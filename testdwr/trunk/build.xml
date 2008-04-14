@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<project name="dwrtest" default="test">
+
+  <!-- ===================================================================== -->
+  <target name="prepare" description="">
+    <tstamp/>
+    <property name="dwr.home" value="../dwr"/>
+    <property name="downloads" value="./downloads"/>
+    <property name="servers" value="./servers"/>
+  </target>
+
+  <!-- ===================================================================== -->
+  <target name="test" depends="build-dwr" description="Run the full test suite">
+    <install-server name="apache-tomcat-6.0.16"/>
+  </target>
+
+  <!-- ===================================================================== -->
+  <target name="clean" depends="prepare" description="Set the state of the filesystem back to that of a clean checkout">
+    <delete dir="${servers}"/>
+  </target>
+
+  <!-- ===================================================================== -->
+  <target name="build-dwr" depends="prepare" description="Build DWR, assuming it is next door">
+    <ant dir="${dwr.home}" target="standard"/>
+  </target>
+
+  <!-- ===================================================================== -->
+  <target name="install-servers" depends="prepare" description="Download Free App Servers">
+    <install-server name="apache-tomcat-6.0.16"/>
+    <install-server name="apache-tomcat-5.5.26"/>
+    <install-server name="jetty-6.1.9"/>
+  </target>
+
+  <!-- ===================================================================== -->
+  <target name="download-servers" description="Download Free App Servers">
+    <!--
+    You shouldn't need to do this, because we're storing them in SVN, but it
+    might be a decent way to document important servers to test with
+    -->
+    <get dest="${downloads}/apache-tomcat-6.0.16.zip" src="http://www.apache.org/dist/tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"/>
+    <get dest="${downloads}/apache-tomcat-5.5.26.zip" src="http://www.apache.org/dist/tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26.zip"/>
+    <get dest="${downloads}/jetty-6.1.9.zip" src="http://dist.codehaus.org/jetty/jetty-6.1.9/jetty-6.1.9.zip"/>
+  </target>
+
+  <!-- ===================================================================== -->
+  <macrodef name="install-server">
+    <attribute name="name"/>
+    <sequential>
+      <mkdir dir="${servers}"/>
+      <unzip dest="${servers}" src="${downloads}/@{name}.zip"/>
+      <copy file="${dwr.home}/target/ant/dwr-test.war" todir="${servers}/@{name}/webapps"/>
+    </sequential>
+  </macrodef>
+
+</project>
