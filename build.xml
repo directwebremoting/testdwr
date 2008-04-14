@@ -4,14 +4,25 @@
   <!-- ===================================================================== -->
   <target name="prepare" description="">
     <tstamp/>
-    <property name="dwr.home" value="../dwr"/>
-    <property name="downloads" value="./downloads"/>
-    <property name="servers" value="./servers"/>
+    <property name="dwr.home" value="${basedir}/../dwr"/>
+    <property name="downloads" value="${basedir}/downloads"/>
+    <property name="servers" value="${basedir}/servers"/>
+    <property name="target" value="${basedir}/target/ant"/>
   </target>
 
   <!-- ===================================================================== -->
   <target name="test" depends="build-dwr" description="Run the full test suite">
-    <install-server name="apache-tomcat-6.0.16"/>
+    <parallel>
+      <selenium-proxy-start/>
+      <sequential>    
+        <echo taskname="waitfor" message="Wait for proxy server launch" />
+        <waitfor maxwait="2" maxwaitunit="minute" checkevery="100">
+          <http url="http://localhost:4444/selenium-server/driver/?cmd=testComplete"/>
+        </waitfor>
+        <junit-dwr/>
+        <selenium-proxy-stop/>
+      </sequential>
+    </parallel>
   </target>
 
   <!-- ===================================================================== -->
@@ -21,8 +32,41 @@
 
   <!-- ===================================================================== -->
   <target name="build-dwr" depends="prepare" description="Build DWR, assuming it is next door">
-    <ant dir="${dwr.home}" target="standard"/>
+    <ant dir="${dwr.home}" target="standard" inheritall="false" inheritrefs="false"/>
   </target>
+
+  <!-- ===================================================================== -->
+  <target name="build-testdwr" depends="prepare" description="Build our test suites">
+    <mkdir dir="${target}/classes/"/>
+    <javac srcdir="${basedir}/main/java" destdir="${target}/classes" debug="on">
+      <classpath path="${basedir}/main/lib"/>
+    </javac>
+  </target>
+
+  <!-- ===================================================================== -->
+  <macrodef name="junit-dwr">
+    <sequential>
+      <mkdir dir="${target}/junit"/>
+      <junit printsummary="yes" haltonfailure="no">
+        <classpath>
+          <pathelement location="${target}/classes"/>
+          <pathelement location="${basedir}/main/lib/junit-4.4.jar"/>
+        </classpath>
+        <formatter type="plain"/>
+
+        <test name="dwr" haltonfailure="no" outfile="result">
+          <formatter type="xml"/>
+        </test>
+
+        <batchtest todir="${target}/junit">
+          <fileset dir="${basedir}/main/java">
+            <include name="**/*Test*.java"/>
+            <exclude name="**/AllTests.java"/>
+          </fileset>
+        </batchtest>
+      </junit>
+    </sequential>
+  </macrodef>
 
   <!-- ===================================================================== -->
   <target name="install-servers" depends="prepare" description="Download Free App Servers">
@@ -49,6 +93,22 @@
       <mkdir dir="${servers}"/>
       <unzip dest="${servers}" src="${downloads}/@{name}.zip"/>
       <copy file="${dwr.home}/target/ant/dwr-test.war" todir="${servers}/@{name}/webapps"/>
+    </sequential>
+  </macrodef>
+
+  <!-- ===================================================================== -->
+  <macrodef name="selenium-proxy-start" description="Launches the Selenium Proxy Server">
+    <sequential>
+      <java jar="${basedir}/main/lib/selenium-server.jar" fork="true" spawn="true"/>
+    </sequential>
+  </macrodef>
+
+  <!-- ===================================================================== -->
+  <macrodef name="selenium-proxy-stop" description="Launches the Selenium Proxy Server">
+    <sequential>
+      <get taskname="selenium-shutdown" src="http://localhost:4444/selenium-server/driver/?cmd=shutDown"
+          dest="${basedir}/target/shutdown-ignore.txt" ignoreerrors="true"/>
+      <echo taskname="selenium-shutdown" message="DGF Errors during shutdown are expected" />
     </sequential>
   </macrodef>
 
