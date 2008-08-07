@@ -1,4 +1,4 @@
-package org.example.testdwr;
+package org.testdwr.plain;
 
 import junit.framework.TestCase;
 

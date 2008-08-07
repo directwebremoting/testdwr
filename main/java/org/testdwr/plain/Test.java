@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.example.testdwr;
+package org.testdwr.plain;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -623,17 +623,17 @@ public class Test
 
     public static String staticMethod()
     {
-        return "static Test.staticMethod() says hello.";
+        return "static SpringServletTest.staticMethod() says hello.";
     }
 
     public String dangerOverload(String param1)
     {
-        return "Test.dangerOverload(" + param1 + ") says hello.";
+        return "SpringServletTest.dangerOverload(" + param1 + ") says hello.";
     }
 
     public String dangerOverload()
     {
-        return "Test.dangerOverload() says hello.";
+        return "SpringServletTest.dangerOverload() says hello.";
     }
 
     public String error(InboundContext cx)
@@ -675,7 +675,7 @@ public class Test
         {
             String className = it.next();
 
-            if (className.endsWith("Test"))
+            if (className.endsWith("SpringServletTest"))
             {
                 try
                 {

@@ -13,22 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.example.testdwr;
-
-import org.directwebremoting.server.jetty.JettyLauncherBase;
+package org.testdwr.plain;
 
 /**
- * Launch Jetty embedded for testing
- * @author Joe Walker [joe at getahead dot org]
+ * @author Joe Walker [joe at getahead dot ltd dot uk]
  */
-public class JettyTestLauncher
+public class ObjA
 {
+    private ObjB objB;
+
     /**
-     * Just create and launch an instance of Jetty
+     * @return objb
      */
-    public static void main(String[] args) throws Exception
+    public ObjB getObjB()
     {
-        JettyLauncherBase launcher = new JettyLauncherBase("web", "/test-dwr", 8080);
-        launcher.start();
+        return objB;
+    }
+
+    /**
+     * @param objB
+     */
+    public void setObjB(ObjB objB)
+    {
+        this.objB = objB;
     }
 }

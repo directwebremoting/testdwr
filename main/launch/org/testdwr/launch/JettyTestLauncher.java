@@ -13,28 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.example.testdwr;
+package org.testdwr.launch;
 
 /**
- * @author Joe Walker [joe at getahead dot ltd dot uk]
+ * Launch Jetty embedded for testing
+ * @author Joe Walker [joe at getahead dot org]
  */
-public class ObjA
+public class JettyTestLauncher
 {
-    private ObjB objB;
-
     /**
-     * @return objb
+     * Just create and launch an instance of Jetty
      */
-    public ObjB getObjB()
+    public static void main(String[] args) throws Exception
     {
-        return objB;
-    }
-
-    /**
-     * @param objB
-     */
-    public void setObjB(ObjB objB)
-    {
-        this.objB = objB;
+        JettyLauncherBase launcher = new JettyLauncherBase("main/web", "/test-dwr", 8080);
+        launcher.start();
     }
 }

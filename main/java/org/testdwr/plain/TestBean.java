@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.example.testdwr;
+package org.testdwr.plain;
 
 /**
  * @author Joe Walker [joe at getahead dot ltd dot uk]
