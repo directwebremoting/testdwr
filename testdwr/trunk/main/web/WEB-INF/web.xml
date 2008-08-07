@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app id="dwr">
+
+  <display-name>DWR Test</display-name>
+
+  <!-- Part of springservlet -->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/springservlet.xml</param-value>
+  </context-param>
+
+  <!-- Part of springservlet -->
+  <listener>
+    <listener-class>org.directwebremoting.servlet.EfficientShutdownServletContextListener</listener-class>
+  </listener>
+
+  <!-- Part of bayeux -->
+  <listener>
+    <listener-class>org.directwebremoting.bayeux.BayeuxServletContextAttributeListener</listener-class>
+  </listener>
+
+  <!-- Part of springservlet -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <!-- Part of guice -->
+  <listener>
+    <listener-class>org.testdwr.guice.TestDwrGuiceServletContextListener</listener-class>
+  </listener>
+
+  <!-- Part of dwr -->
+  <servlet>
+    <servlet-name>dwr</servlet-name>
+    <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>classes</param-name>
+      <param-value>
+      org.testdwr.plain.TestBean2Converter,
+      org.testdwr.plain.Test,
+      org.testdwr.plain.TestBean
+      </param-value>
+    </init-param>
+    <init-param>
+      <param-name>activeReverseAjaxEnabled</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>allowImpossibleTests</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>allowGetForSafariButMakeForgeryEasier</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>org.directwebremoting.Container</param-name>
+      <param-value>org.testdwr.plain.TestDefaultContainer</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <!-- Part of bayeux -->
+  <servlet>
+    <servlet-name>bayeux</servlet-name>
+    <servlet-class>org.mortbay.cometd.continuation.ContinuationCometdServlet</servlet-class>
+  </servlet>
+
+  <!-- Part of springservlet -->
+ <servlet>
+    <servlet-name>springservlet</servlet-name>
+    <servlet-class>org.directwebremoting.spring.DwrSpringServlet</servlet-class>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </servlet>
+
+  <!-- Part of guice -->
+  <servlet>
+    <servlet-name>guice</servlet-name>
+    <servlet-class>org.directwebremoting.guice.DwrGuiceServlet</servlet-class>
+  </servlet>
+
+  <!-- Part of the custom response system -->
+  <servlet>
+    <servlet-name>custom</servlet-name>
+    <servlet-class>org.testdwr.custom.CustomResponseServlet</servlet-class>
+  </servlet>
+
+  <!-- Part of dwr -->
+  <servlet-mapping>
+    <servlet-name>dwr</servlet-name>
+    <url-pattern>/dwr/*</url-pattern>
+  </servlet-mapping>
+
+  <!-- Part of bayeux -->
+  <servlet-mapping>
+    <servlet-name>bayeux</servlet-name>
+    <url-pattern>/bayeux/*</url-pattern>
+  </servlet-mapping>
+
+  <!-- Part of springservlet -->
+  <servlet-mapping>
+    <servlet-name>springservlet</servlet-name>
+    <url-pattern>/springservlet/*</url-pattern>
+  </servlet-mapping>
+
+  <!-- Part of guice -->
+  <servlet-mapping>
+    <servlet-name>guice</servlet-name>
+    <url-pattern>/guice/*</url-pattern>
+  </servlet-mapping>
+
+  <!-- Part of the custom response system -->
+  <servlet-mapping>
+    <servlet-name>custom</servlet-name>
+    <url-pattern>/custom/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>

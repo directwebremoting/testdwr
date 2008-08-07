@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.example.testdwr;
-
-import org.directwebremoting.convert.BeanConverter;
+package org.testdwr.springservlet;
 
 /**
- * For demo purposes
  * @author Joe Walker [joe at getahead dot ltd dot uk]
  */
-public class TestBean2Converter extends BeanConverter
+public class SpringServletBean
 {
+    private String name;
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 }

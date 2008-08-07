@@ -9,19 +9,19 @@
 
     <!-- test -->
     <create creator="new" javascript="Test" scope="application">
-      <param name="class" value="org.example.testdwr.Test"/>
+      <param name="class" value="org.testdwr.plain.Test"/>
     </create>
-    <convert converter="bean" match="org.example.testdwr.TestBean"/>
-    <convert converter="bean" javascript="ObjB" match="org.example.testdwr.ObjB"/>
-    <convert converter="object" javascript="ObjA" match="org.example.testdwr.ObjA">
+    <convert converter="bean" match="org.testdwr.plain.TestBean"/>
+    <convert converter="bean" javascript="ObjB" match="org.testdwr.plain.ObjB"/>
+    <convert converter="object" javascript="ObjA" match="org.testdwr.plain.ObjA">
       <param name="force" value="true"/>
     </convert>
 
     <!-- test -->
     <create creator="new" javascript="Recorder" scope="application">
-      <param name="class" value="org.example.testdwr.Recorder"/>
+      <param name="class" value="org.testdwr.plain.Recorder"/>
     </create>
-    <convert converter="bean" match="org.example.testdwr.TestResult"/>
+    <convert converter="bean" match="org.testdwr.plain.TestResult"/>
 
     <convert converter="exception" match="java.lang.NullPointerException"/>
     <convert converter="exception" match="org.xml.sax.SAXParseException"/>
@@ -32,7 +32,7 @@
   <signatures>
   <![CDATA[
   import java.util.*;
-  import org.example.testdwr.*;
+  import org.testdwr.plain.*;
 
   Test.testBeanSetParam(Set<TestBean>);
   Test.testBeanListParam(List<TestBean>);

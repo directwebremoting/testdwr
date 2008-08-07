@@ -13,28 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.example.testdwr;
+package org.testdwr.plain;
+
+import org.directwebremoting.convert.BeanConverter;
 
 /**
+ * For demo purposes
  * @author Joe Walker [joe at getahead dot ltd dot uk]
  */
-public class ObjB
+public class TestBean2Converter extends BeanConverter
 {
-    private ObjA objA;
-
-    /**
-     * @return obja
-     */
-    public ObjA getObjA()
-    {
-        return objA;
-    }
-
-    /**
-     * @param objA
-     */
-    public void setObjA(ObjA objA)
-    {
-        this.objA = objA;
-    }
 }
