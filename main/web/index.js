@@ -26,6 +26,14 @@ function init() {
   if (window.location.href.match(/autoRun=true/)) {
     runAllTests();
   }
+  var delayMatch = window.location.href.match(/delay=(\d+)/);
+  if (delayMatch != null && delayMatch.length >= 1) {
+    var delay = delayMatch[1] - 0;
+    dwr.util.setValue("delay", delay);
+  }
+  if (window.location.href.match(/autoSend=true/)) {
+    dwr.util.setValue("autoSend", true);
+  }
 }
 
 /**
@@ -177,7 +185,20 @@ function _toggleDetail(groupName) {
 /**
  *
  */
-function updateTestResults() {
+function _toggleDisplay(id) {
+  id = dwr.util.byId(id);
+  if (id.style.display == "none") {
+    id.style.display = "block";
+  }
+  else {
+    id.style.display = "none";
+  }
+}
+
+/**
+ *
+ */
+function updateTestResults(reportAnyway) {
   var counts = [ 0, 0, 0, 0, 0 ];
   var groupCounts = {};
   for (var i = 0; i < groupNames.length; i++) {
@@ -260,7 +281,7 @@ function updateTestResults() {
     dwr.util.byId("testsPassed").style.color = statusColors[status.pass];
   }
 
-  if (started == testCount && outstanding == 0 && dwr.util.getValue("report")) {
+  if ((started == testCount && outstanding == 0 && dwr.util.getValue("report")) || reportAnyway) {
     var failures = [];
     for (var testName in tests) {
       test = tests[testName];
@@ -274,8 +295,9 @@ function updateTestResults() {
       }
     }
     Recorder.postResults(testCount, passed, failed, failures, function() {
-      console.log("Posted report to server");
+      dwr.util.setValue("reportResult", "Posted report to server");
     });
+    clearTimeout(boredTimeout);
   }
 }
 
@@ -309,7 +331,7 @@ function runTest(testName) {
   if (!subTest) {
     currentTest = null;
   }
-  updateTestResults();
+  updateTestResults(false);
 }
 
 /**
@@ -349,6 +371,9 @@ function runAllTests() {
 
   var pauseAndRunAll = function(index) {
     if (index >= testNames.length) {
+      boredTimeout = setTimeout(function() {
+        updateTestResults(true);
+      }, 10000);
       return;
     }
     var testName = testNames[index];
@@ -403,7 +428,7 @@ function createDelayed(func, scope) {
     if (!isSync) {
       currentTest = null;
     }
-    updateTestResults();
+    updateTestResults(false);
   };
 }
 
@@ -421,7 +446,7 @@ function createDelayedError(func, scope) {
       func.apply(obj, arguments);
     }
     currentTest = null;
-    updateTestResults();
+    updateTestResults(false);
   };
 }
 

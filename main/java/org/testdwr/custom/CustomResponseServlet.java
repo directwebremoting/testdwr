@@ -1,40 +1,112 @@
 package org.testdwr.custom;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.InputStream;
+import java.net.URLDecoder;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.directwebremoting.util.LocalUtil;
 
 public class CustomResponseServlet extends HttpServlet
 {
+    /* (non-Javadoc)
+     * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        super.doPost(request, response);
+        this.doPost(request, response);
     }
 
+    /* (non-Javadoc)
+     * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         String pathInfo = request.getPathInfo();
-        log.error(pathInfo);
+        String homePage = request.getContextPath() + request.getServletPath() + "/";
 
-        if ("500".equals(pathInfo))
+        if (pathInfo == null)
         {
-            response.sendError(500, "Eat my 500");
+            response.sendRedirect(homePage);
+            return;
+        }
+
+        if (pathInfo.matches("\\/[1-9][0-9][0-9]\\/?.*"))
+        {
+            String responseCodeStr = pathInfo.substring(1, 4);
+            int responseCode = Integer.parseInt(responseCodeStr);
+
+            String extra = "";
+            if (pathInfo.length() == 4)
+            {
+                if (responseCode == HttpServletResponse.SC_TEMPORARY_REDIRECT)
+                {
+                    extra = homePage;
+                }
+            }
+            else
+            {
+                if (pathInfo.charAt(4) != '/')
+                {
+                    response.sendError(404);
+                }
+                else
+                {
+                    extra = URLDecoder.decode(pathInfo.substring(5), "utf-8");
+                    if (!extra.startsWith("http"))
+                    {
+                        extra = homePage;
+                    }
+                }
+            }
+
+            log.info("Sending " + responseCode + ":" + extra + "(" + pathInfo + ")");
+            switch (responseCode)
+            {
+            case HttpServletResponse.SC_MULTIPLE_CHOICES:
+            case HttpServletResponse.SC_MOVED_PERMANENTLY:
+            case HttpServletResponse.SC_FOUND:
+            case HttpServletResponse.SC_SEE_OTHER:
+                response.setHeader("Location", "/" + extra);
+                response.setStatus(responseCode);
+                break;
+
+            case HttpServletResponse.SC_TEMPORARY_REDIRECT:
+                response.sendRedirect(extra);
+                break;
+
+            default:
+                response.sendError(responseCode, "/" + extra);
+                break;
+            }
         }
         else
         {
-            PrintWriter writer = response.getWriter();
-            writer.append("Hello");
+            InputStream in = getClass().getResourceAsStream(RESOURCE_HELP);
+            if (in == null)
+            {
+                log.error("Missing file " + RESOURCE_HELP);
+                response.sendError(500, "Missing file " + RESOURCE_HELP);
+            }
+            else
+            {
+                response.setContentType("text/html");
+                ServletOutputStream out = response.getOutputStream();
+                LocalUtil.readFully(in, out);
+            }
         }
     }
+
+    private static final String RESOURCE_HELP = "/org/testdwr/custom/index.html";
 
     /**
      * The log stream

@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.testdwr.springservlet;
+package org.testdwr.annotate;
 
 import java.util.List;
 
+import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.extend.InboundContext;
 
 /**
- * Methods to help unit test DWR that are configured by the SpringServlet.
+ * Methods to help unit test DWR that are configured by Guice.
  * @author Joe Walker [joe at getahead dot ltd dot uk]
  */
-public class SpringServletTest
+@RemoteProxy
+public class AnnotateTest
 {
     public boolean areIdentical(List<?> a, List<?> b)
     {
         return a == b;
     }
 
-    public SpringServletBean springServletBeanParam(SpringServletBean test)
+    public AnnotateBean springServletBeanParam(AnnotateBean test)
     {
         return test;
     }
@@ -98,17 +100,17 @@ public class SpringServletTest
 
     public static String staticMethod()
     {
-        return "static SpringServletTest.staticMethod() says hello.";
+        return "static AnnotateTest.staticMethod() says hello.";
     }
 
     public String dangerOverload(String param1)
     {
-        return "SpringServletTest.dangerOverload(" + param1 + ") says hello.";
+        return "AnnotateTest.dangerOverload(" + param1 + ") says hello.";
     }
 
     public String dangerOverload()
     {
-        return "SpringServletTest.dangerOverload() says hello.";
+        return "AnnotateTest.dangerOverload() says hello.";
     }
 
     public String error(InboundContext cx)

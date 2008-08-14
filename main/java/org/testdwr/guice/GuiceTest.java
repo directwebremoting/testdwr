@@ -20,7 +20,7 @@ import java.util.List;
 import org.directwebremoting.extend.InboundContext;
 
 /**
- * Methods to help unit test DWR.
+ * Methods to help unit test DWR that are configured by Guice.
  * @author Joe Walker [joe at getahead dot ltd dot uk]
  */
 public class GuiceTest
