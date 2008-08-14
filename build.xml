@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="dwrtest" default="test">
+<project name="testdwr" default="test">
 
   <!-- ===================================================================== -->
   <target name="prepare" description="">
@@ -15,7 +15,7 @@
   </target>
 
   <!-- ===================================================================== -->
-  <target name="test" depends="build-dwr, build-testdwr" description="Run the full test suite">
+  <target name="test" depends="update-dwr, build-testdwr" description="Run the full test suite">
     <test-server name="apache-tomcat-6.0.16"/>
   </target>
 
@@ -55,8 +55,9 @@
   </target>
 
   <!-- ===================================================================== -->
-  <target name="build-dwr" depends="prepare" description="Build DWR, assuming it is next door">
-    <ant dir="${dwr.home}" target="standard" inheritall="false" inheritrefs="false"/>
+  <target name="update-dwr" depends="prepare" description="Build DWR, assuming it is next door">
+    <ant dir="${dwr.home}" target="war" inheritall="false" inheritrefs="false"/>
+    <copy file="${dwr.home}/target/ant/dwr.jar" todir="${basedir}/main/web/WEB-INF/lib"/>
   </target>
 
   <!-- ===================================================================== -->
@@ -64,17 +65,6 @@
     <mkdir dir="${target}/classes/"/>
     <javac srcdir="${basedir}/main/java" destdir="${target}/classes" debug="on" classpathref="cp"/>
   </target>
-
-  <!-- ===================================================================== -->
-  <macrodef name="testng-dwr">
-    <sequential>
-      <mkdir dir="${target}/testng"/>
-      <taskdef name="testng" classpathref="cp" classname="org.testng.TestNGAntTask"/>
-      <testng classpathref="cp" groups="basic" outputdir="${target}/testng">
-        <classfileset dir="${target}/classes" includes="**/*.class"/>
-      </testng>
-    </sequential>
-  </macrodef>
 
   <!-- ===================================================================== -->
   <macrodef name="junit-dwr">
