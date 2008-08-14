@@ -68,3 +68,9 @@ pre { background:#f4f4f4; padding:10px; }
 
 #groupTemplate { display:none; }
 .headInline { font-size:70%; font-weight:normal; }
+#settingsPanel { float:right; border:1px solid #BBB; padding:5px;
+-moz-border-radius:5px; background:#EEE; }
+#settingsPanel h3 { margin:5px 0; color:#333; }
+#settingsPanel hr { color:#FFF; }
+#reportHelp { max-width:200px; font-size:75%; }
+#reportResult { margin:5px 0; color:#F00; }

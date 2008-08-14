@@ -11,7 +11,7 @@
     <param-value>/WEB-INF/springservlet.xml</param-value>
   </context-param>
 
-  <!-- Part of springservlet -->
+  <!-- Part of dwr -->
   <listener>
     <listener-class>org.directwebremoting.servlet.EfficientShutdownServletContextListener</listener-class>
   </listener>
@@ -42,9 +42,8 @@
     <init-param>
       <param-name>classes</param-name>
       <param-value>
-      org.testdwr.plain.TestBean2Converter,
-      org.testdwr.plain.Test,
-      org.testdwr.plain.TestBean
+      org.testdwr.annotate.AnnotateTest,
+      org.testdwr.annotate.AnnotateBean
       </param-value>
     </init-param>
     <init-param>
@@ -80,18 +79,21 @@
       <param-name>debug</param-name>
       <param-value>true</param-value>
     </init-param>
+    <load-on-startup>2</load-on-startup>
   </servlet>
 
   <!-- Part of guice -->
   <servlet>
     <servlet-name>guice</servlet-name>
     <servlet-class>org.directwebremoting.guice.DwrGuiceServlet</servlet-class>
+    <load-on-startup>2</load-on-startup>
   </servlet>
 
   <!-- Part of the custom response system -->
   <servlet>
     <servlet-name>custom</servlet-name>
     <servlet-class>org.testdwr.custom.CustomResponseServlet</servlet-class>
+    <load-on-startup>3</load-on-startup>
   </servlet>
 
   <!-- Part of dwr -->

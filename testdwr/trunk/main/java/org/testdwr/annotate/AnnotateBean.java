@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.testdwr.guice;
+package org.testdwr.annotate;
+
+import org.directwebremoting.annotations.DataTransferObject;
 
 /**
  * Methods to help unit test DWR that are configured by Guice.
  * @author Joe Walker [joe at getahead dot ltd dot uk]
  */
-public class GuiceBean
+@DataTransferObject
+public class AnnotateBean
 {
     private String name;
     public String getName() { return name; }

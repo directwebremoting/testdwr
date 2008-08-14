@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Custom Error Pages</title>
+</head>
+<body>
+
+<h2>Custom Error Pages</h2>
+
+<p>This servlet is almost certainly very insecure. It is highly likely that
+it contains persistent XSS flaws, or other more significant issues. It should
+not be deployed into an untrusted environment.</p>
+
+<p>The following error URLs are provided by this application</p>
+<ul>
+<li><a href="100"/>HTTP/100</a>: Continue - Tells the browser to carry on sending the request.</li>
+<li><a href="101"/>HTTP/101</a>: Switching Protocols - If we need to upgrade to HTTP 1.1.</li>
+<li><a href="200"/>HTTP/200</a>: OK - The request has succeeded.</li>
+<li><a href="201"/>HTTP/201</a>: Created - (Although we do not create any resources or return a Location header)</li>
+<li><a href="202"/>HTTP/202</a>: Accepted - Intentionally non-committal response</li>
+<li><a href="203"/>HTTP/203</a>: Non-Authoritative - Perhaps response is from a cached copy</li>
+<li><a href="204"/>HTTP/204</a>: No Content - Browser should keep the existing view</li>
+<li><a href="205"/>HTTP/205</a>: Reset Content - Browser should reset the content to load state</li>
+<li><a href="206"/>HTTP/206</a>: Partial Content - Sent in response to a GET with a Range header</li>
+<li><a href="300"/>HTTP/300</a>: Multiple Choices - Page indicates options</li>
+<li><a href="301"/>HTTP/301</a>: Moved Permanently - New URI is this page, or is specified after /</li>
+<li><a href="302"/>HTTP/302</a>: Found - Like 301, but the Location header isn't permanent</li>
+<li><a href="303"/>HTTP/303</a>: See Other - For form submit re-direction</li>
+<li><a href="304"/>HTTP/304</a>: Not Modified - In response to a conditional GET</li>
+<li><a href="305"/>HTTP/305</a>: Use Proxy - Use Location header as proxy</li>
+<li><a href="307"/>HTTP/307</a>: Temporary Redirect - Like 301, but the Location header isn't permanent</li>
+<li><a href="400"/>HTTP/400</a>: Bad Request - The request was malformed</li>
+<li><a href="401"/>HTTP/401</a>: Unauthorized - Use HTTP-Auth</li>
+<li><a href="402"/>HTTP/402</a>: Payment Required - Reserved for future use</li>
+<li><a href="403"/>HTTP/403</a>: Forbidden - Security access denied</li>
+<li><a href="404"/>HTTP/404</a>: Not Found - URL not found</li>
+<li><a href="405"/>HTTP/405</a>: Method Not Allowed - HTTP-Method disallowed</li>
+<li><a href="406"/>HTTP/406</a>: Not Acceptable - Request headers invalid for URI</li>
+<li><a href="407"/>HTTP/407</a>: Proxy Authentication Required - 401 for a proxy</li>
+<li><a href="408"/>HTTP/408</a>: Request Timeout - You can try again later</li>
+<li><a href="409"/>HTTP/409</a>: Conflict - Maybe the user can resolve the conflict</li>
+<li><a href="410"/>HTTP/410</a>: Gone - If you had a bookmark here, delete it</li>
+<li><a href="411"/>HTTP/411</a>: Length Required - Repeat request with a Content-Length header</li>
+<li><a href="412"/>HTTP/412</a>: Precondition Failed - Some headers contained preconditions which failed</li>
+<li><a href="413"/>HTTP/413</a>: Request Entity Too Large - I've got it, but it's too big to give out</li>
+<li><a href="414"/>HTTP/414</a>: Request-URI Too Long - Only likely when POST is converted to a GET</li>
+<li><a href="415"/>HTTP/415</a>: Unsupported Media Type - Requested resource not in requested format</li>
+<li><a href="416"/>HTTP/416</a>: Requested Range Not Satisfiable - Only with Range request header</li>
+<li><a href="417"/>HTTP/417</a>: Expectation Failed - Only with Expect header</li>
+<li><a href="500"/>HTTP/500</a>: Internal Server Error - Generic server failure</li>
+<li><a href="501"/>HTTP/501</a>: Not Implemented - The server can't fulfill the request</li>
+<li><a href="502"/>HTTP/502</a>: Bad Gateway - An upstream proxy failed</li>
+<li><a href="503"/>HTTP/503</a>: Service Unavailable - Under maintenance or overloaded</li>
+<li><a href="504"/>HTTP/504</a>: Gateway Timeout - Upstream proxy timeout</li>
+<li><a href="505"/>HTTP/505</a>: HTTP Version Not Supported - </li>
+</ul>
+
+</body>
+</html>

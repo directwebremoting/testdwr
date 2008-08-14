@@ -13,3 +13,15 @@ function testRemoteDwrSetValue() {
     assertEqual("changed", remoteDwrSetValue);
   }));
 }
+
+/**
+ * 
+ */
+function testRemoteDwrSetCookie() {
+  var value = "someCookieValue\\!!\'\"&&amp";
+  Test.setCookie("someCookieName", value, createDelayed(function() {
+    var result = document.cookie;
+    verifyTrue(result.indexOf("someCookieName") > -1);
+    verifyTrue(result.indexOf(value) > -1);
+  }));
+}

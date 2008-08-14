@@ -5,6 +5,7 @@
   <script type='text/javascript' src='./dwr/engine.js'> </script>
   <script type='text/javascript' src='./dwr/util.js'> </script>
   <script type='text/javascript' src='./dwr/interface/Test.js'> </script>
+  <script type='text/javascript' src='./dwr/interface/AnnotateTest.js'> </script>
   <script type='text/javascript' src='./dwr/interface/Recorder.js'> </script>
   <script type='text/javascript' src='./springservlet/interface/SpringServletTest.js'> </script>
   <script type='text/javascript' src='./guice/interface/GuiceTest.js'> </script>
@@ -17,6 +18,7 @@
   <script type='text/javascript' src='testDwrUtil.js'> </script>
   <script type='text/javascript' src='testSpringServlet.js'> </script>
   <script type='text/javascript' src='testGuice.js'> </script>
+  <script type='text/javascript' src='testAnnotate.js'> </script>
   <!--
   Contains deliberate failures to test the test suite
   <script type='text/javascript' src='testTestSuite.js'> </script>
@@ -44,18 +46,23 @@
   <a href="..">Web Application Index</a>
 ]</div>
 
-<div style="float:right; border:1px solid #BBB; padding:5px; -moz-border-radius:5px; background:#EEE;">
-  <div style="font-weight:bold;padding-bottom:5px;">Settings</div>
-  Async Delay:
-  <select id="delay">
-    <option value="0" selected="selected">0ms</option>
-    <option value="5">5ms</option>
-    <option value="10">10ms</option>
-    <option value="20">20ms</option>
-  </select>
+<div id="settingsPanel">
+  <h3>Settings</h3>
+  <label for="delay" title="The delay between starting tests.">Inter-test delay:</label>
+  <input id="delay" value="0" size="3"/> ms
+  <hr/>
+  Test Report: <a href="#" onclick="_toggleDisplay('reportHelp');"><strong>?</strong></a>
   <br/>
-  <label for="report">Report when finished:</label>
-  <input id="report" type="checkbox"/>
+  <div id="reportHelp" style="display:none;">
+    <p>DWR can record a test run in a separate file (~/.dwr_test_results.xml)
+    to enable aggregation of several test runs on separate browsers, servers,
+    jvms, OSs, etc.</p>
+  </div>
+  <!--<input type="button" onclick="" value="Send"/>-->
+  <label for="autoSend" title="Do we automatically send the results to the server on completion?">Auto-send:</label>
+  <input id="autoSend" type="checkbox"/>
+  <br/>
+  <div id="reportResult"></div>
 </div>
 
 <h1>Test Summary</h1>

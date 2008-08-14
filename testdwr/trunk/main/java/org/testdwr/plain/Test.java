@@ -49,6 +49,7 @@ import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.extend.InboundContext;
 import org.directwebremoting.io.JavascriptFunction;
 import org.directwebremoting.ui.ScriptProxy;
+import org.directwebremoting.ui.browser.Document;
 import org.directwebremoting.util.ClasspathScanner;
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
@@ -660,6 +661,11 @@ public class Test
     {
         ScriptProxy.addFunctionCall("dwr.util.setValue", elementId, value);
         return value;
+    }
+
+    public void setCookie(String name, String value)
+    {
+        Document.setCookie(name, value);
     }
 
     /**
