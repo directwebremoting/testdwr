@@ -20,6 +20,24 @@ function testMemoryLeaks(count) {
 }
 
 /**
+ * Changing the _path clashes with other tests
+ */
+function testErrorRedirect(){
+  var oldPath = Test._path;
+  Test._path = "/test-dwr/custom/307";
+  Test.doNothing({
+    callback:createDelayedError(),
+    exceptionHandler:createDelayedError(),
+    textHtmlHandler:createDelayed(function(data) {
+      verifyEqual(200, data.status);
+      verifyTrue(data.responseText.indexOf("html") != -1);
+      verifyEqual("text/html", data.contentType);
+      Test._path = oldPath;
+    })
+  });
+}
+
+/**
  *
  */
 function testServerChecks() {
