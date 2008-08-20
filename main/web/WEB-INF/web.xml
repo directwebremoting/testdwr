@@ -13,7 +13,7 @@
 
   <!-- Part of dwr -->
   <listener>
-    <listener-class>org.directwebremoting.servlet.EfficientShutdownServletContextListener</listener-class>
+    <listener-class>org.directwebremoting.servlet.DwrListener</listener-class>
   </listener>
 
   <!-- Part of bayeux -->
