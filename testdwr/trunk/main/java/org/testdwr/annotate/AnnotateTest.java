@@ -17,6 +17,7 @@ package org.testdwr.annotate;
 
 import java.util.List;
 
+import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.extend.InboundContext;
 
@@ -27,6 +28,11 @@ import org.directwebremoting.extend.InboundContext;
 @RemoteProxy
 public class AnnotateTest
 {
+    public String getPath()
+    {
+        return WebContextFactory.get().getContextPath();
+    }
+
     public boolean areIdentical(List<?> a, List<?> b)
     {
         return a == b;

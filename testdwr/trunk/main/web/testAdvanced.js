@@ -47,3 +47,22 @@ function testServerChecks() {
   });
 }
 
+/**
+ * This doesn't always work when there is lots going on, and it requires to not
+ * be the last test in a run because it delays reports
+ */
+function testScriptSessionListener() {
+  var progress1 = createDelayed(function(results) {
+    if (results == null || results.length == 0) {
+      return;
+    }
+    fail(results.join("<br/>"));
+  });
+  var progress2 = createDelayed(function(results) {
+    if (results == null || results.length == 0) {
+      return;
+    }
+    fail(results.join("<br/>"));
+  });
+  Test.checkScriptSessionListener(progress1, progress2, createReplyIsErrorCallback());
+}

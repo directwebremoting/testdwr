@@ -15,17 +15,6 @@
         http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd
         ">
 
-  <!-- Playing with Acegi
-  <security:http auto-config='true'>
-    <security:intercept-url pattern="/**" access="ROLE_USER" />
-  </security:http>
-  <security:authentication-provider>
-    <security:user-service>
-      <security:user name="user" password="password" authorities="ROLE_USER, ROLE_ADMIN" />
-    </security:user-service>
-  </security:authentication-provider>
-  -->
-
   <!-- Exposed resources -->
   <dwr:configuration>
     <dwr:convert type="bean" class="org.testdwr.springservlet.SpringServletBean" javascript="SpringServletBean"/>

@@ -1,6 +1,15 @@
 
 createTestGroup("Guice");
 
+/**
+ *
+ */
+function testGuiceGetPath() {
+  GuiceTest.getPath(createDelayed(function(data) {
+    verifyEqual("/guice", data);
+  }));
+}
+
 function testGuiceByteParam() {
   runGuiceComparisonTests([
     { code:"byteParam", data:-128 },

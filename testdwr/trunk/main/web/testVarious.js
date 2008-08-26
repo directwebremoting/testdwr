@@ -8,3 +8,17 @@ function testAreIdentical() {
     assertTrue(reply);
   });
 }
+
+/**
+ *
+ */
+function testScriptSessionBindingListener() {
+  Test.checkScriptSessionBindingListener(createReplyIsErrorCallback());
+}
+
+/**
+ *
+ */
+function testImHere() {
+  Test.checkImHere(createReplyIsErrorCallback());
+}
