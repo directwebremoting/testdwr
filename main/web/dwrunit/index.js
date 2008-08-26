@@ -311,6 +311,7 @@ function runTest(testName) {
   }
 
   _setStatus(currentTest, status.executing, true);
+  currentTest.messages = [];
   dwr.util.setValue(currentTest.name, "");
 
   var scope = currentTest.scope || window;
@@ -447,6 +448,21 @@ function createDelayedError(func, scope) {
     }
     currentTest = null;
     updateTestResults(false);
+  };
+}
+
+/**
+ *
+ */
+function createReplyIsErrorCallback() {
+  return {
+    callback:createDelayed(function(data) {
+      if (data == null || data.length == 0) {
+        return;
+      }
+      fail(data.join("<br/>"));
+    }),
+    exceptionHandler:createDelayedError()
   };
 }
 
@@ -807,6 +823,22 @@ function _addSpaces(funcName) {
   funcName = funcName.replace(/([a-zA-Z])([0-9])/g, "$1 $2");
   return funcName;
 }
+
+function _addEvent(obj, event, func) {
+  if (obj.addEventListener) obj.addEventListener(event, func, false);
+  else if (obj.attachEvent) obj.attachEvent('on' + event, func);
+}
+
+function _removeEvent(obj, event, func) {
+  if (obj.removeEventListener) obj.removeEventListener(event, func, false);
+  else if (obj.detachEvent) obj.detachEvent('on' + event, func);
+}
+
+//*
+_addEvent(window, 'load', function() {
+  init();
+});
+// */
 
 /*
 Each test must conform to the following:

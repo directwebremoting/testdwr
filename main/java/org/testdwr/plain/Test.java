@@ -33,6 +33,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -44,18 +47,27 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSession;
+import org.directwebremoting.ScriptSessionFilter;
+import org.directwebremoting.ScriptSessions;
+import org.directwebremoting.ServerContext;
+import org.directwebremoting.ServerContextFactory;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
+import org.directwebremoting.event.ScriptSessionBindingEvent;
+import org.directwebremoting.event.ScriptSessionBindingListener;
 import org.directwebremoting.extend.InboundContext;
+import org.directwebremoting.impl.StartupUtil;
 import org.directwebremoting.io.JavascriptFunction;
-import org.directwebremoting.ui.ScriptProxy;
 import org.directwebremoting.ui.browser.Document;
+import org.directwebremoting.ui.browser.Window;
 import org.directwebremoting.util.ClasspathScanner;
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
+import org.testdwr.event.Test2ScriptSessionListener;
+import org.testdwr.event.TestScriptSessionListener;
 import org.xml.sax.SAXParseException;
 
 /**
@@ -65,6 +77,11 @@ import org.xml.sax.SAXParseException;
 @SuppressWarnings({"UnnecessaryFullyQualifiedName"})
 public class Test
 {
+    public String getPath()
+    {
+        return WebContextFactory.get().getContextPath();
+    }
+
     public void throwNPE()
     {
         // This is exported by dwr.xml
@@ -99,21 +116,21 @@ public class Test
     public void slowAsync(final int wait, final String function)
     {
         WebContext context = WebContextFactory.get();
-        final ScriptSession session = context.getScriptSession();
+        final String sessionId = context.getScriptSession().getId();
 
         new Thread()
         {
             @Override
             public void run()
             {
-                Browser.withSession(session, new Runnable()
+                Browser.withSession(sessionId, new Runnable()
                 {
                     public void run()
                     {
                         try
                         {
                             Thread.sleep(wait);
-                            ScriptProxy.addFunctionCall(function);
+                            ScriptSessions.addFunctionCall(function);
                         }
                         catch (InterruptedException ex)
                         {
@@ -659,7 +676,7 @@ public class Test
 
     public String setValue(String elementId, String value)
     {
-        ScriptProxy.addFunctionCall("dwr.util.setValue", elementId, value);
+        ScriptSessions.addFunctionCall("dwr.util.setValue", elementId, value);
         return value;
     }
 
@@ -668,10 +685,308 @@ public class Test
         Document.setCookie(name, value);
     }
 
+    public List<String> checkScriptSessionBindingListener()
+    {
+        final AtomicInteger bound = new AtomicInteger();
+        final AtomicInteger unbound = new AtomicInteger();
+
+        ScriptSession session = WebContextFactory.get().getScriptSession();
+        ScriptSessionBindingListener listener = new ScriptSessionBindingListener()
+        {
+            /* (non-Javadoc)
+             * @see org.directwebremoting.event.ScriptSessionBindingListener#valueBound(org.directwebremoting.event.ScriptSessionBindingEvent)
+             */
+            public void valueBound(ScriptSessionBindingEvent event)
+            {
+                bound.addAndGet(1);
+            }
+
+            /* (non-Javadoc)
+             * @see org.directwebremoting.event.ScriptSessionBindingListener#valueUnbound(org.directwebremoting.event.ScriptSessionBindingEvent)
+             */
+            public void valueUnbound(ScriptSessionBindingEvent event)
+            {
+                unbound.addAndGet(1);
+            }
+        };
+
+        Verify verify = new Verify();
+        verify.equals("Start, bound", bound.get(), 0);
+        verify.equals("Start, unbound", unbound.get(), 0);
+
+        session.setAttribute("test", listener);
+        verify.equals("After set, bound", bound.get(), 1);
+        verify.equals("After set, unbound", unbound.get(), 0);
+
+        session.setAttribute("irrelevant", 0);
+        verify.equals("After set, bound", bound.get(), 1);
+        verify.equals("After set, unbound", unbound.get(), 0);
+
+        session.removeAttribute("test");
+        verify.equals("After set, bound", bound.get(), 1);
+        verify.equals("After set, unbound", unbound.get(), 1);
+
+        return verify.getReport();
+    }
+    
+    public List<String> checkScriptSessionListener(final JavascriptFunction progress1, final JavascriptFunction progress2)
+    {
+        final ServerContext serverContext = ServerContextFactory.get();
+        final String testPage = serverContext.getContextPath() + "/checkSession.html";
+
+        Verify verify = new Verify();
+
+        final int createdBefore = TestScriptSessionListener.created;
+        final int createdBefore2 = Test2ScriptSessionListener.created;
+        final int destroyedBefore = TestScriptSessionListener.destroyed;
+        final int destroyedBefore2 = Test2ScriptSessionListener.destroyed;
+
+        // At least one test window is open ...
+        verify.isTrue("createdBefore > 0", createdBefore > 0);
+        verify.isTrue("createdBefore2 > 0", createdBefore2 > 0);
+
+        // Open a new window
+        Window.open(testPage, "checkSession");
+
+        // We'll fill these in in the first cron, and use them in the second
+        final AtomicInteger createdMid = new AtomicInteger();
+        final AtomicInteger createdMid2 = new AtomicInteger();
+        final AtomicInteger destroyedMid = new AtomicInteger();
+        final AtomicInteger destroyedMid2 = new AtomicInteger();
+
+        // Give it a second to open, check counters and close it
+        ScheduledThreadPoolExecutor executorService = serverContext.getContainer().getBean(ScheduledThreadPoolExecutor.class);
+        executorService.schedule(new Runnable()
+        {
+            public void run()
+            {
+                createdMid.set(TestScriptSessionListener.created);
+                createdMid2.set(Test2ScriptSessionListener.created);
+                destroyedMid.set(TestScriptSessionListener.destroyed);
+                destroyedMid2.set(Test2ScriptSessionListener.destroyed);
+
+                Verify verify1 = new Verify();
+                verify1.isTrue("createdMid > createdBefore", createdMid.intValue() > createdBefore);
+                verify1.isTrue("createdMid2 > createdBefore2", createdMid2.intValue() > createdBefore2);
+                verify1.equals("destroyedMid == destroyedBefore", destroyedMid.intValue(), destroyedBefore);
+                verify1.equals("destroyedMid2 == destroyedBefore2", destroyedMid2.intValue(), destroyedBefore2);
+
+                // Find it and close it
+                Browser.withPage(serverContext, testPage, new Runnable()
+                {
+                    public void run()
+                    {
+                        Window.close();
+                    }
+                });
+                progress1.executeAndClose(verify1.getReport());
+            }
+        }, 1, TimeUnit.SECONDS);
+
+        // Give it 2 seconds to open and be closed then check counters again
+        executorService.schedule(new Runnable()
+        {
+            public void run()
+            {
+                int createdAfter = TestScriptSessionListener.created;
+                int createdAfter2 = Test2ScriptSessionListener.created;
+                int destroyedAfter = TestScriptSessionListener.destroyed;
+                int destroyedAfter2 = Test2ScriptSessionListener.destroyed;
+
+                Verify verify2 = new Verify();
+                verify2.equals("createdAfter == createdMid", createdAfter, createdMid.intValue());
+                verify2.equals("createdAfter2 == createdMid2", createdAfter2, createdMid2.intValue());
+                verify2.isTrue("destroyedAfter > destroyedMid", destroyedAfter > destroyedMid.intValue());
+                verify2.isTrue("destroyedAfter2 > destroyedMid2", destroyedAfter2 > destroyedMid2.intValue());
+
+                progress2.executeAndClose(verify2.getReport());
+            }
+        }, 2, TimeUnit.SECONDS);
+
+        return verify.getReport();
+    }
+
+    public List<String> checkImHere()
+    {
+        final String attributeName = "attr:" + System.currentTimeMillis();
+        final Verify verify = new Verify();
+
+        ServerContext serverContext = ServerContextFactory.get();
+        WebContext webContext = WebContextFactory.get();
+        ScriptSession scriptSession = webContext.getScriptSession();
+        scriptSession.setAttribute(attributeName, true);
+
+        ScriptSessionFilter filter = new TestScriptSessionFilter(attributeName);
+        String page = webContext.getCurrentPage();
+
+        Browser.withPage(page, new FilterCheckSingle("withPage:Auto", attributeName, verify));
+        Browser.withAllSessions(new FilterCheckSingle("withAllSessions:Auto", attributeName, verify));
+        Browser.withCurrentPage(new FilterCheckSingle("withCurrentPage:Auto", attributeName, verify));
+        Browser.withSession(scriptSession.getId(), new FilterCheckSingle("withSession:Auto", attributeName, verify));
+
+        Browser.withPageFiltered(page, filter, new CheckSingle("withPageFiltered:Auto", verify));
+        Browser.withAllSessionsFiltered(filter, new CheckSingle("withAllSessionsFiltered:Auto", verify));
+        Browser.withCurrentPageFiltered(filter, new CheckSingle("withCurrentPageFiltered:Auto", verify));
+
+        log.debug("** Testing Browser against local context: " + serverContext);
+
+        Browser.withPage(serverContext, page, new FilterCheckSingle("withPage:Context", attributeName, verify));
+        Browser.withAllSessions(serverContext, new FilterCheckSingle("withAllSessions:Context", attributeName, verify));
+        Browser.withSession(serverContext, scriptSession.getId(), new FilterCheckSingle("withSession:Context", attributeName, verify));
+
+        Browser.withPageFiltered(serverContext, page, filter, new CheckSingle("withPageFiltered:Context", verify));
+        Browser.withAllSessionsFiltered(serverContext, filter, new CheckSingle("withAllSessionsFiltered:Context", verify));
+
+        Collection<ServerContext> contexts = StartupUtil.getAllServerContexts();
+        for (ServerContext otherContext : contexts)
+        {
+            if (otherContext.getServletConfig().equals(serverContext.getServletConfig()))
+            {
+                log.debug("** Skipping current config: " + otherContext);
+                continue;
+            }
+
+            log.debug("** Testing Browser against other context: " + otherContext);
+
+            Browser.withPage(otherContext, page, new FilterCheckNone("withPage:Other", attributeName, verify));
+            Browser.withAllSessions(otherContext, new FilterCheckNone("withAllSessions:Other", attributeName, verify));
+            Browser.withSession(otherContext, scriptSession.getId(), new FilterCheckNone("withSession:Other", attributeName, verify));
+
+            Browser.withPageFiltered(otherContext, page, filter, new CheckNone("withPageFiltered:Other", verify));
+        }
+
+        return verify.getReport();
+    }
+
+    protected class FilterCheckSingle implements Runnable
+    {
+        protected FilterCheckSingle(String context, String attributeName, Verify verify)
+        {
+            this.context = context;
+            this.attributeName = attributeName;
+            this.verify = verify;
+        }
+
+        /* (non-Javadoc)
+         * @see java.lang.Runnable#run()
+         */
+        public void run()
+        {
+            int found = 0;
+            Collection<ScriptSession> sessions = Browser.getTargetSessions();
+            for (ScriptSession session : sessions)
+            {
+                Object check = session.getAttribute(attributeName);
+                if (check != null && check.equals(Boolean.TRUE))
+                {
+                    found++;
+                }
+            }
+            verify.equals(context, found, 1);
+        }
+
+        private String context;
+        private String attributeName;
+        private Verify verify;
+    }
+
+    protected class TestScriptSessionFilter implements ScriptSessionFilter
+    {
+        public TestScriptSessionFilter(String attributeName)
+        {
+            this.attributeName = attributeName;
+        }
+
+        /* (non-Javadoc)
+         * @see org.directwebremoting.ScriptSessionFilter#match(org.directwebremoting.ScriptSession)
+         */
+        public boolean match(ScriptSession session)
+        {
+            Object check = session.getAttribute(attributeName);
+            return (check != null && check.equals(Boolean.TRUE));
+        }
+
+        private String attributeName;
+    }
+
+    protected class CheckSingle implements Runnable
+    {
+        protected CheckSingle(String context, Verify verify)
+        {
+            this.context = context;
+            this.verify = verify;
+        }
+
+        /* (non-Javadoc)
+         * @see java.lang.Runnable#run()
+         */
+        public void run()
+        {
+            Collection<ScriptSession> sessions = Browser.getTargetSessions();
+            verify.equals(context, sessions.size(), 1);
+        }
+
+        private String context;
+        private Verify verify;
+    }
+
+    protected class FilterCheckNone implements Runnable
+    {
+        protected FilterCheckNone(String context, String attributeName, Verify verify)
+        {
+            this.context = context;
+            this.attributeName = attributeName;
+            this.verify = verify;
+        }
+
+        /* (non-Javadoc)
+         * @see java.lang.Runnable#run()
+         */
+        public void run()
+        {
+            int found = 0;
+            Collection<ScriptSession> sessions = Browser.getTargetSessions();
+            for (ScriptSession session : sessions)
+            {
+                Object check = session.getAttribute(attributeName);
+                if (check != null && check.equals(Boolean.TRUE))
+                {
+                    found++;
+                }
+            }
+            verify.equals(context, found, 0);
+        }
+
+        private String context;
+        private String attributeName;
+        private Verify verify;
+    }
+
+    protected class CheckNone implements Runnable
+    {
+        protected CheckNone(String context, Verify verify)
+        {
+            this.context = context;
+            this.verify = verify;
+        }
+
+        /* (non-Javadoc)
+         * @see java.lang.Runnable#run()
+         */
+        public void run()
+        {
+            Collection<ScriptSession> sessions = Browser.getTargetSessions();
+            verify.equals(context, sessions.size(), 0);
+        }
+
+        private String context;
+        private Verify verify;
+    }
+
     /**
      * JUnit test runner!
      */
-    public String runAllJUnitTests(final JavascriptFunction noteProgressInScratch)
+    public List<String> runAllJUnitTests(final JavascriptFunction noteProgressInScratch)
     {
         ClasspathScanner scanner = new ClasspathScanner("org.directwebremoting", true);
         Set<String> classNames = scanner.getClasses();
@@ -681,7 +996,7 @@ public class Test
         {
             String className = it.next();
 
-            if (className.endsWith("SpringServletTest"))
+            if (className.endsWith("Test"))
             {
                 try
                 {
@@ -718,15 +1033,15 @@ public class Test
         Class<?>[] testArray = tests.toArray(new Class<?>[tests.size()]);
         Result results = core.run(testArray);
 
-        String reply = "";
+        Verify verify = new Verify();
         for (Failure failure : results.getFailures())
         {
-            reply += "Desc: " + failure.getDescription() +
-                     "Header: " + failure.getTestHeader() +
-                     "Message: " + failure.getMessage();
+            verify.fail("Desc: " + failure.getDescription() +
+                        "Header: " + failure.getTestHeader() +
+                        "Message: " + failure.getMessage());
         }
 
-        return reply;
+        return verify.getReport();
     }
 
     /**

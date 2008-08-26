@@ -4,6 +4,15 @@ createTestGroup("Remoting");
 /**
  *
  */
+function testRemotingGetPath() {
+  Test.getPath(createDelayed(function(data) {
+    verifyEqual("/dwr", data);
+  }));
+}
+
+/**
+ *
+ */
 function testRemotingScopeAndArgs() {
   var args = [ 1, "two" ];
   var scope = {

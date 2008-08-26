@@ -17,6 +17,7 @@ package org.testdwr.guice;
 
 import java.util.List;
 
+import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.extend.InboundContext;
 
 /**
@@ -25,6 +26,11 @@ import org.directwebremoting.extend.InboundContext;
  */
 public class GuiceTest
 {
+    public String getPath()
+    {
+        return WebContextFactory.get().getContextPath();
+    }
+
     public boolean areIdentical(List<?> a, List<?> b)
     {
         return a == b;

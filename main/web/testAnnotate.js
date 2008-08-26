@@ -1,6 +1,15 @@
 
 createTestGroup("Annotate");
 
+/**
+ *
+ */
+function testAnnotateGetPath() {
+  AnnotateTest.getPath(createDelayed(function(data) {
+    verifyEqual("/annotate", data);
+  }));
+}
+
 function testAnnotateByteParam() {
   runAnnotateComparisonTests([
     { code:"byteParam", data:-128 },

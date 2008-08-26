@@ -50,3 +50,13 @@ function testTestSuiteSyncAsync() {
     verifyTrue(true);
   })();
 }
+
+/**
+ * The ability to test the groups isn't working
+ */
+createTestGroup("Combination");
+function testCombinationMarshalling() {
+  dwr.engine.setAsync(true);
+  runTestGroup('Marshall');
+  dwr.engine.setAsync(false);
+}

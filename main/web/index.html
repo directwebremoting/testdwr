@@ -2,11 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <link type="text/css" href="dwrunit/index.css" rel="stylesheet" />
   <script type='text/javascript' src='./dwr/engine.js'> </script>
   <script type='text/javascript' src='./dwr/util.js'> </script>
   <script type='text/javascript' src='./dwr/interface/Test.js'> </script>
   <script type='text/javascript' src='./dwr/interface/Recorder.js'> </script>
-  <script type='text/javascript' src='index.js'> </script>
+  <script type='text/javascript' src='dwrunit/index.js'> </script>
   <script type='text/javascript' src='testVarious.js'> </script>
   <script type='text/javascript' src='testRemoting.js'> </script>
   <script type='text/javascript' src='testRemoteDwr.js'> </script>
@@ -33,18 +34,14 @@
   Some edge-case tests that don't need running routinely
   <script type='text/javascript' src='testAdvanced.js'> </script>
 
-  Nested testing is broken right now
-  <script type='text/javascript' src='testCombination.js'> </script>
-
   This is a cool idea, but running junit inside dwr could be fragile
-  We should re-enable this when the junit test are passing to see if it works
+  We should re-enable this when the junit tests can be copied from the dwr project
   <script type='text/javascript' src='testJUnit.js'> </script>
   -->
-  <link type="text/css" href="index.css" rel="stylesheet" />
   <title>DWR - Various Tests</title>
 </head>
 
-<body onload="init();">
+<body>
 <div id="page-title">[
   <a href="http://getahead.ltd.uk/dwr/">DWR Website</a> |
   <a href="..">Web Application Index</a>
@@ -53,8 +50,7 @@
 <div id="settingsPanel">
   <h3>Settings</h3>
   <label for="delay" title="The delay between starting tests.">Inter-test delay:</label>
-  <input id="delay" value="0" size="3"/> ms
-  <hr/>
+  <input id="delay" value="0" size="3"/> ms<hr/>
   Test Report: <a href="#" onclick="_toggleDisplay('reportHelp');"><strong>?</strong></a>
   <br/>
   <div id="reportHelp" style="display:none;">
@@ -62,10 +58,8 @@
     to enable aggregation of several test runs on separate browsers, servers,
     jvms, OSs, etc.</p>
   </div>
-  <!--<input type="button" onclick="" value="Send"/>-->
   <label for="autoSend" title="Do we automatically send the results to the server on completion?">Auto-send:</label>
-  <input id="autoSend" type="checkbox"/>
-  <br/>
+  <input id="autoSend" type="checkbox"/><br/>
   <div id="reportResult"></div>
 </div>
 
@@ -83,8 +77,7 @@
       <th>Actions</th>
     </tr>
   </thead>
-  <tbody id="testSummary">
-  </tbody>
+  <tbody id="testSummary"> </tbody>
 </table>
 
 <br/>
@@ -104,14 +97,12 @@
           <th>Scratch Space</th>
         </tr>
       </thead>
-      <tbody id="groupTests">
-      </tbody>
+      <tbody id="groupTests"> </tbody>
     </table>
   </div>
 </div>
 
-<div id="output">
-</div>
+<div id="output"> </div>
 
 </body>
 </html>

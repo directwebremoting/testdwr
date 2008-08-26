@@ -1,6 +1,15 @@
 
 createTestGroup("SpringServlet");
 
+/**
+ *
+ */
+function testSpringServletGetPath() {
+  SpringServletTest.getPath(createDelayed(function(data) {
+    verifyEqual("/springservlet", data);
+  }));
+}
+
 function testSpringServletByteParam() {
   runSpringServletComparisonTests([
     { code:"byteParam", data:-128 },
