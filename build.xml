@@ -1,5 +1,12 @@
 <?xml version="1.0"?>
-<project name="testdwr" default="test">
+<project name="testdwr" default="package">
+
+  <!-- ===================================================================== -->
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+    <classpath>
+      <fileset dir="${basedir}/etc/ant" includes="**/*"/>
+    </classpath>
+  </taskdef>
 
   <!-- ===================================================================== -->
   <target name="prepare" description="">
@@ -15,41 +22,6 @@
   </target>
 
   <!-- ===================================================================== -->
-  <target name="test" depends="update-dwr, build-testdwr" description="Run the full test suite">
-    <test-server name="apache-tomcat-6.0.16"/>
-  </target>
-
-  <!-- ===================================================================== -->
-  <macrodef name="test-server">
-    <attribute name="name"/>
-    <sequential>
-      <!-- Install the latest test war file -->
-      <copy file="${dwr.home}/target/ant/testdwr.war" todir="${servers}/@{name}/webapps"/>
-      <parallel>
-        <!-- Start the 2 servers -->
-        <selenium-proxy-start/>
-        <server-start name="@{name}"/>
-        <sequential>
-          <waitfor maxwait="2" maxwaitunit="minute" checkevery="100" checkeveryunit="millisecond">
-            <http url="http://localhost:4444/selenium-server/driver/?cmd=testComplete"/>
-          </waitfor>
-          <echo taskname="waitfor" message="Proxy server contacted on port 4444" />
-          <waitfor maxwait="2" maxwaitunit="minute" checkevery="100" checkeveryunit="millisecond">
-            <http url="http://localhost:8080/testdwr/test/dhtml.html"/>
-          </waitfor>
-          <echo taskname="waitfor" message="Web server contacted on port 8080" />
-          <!-- Run the actual tests -->
-          <!--<junit-dwr/>-->
-          <testng-dwr/>
-          <!-- Stop the servers -->
-          <server-stop name="@{name}"/>
-          <selenium-proxy-stop/>
-        </sequential>
-      </parallel>
-    </sequential>
-  </macrodef>
-
-  <!-- ===================================================================== -->
   <target name="clean" depends="prepare" description="Set the state of the filesystem back to that of a clean checkout">
     <delete dir="${servers}"/>
   </target>
@@ -61,94 +33,37 @@
     <copy file="${dwr.home}/target/ant/junitdwr.jar" todir="${basedir}/main/web/WEB-INF/lib"/>
   </target>
 
-  <!-- ===================================================================== -->
-  <target name="build-testdwr" depends="prepare" description="Build our test suites">
-    <mkdir dir="${target}/classes/"/>
-    <javac srcdir="${basedir}/main/java" destdir="${target}/classes" debug="on" classpathref="cp"/>
+  <!--=======================================================================-->
+  <target name="package" depends="prepare" description="Create packaged outputs: testdwr.war">
+    <!-- Rezip the demo war file if it's contents have changed -->
+    <mkdir dir="${target}"/>
+    <if-not-uptodate destfile="${target}/testdwr.war" sourcedir="${basedir}/main/web">
+      <action>
+        <zip destfile="${target}/testdwr.war" basedir="${basedir}/main/web"/>
+      </action>
+    </if-not-uptodate>
   </target>
 
-  <!-- ===================================================================== -->
-  <macrodef name="junit-dwr">
+  <!--=======================================================================-->
+  <macrodef name="if-not-uptodate">
+    <!-- If you change this, remember the copy in dwr/build.xml -->
+    <attribute name="destfile"/>
+    <attribute name="sourcedir"/>
+    <element name="action"/>
     <sequential>
-      <mkdir dir="${target}/junit"/>
-      <junit printsummary="yes" haltonfailure="no">
-        <classpath refid="cp"/>
-        <batchtest todir="${target}/junit">
-          <formatter type="xml"/>
-          <fileset dir="${basedir}/main/java">
-            <include name="**/*Test*.java"/>
-            <exclude name="**/AllTests.java"/>
-          </fileset>
-        </batchtest>
-      </junit>
-    </sequential>
-  </macrodef>
-
-  <!-- ===================================================================== -->
-  <target name="install-servers" depends="prepare" description="Download Free App Servers">
-    <install-server name="apache-tomcat-6.0.16"/>
-    <install-server name="apache-tomcat-5.5.26"/>
-    <install-server name="jetty-6.1.9"/>
-  </target>
-
-  <!-- ===================================================================== -->
-  <target name="download-servers" description="Download Free App Servers">
-    <!--
-    You shouldn't need to do this, because we're storing them in SVN, but it
-    might be a decent way to document important servers to test with
-    -->
-    <get dest="${downloads}/apache-tomcat-6.0.16.zip" src="http://www.apache.org/dist/tomcat/tomcat-6/v6.0.16/bin/apache-tomcat-6.0.16.zip"/>
-    <get dest="${downloads}/apache-tomcat-5.5.26.zip" src="http://www.apache.org/dist/tomcat/tomcat-5/v5.5.26/bin/apache-tomcat-5.5.26.zip"/>
-    <get dest="${downloads}/jetty-6.1.9.zip" src="http://dist.codehaus.org/jetty/jetty-6.1.9/jetty-6.1.9.zip"/>
-  </target>
-
-  <!-- ===================================================================== -->
-  <macrodef name="install-server">
-    <attribute name="name"/>
-    <sequential>
-      <mkdir dir="${servers}"/>
-      <unzip dest="${servers}" src="${downloads}/@{name}.zip"/>
-      <chmod perm="755">
-        <fileset dir="${servers}/@{name}/bin" includes="*.sh"/>
-      </chmod>
-    </sequential>
-  </macrodef>
-
-  <!-- ===================================================================== -->
-  <macrodef name="selenium-proxy-start" description="Launches the Selenium Proxy Server">
-    <sequential>
-      <echo>Selenium Server Starting</echo>
-      <java jar="${basedir}/main/selenium-server/selenium-server.jar" spawn="true" fork="true" />
-    </sequential>
-  </macrodef>
-
-  <!-- ===================================================================== -->
-  <macrodef name="selenium-proxy-stop" description="Launches the Selenium Proxy Server">
-    <sequential>
-      <echo>Selenium Server Stopping</echo>
-      <get taskname="selenium-shutdown" src="http://localhost:4444/selenium-server/driver/?cmd=shutDown"
-          dest="${basedir}/target/shutdown-ignore.txt" ignoreerrors="true"/>
-    </sequential>
-  </macrodef>
-
-  <!-- ===================================================================== -->
-  <macrodef name="server-start">
-    <attribute name="name"/>
-    <sequential>
-      <java jar="${servers}/@{name}/bin/bootstrap.jar" fork="true">
-        <jvmarg value="-Dcatalina.home=${servers}/@{name}"/>
-      </java>
-    </sequential>
-  </macrodef>
-
-  <!-- ===================================================================== -->
-  <macrodef name="server-stop">
-    <attribute name="name"/>
-    <sequential>
-      <java jar="${servers}/@{name}/bin/bootstrap.jar" fork="true">
-        <jvmarg value="-Dcatalina.home=${servers}/@{name}"/>
-        <arg line="stop"/>
-      </java>
+      <if>
+        <or>
+          <not><available file="@{destfile}"/></not>
+          <not>
+            <uptodate targetfile="@{destfile}">
+              <srcfiles dir="@{sourcedir}" includes="**/*"/>
+            </uptodate>
+          </not>
+        </or>
+        <then>
+          <action/>
+        </then>      
+      </if>
     </sequential>
   </macrodef>
 
