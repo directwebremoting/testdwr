@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.directwebremoting.util.LocalUtil;
+import org.directwebremoting.util.CopyUtils;
 
 public class CustomResponseServlet extends HttpServlet
 {
@@ -116,11 +116,14 @@ public class CustomResponseServlet extends HttpServlet
             {
                 response.setContentType("text/html");
                 ServletOutputStream out = response.getOutputStream();
-                LocalUtil.readFully(in, out);
+                CopyUtils.copy(in, out);
             }
         }
     }
 
+    /**
+     * 
+     */
     private static final String RESOURCE_HELP = "/org/testdwr/custom/index.html";
 
     /**
