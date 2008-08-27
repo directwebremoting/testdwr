@@ -66,6 +66,15 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
+import org.testdwr.convert.AbstractBase;
+import org.testdwr.convert.ConcreteBBase;
+import org.testdwr.convert.ConcreteCBase;
+import org.testdwr.convert.IFace;
+import org.testdwr.convert.MyFancyException;
+import org.testdwr.convert.MyFancyExceptionInPackage;
+import org.testdwr.convert.MyUnmappedException;
+import org.testdwr.convert.OnePackage;
+import org.testdwr.convert.TwoPackages;
 import org.testdwr.event.Test2ScriptSessionListener;
 import org.testdwr.event.TestScriptSessionListener;
 import org.xml.sax.SAXParseException;
@@ -657,6 +666,56 @@ public class Test
     public String error(InboundContext cx)
     {
         return "You should not see this: " + cx;
+    }
+
+    public AbstractBase[] downloadMapped()
+    {
+        return new AbstractBase[] { new ConcreteBBase(), new ConcreteCBase() };
+    }
+
+    public String uploadMapped(AbstractBase abstractBase)
+    {
+        if (abstractBase == null)
+        {
+            return "null";
+        }
+        return abstractBase.getClass().getName();
+    }
+
+    public void throwMapped() throws MyFancyException
+    {
+        throw new MyFancyException("fancy");
+    }
+
+    public void throwUnmapped() throws MyUnmappedException
+    {
+        throw new MyUnmappedException("unmapped");
+    }
+
+    public String uploadInterface(IFace impl)
+    {
+        if (impl == null)
+        {
+            return "null";
+        }
+        return impl.getClass().getName();
+    }
+
+    public OnePackage package1(OnePackage obj)
+    {
+        obj.i++;
+        return obj;
+    }
+
+    public TwoPackages package2(TwoPackages obj)
+    {
+        obj.i++;
+        return obj;
+    }
+
+    public void packagedException() throws MyFancyExceptionInPackage
+    {
+        throw new MyFancyExceptionInPackage("fancy");
     }
 
     public String serverChecks()

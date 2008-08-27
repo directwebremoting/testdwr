@@ -483,3 +483,128 @@ function runComparisonTests(compares) {
     });
   }
 }
+
+// Manual setup of inheritance (could be implemented in the interface file instead)
+ConcreteBBase.prototype = new AbstractBase();
+ConcreteBBase.prototype.constructor = ConcreteBBase;
+ConcreteCBase.prototype = new AbstractBase();
+ConcreteCBase.prototype.constructor = ConcreteCBase;
+
+/**
+ *
+ */
+function testMarshallDownloadMapped() {
+  Test.downloadMapped(createDelayed(function(arr) {
+    var b = arr[0];
+    verifyTrue(b instanceof AbstractBase, "b instanceof AbstractBase");
+    verifyTrue(b instanceof ConcreteBBase, "b instanceof ConcreteBBase");
+    verifyEqual(b.fieldB, true);
+    verifyUndefined(b.fieldC);
+
+    var c = arr[1];
+    verifyTrue(c instanceof AbstractBase, "c instanceof AbstractBase");
+    verifyTrue(c instanceof ConcreteCBase, "c instanceof ConcreteCBase");
+    verifyUndefined(c.fieldB);
+    verifyEqual(c.fieldC, 3.14);
+  }));
+}
+
+/**
+ *
+ */
+function testMarshallUploadMapped() {
+  Test.uploadMapped(new ConcreteBBase(), createDelayed(function(reply) {
+    verifyEqual(reply, "org.testdwr.convert.ConcreteBBase");
+  }));
+  Test.uploadMapped(new ConcreteCBase(), createDelayed(function(reply) {
+    verifyEqual(reply, "org.testdwr.convert.ConcreteCBase");
+  }));
+  Test.uploadMapped(null, createDelayed(function(reply) {
+    verifyEqual(reply, "null");
+  }));
+}
+
+/**
+ * Receive a mapped exception from server
+ */
+function testMarshallThrowMapped() {
+  Test.throwMapped({
+    callback:createDelayedError(),
+    exceptionHandler:createDelayed(function(message, ex) {
+      verifyTrue(ex instanceof MyFancyException);
+      verifyEqual(message, "fancy");
+      verifyEqual(message, ex.message);
+      verifyEqual(ex.javaClassName, "org.testdwr.convert.MyFancyException");
+    })
+  });
+}
+
+/**
+ *
+ */
+function testMarshallThrowUnmapped() {
+  Test.throwUnmapped({
+    callback:createDelayedError(),
+    exceptionHandler:createDelayed(function(message, ex) {
+      verifyFalse(ex instanceof MyFancyException);
+      verifyNotEqual(message, "unmapped");
+      verifyEqual(message, ex.message);
+      verifyEqual(ex.javaClassName, "org.testdwr.convert.MyFancyException");
+    })
+  });
+}
+
+/**
+ *
+ */
+function testMarshallUploadInterface() {
+  var c = new ConcreteIFace();
+  c.i = 42;
+  Test.uploadInterface(c, createDelayed(function(reply) {
+    verifyEqual(reply, "org.testdwr.convert.ConcreteIFace");
+  }));
+
+  Test.uploadInterface(null, createDelayed(function(reply) {
+    verifyEqual(reply, "null");
+  }));
+}
+
+/**
+ *
+ */
+function testMarshallPackage1() {
+  var obj = new pkg1.OnePackage();
+  obj.i = 42;
+  obj.extraProperty = "THIS TEXT SHOULDN'T BE MARSHALLED TO SERVER";
+
+  Test.package1(obj, createDelayed(function(retval) {
+    verifyEqual(retval.i, 43);
+  }));
+}
+
+/**
+ *
+ */
+function testMarshallPackage2() {
+  var obj = new pkg1.pkg2.TwoPackages();
+  obj.i = 42;
+
+  Test.package2(obj, createDelayed(function(retval) {
+    verifyEqual(retval.i, 43);
+  }));
+}
+
+/**
+ *
+ */
+function testMarshallPackagedEx() {
+  Test.packagedException({
+    callback:createDelayedError(),
+    exceptionHandler: createDelayed(function(message, ex) {
+      verifyFalse(ex instanceof MyFancyException);
+      verifyNotEqual(message, "fancy");
+      verifyEqual(message, ex.message);
+      verifyEqual(ex.javaClassName, "pkg1.MyFancyExceptionInPackage");
+    })
+  });
+}

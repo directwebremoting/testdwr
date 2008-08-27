@@ -477,8 +477,7 @@ function useHtml(html) {
  *
  */
 function fail(message) {
-  _record(currentTest, "fail", message);
-  throw new Error();
+  _recordThrow("fail", arguments);
 }
 
 /**
@@ -486,8 +485,7 @@ function fail(message) {
  */
 function assertTrue(value) {
   if (!value) {
-    _record(currentTest, "assertTrue", value);
-    throw new Error();
+    _recordThrow("assertTrue", arguments);
   }
 }
 
@@ -496,7 +494,7 @@ function assertTrue(value) {
  */
 function verifyTrue(value) {
   if (!value) {
-    _recordTrace(currentTest, "verifyTrue", value);
+    _recordTrace("verifyTrue", arguments);
   }
 }
 
@@ -505,8 +503,7 @@ function verifyTrue(value) {
  */
 function assertFalse(value) {
   if (value) {
-    _record(currentTest, "assertFalse", value);
-    throw new Error();
+    _recordThrow("assertFalse", arguments);
   }
 }
 
@@ -515,7 +512,7 @@ function assertFalse(value) {
  */
 function verifyFalse(value) {
   if (value) {
-    _recordTrace(currentTest, "verifyFalse", value);
+    _recordTrace("verifyFalse", arguments);
   }
 }
 
@@ -524,8 +521,7 @@ function verifyFalse(value) {
  */
 function assertNull(value) {
   if (value !== null) {
-    _record(currentTest, "assertNull", value);
-    throw new Error();
+    _recordThrow("assertNull", arguments);
   }
 }
 
@@ -534,7 +530,7 @@ function assertNull(value) {
  */
 function verifyNull(value) {
   if (value !== null) {
-    _recordTrace(currentTest, "verifyNull", value);
+    _recordTrace("verifyNull", arguments);
   }
 }
 
@@ -543,8 +539,7 @@ function verifyNull(value) {
  */
 function assertNotNull(value) {
   if (value === null) {
-    _record(currentTest, "assertNotNull", value);
-    throw new Error();
+    _recordThrow("assertNotNull", arguments);
   }
 }
 
@@ -553,7 +548,7 @@ function assertNotNull(value) {
  */
 function verifyNotNull(value) {
   if (value === null) {
-    _recordTrace(currentTest, "verifyNotNull", value);
+    _recordTrace("verifyNotNull", arguments);
   }
 }
 
@@ -562,8 +557,7 @@ function verifyNotNull(value) {
  */
 function assertUndefined(value) {
   if (value !== undefined) {
-    _record(currentTest, "assertUndefined", value);
-    throw new Error();
+    _recordThrow("assertUndefined", arguments);
   }
 }
 
@@ -572,7 +566,7 @@ function assertUndefined(value) {
  */
 function verifyUndefined(value) {
   if (value !== undefined) {
-    _recordTrace(currentTest, "verifyUndefined", value);
+    _recordTrace("verifyUndefined", arguments);
   }
 }
 
@@ -581,8 +575,7 @@ function verifyUndefined(value) {
  */
 function assertNotUndefined(value) {
   if (value === undefined) {
-    _record(currentTest, "assertNotUndefined", value);
-    throw new Error();
+    _recordThrow("assertNotUndefined", arguments);
   }
 }
 
@@ -591,7 +584,43 @@ function assertNotUndefined(value) {
  */
 function verifyNotUndefined(value) {
   if (value === undefined) {
-    _recordTrace(currentTest, "verifyNotUndefined", value);
+    _recordTrace("verifyNotUndefined", arguments);
+  }
+}
+
+/**
+ *
+ */
+function assertUndefined(value) {
+  if (value !== undefined) {
+    _recordThrow("assertUndefined", arguments);
+  }
+}
+
+/**
+ *
+ */
+function verifyUndefined(value) {
+  if (value !== undefined) {
+    _recordTrace("verifyUndefined", arguments);
+  }
+}
+
+/**
+ *
+ */
+function assertNotUndefined(value) {
+  if (value === undefined) {
+    _recordThrow("assertNotUndefined", arguments);
+  }
+}
+
+/**
+ *
+ */
+function verifyNotUndefined(value) {
+  if (value === undefined) {
+    _recordTrace("verifyNotUndefined", arguments);
   }
 }
 
@@ -600,8 +629,7 @@ function verifyNotUndefined(value) {
  */
 function assertNaN(value) {
   if (value !== NaN) {
-    _record(currentTest, "assertNaN", value);
-    throw new Error();
+    _recordThrow("assertNaN", arguments);
   }
 }
 
@@ -610,7 +638,7 @@ function assertNaN(value) {
  */
 function verifyNaN(value) {
   if (value !== NaN) {
-    _recordTrace(currentTest, "verifyNaN", value);
+    _recordTrace("verifyNaN", arguments);
   }
 }
 
@@ -619,8 +647,7 @@ function verifyNaN(value) {
  */
 function assertNotNaN(value) {
   if (value === NaN) {
-    _record(currentTest, "assertNotNaN", value);
-    throw new Error();
+    _recordThrow("assertNotNaN", arguments);
   }
 }
 
@@ -629,7 +656,7 @@ function assertNotNaN(value) {
  */
 function verifyNotNaN(value) {
   if (value === NaN) {
-    _recordTrace(currentTest, "verifyNotNaN", value);
+    _recordTrace("verifyNotNaN", arguments);
   }
 }
 
@@ -638,8 +665,7 @@ function verifyNotNaN(value) {
  */
 function assertEqual(value1, value2) {
   if (!_isEqual(value1, value2)) {
-    _record(currentTest, "assertEqual", value);
-    throw new Error();
+    _recordThrow("assertEqual", arguments);
   }
 }
 
@@ -648,7 +674,7 @@ function assertEqual(value1, value2) {
  */
 function verifyEqual(value1, value2) {
   if (!_isEqual(value1, value2)) {
-    _recordTrace(currentTest, "verifyEqual", value1, value2);
+    _recordTrace("verifyEqual", arguments);
   }
 }
 
@@ -657,8 +683,7 @@ function verifyEqual(value1, value2) {
  */
 function assertNotEqual(value1, value2) {
   if (_isEqual(value1, value2)) {
-    _record(currentTest, "assertNotEqual", value1, value2);
-    throw new Error();
+    _recordThrow("assertNotEqual", arguments);
   }
 }
 
@@ -666,8 +691,8 @@ function assertNotEqual(value1, value2) {
  *
  */
 function verifyNotEqual(value1, value2) {
-  if (_isEqual(value1, value2)) {
-    _recordTrace(currentTest, "verifyNotEqual", value1, value2);
+  if (!_isEqual(value1, value2)) {
+    _recordTrace("verifyNotEqual", arguments);
   }
 }
 
@@ -682,8 +707,16 @@ function _recordTrace() {
 /**
  *
  */
+function _recordThrow() {
+  _record.apply(this, arguments);
+  throw new Error();
+}
+
+/**
+ *
+ */
 function success(message) {
-  _appendMessage(currentTest, message);
+  _appendMessage(message);
 }
 
 /**
@@ -691,17 +724,16 @@ function success(message) {
  */
 function _record() {
   console.error(arguments);
-  var test = arguments[0];
-  _setStatus(test, status.fail);
-  var message = arguments[1] + "(";
-  for (var i = 2; i < arguments.length; i++) {
-    if (i != 2) {
+  _setStatus(currentTest, status.fail);
+  var message = arguments[0] + "(";
+  for (var i = 0; i < arguments[1].length; i++) {
+    if (i != 0) {
       message += ", ";
     }
-    message += arguments[i];
+    message += arguments[1][i];
   }
   message += ")";
-  _appendMessage(test, message);
+  _appendMessage(currentTest, message);
 }
 
 /**
