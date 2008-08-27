@@ -1,8 +1,14 @@
 <?xml version="1.0"?>
 <project name="testdwr" default="test">
 
+  <path id="cp">
+    <fileset dir="${basedir}/main/lib" includes="**/*.jar"/>
+    <pathelement location="${target}/classes"/>
+  </path>
+
   <!-- ===================================================================== -->
-  <target name="test" depends="update-dwr, build-testdwr" description="Run the full test suite">
+  <!-- depends="update-dwr" -->
+  <target name="test" depends="build-testdwr" description="Run the full test suite">
     <test-server name="apache-tomcat-6.0.16"/>
   </target>
 
@@ -37,7 +43,8 @@
   </macrodef>
 
   <!-- ===================================================================== -->
-  <target name="build-testdwr" depends="prepare" description="Build our test suites">
+  <!-- depends="prepare" -->
+  <target name="build-testdwr" description="Build our test suites">
     <mkdir dir="${target}/classes/"/>
     <javac srcdir="${basedir}/main/java" destdir="${target}/classes" debug="on" classpathref="cp"/>
   </target>
@@ -60,7 +67,8 @@
   </macrodef>
 
   <!-- ===================================================================== -->
-  <target name="install-servers" depends="prepare" description="Download Free App Servers">
+  <!-- depends="prepare" -->
+  <target name="install-servers" description="Download Free App Servers">
     <install-server name="apache-tomcat-6.0.16"/>
     <install-server name="apache-tomcat-5.5.26"/>
     <install-server name="jetty-6.1.9"/>
