@@ -4,7 +4,7 @@ createTestGroup("JUnit");
 /**
  *
  */
-function testJUnit() {
+function testJUnitAll() {
   var scratch = currentTest.scratch;
   var noteProgressInScratch = function(passed, failed, total) {
     dwr.util.setValue(scratch, "Pass:" + passed + " Fail:" + failed + " Total:" + total);

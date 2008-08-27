@@ -56,8 +56,9 @@
 
   <!-- ===================================================================== -->
   <target name="update-dwr" depends="prepare" description="Build DWR, assuming it is next door">
-    <ant dir="${dwr.home}" target="war" inheritall="false" inheritrefs="false"/>
+    <ant dir="${dwr.home}" target="test" inheritall="false" inheritrefs="false"/>
     <copy file="${dwr.home}/target/ant/dwr.jar" todir="${basedir}/main/web/WEB-INF/lib"/>
+    <copy file="${dwr.home}/target/ant/junitdwr.jar" todir="${basedir}/main/web/WEB-INF/lib"/>
   </target>
 
   <!-- ===================================================================== -->
