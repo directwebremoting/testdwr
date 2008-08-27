@@ -7,23 +7,14 @@
       <fileset dir="${basedir}/etc/ant" includes="**/*"/>
     </classpath>
   </taskdef>
+  <property name="dwr.home" value="${basedir}/../dwr"/>
+  <property name="downloads" value="${basedir}/downloads"/>
+  <property name="servers" value="${basedir}/servers"/>
+  <property name="target" value="${basedir}/target/ant"/>
 
   <!-- ===================================================================== -->
   <target name="prepare" description="">
     <tstamp/>
-    <property name="dwr.home" value="${basedir}/../dwr"/>
-    <property name="downloads" value="${basedir}/downloads"/>
-    <property name="servers" value="${basedir}/servers"/>
-    <property name="target" value="${basedir}/target/ant"/>
-    <path id="cp">
-      <fileset dir="${basedir}/main/lib" includes="**/*.jar"/>
-      <pathelement location="${target}/classes"/>
-    </path>
-  </target>
-
-  <!-- ===================================================================== -->
-  <target name="clean" depends="prepare" description="Set the state of the filesystem back to that of a clean checkout">
-    <delete dir="${servers}"/>
   </target>
 
   <!-- ===================================================================== -->
@@ -36,12 +27,22 @@
   <!--=======================================================================-->
   <target name="package" depends="prepare" description="Create packaged outputs: testdwr.war">
     <!-- Rezip the demo war file if it's contents have changed -->
+    <javac debug="on" destdir="${basedir}/main/web/WEB-INF/classes" srcdir="${basedir}/main/java" includes="**/*.java" excludes="**/package-info.java">
+      <classpath>
+        <fileset dir="${basedir}/main/web/WEB-INF/lib" includes="**/*.jar"/>
+      </classpath>
+    </javac>
     <mkdir dir="${target}"/>
     <if-not-uptodate destfile="${target}/testdwr.war" sourcedir="${basedir}/main/web">
       <action>
         <zip destfile="${target}/testdwr.war" basedir="${basedir}/main/web"/>
       </action>
     </if-not-uptodate>
+  </target>
+
+  <!-- ===================================================================== -->
+  <target name="clean" depends="prepare" description="Set the state of the filesystem back to that of a clean checkout">
+    <delete dir="${servers}"/>
   </target>
 
   <!--=======================================================================-->
