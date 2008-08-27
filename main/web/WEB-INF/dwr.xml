@@ -11,21 +11,34 @@
     <create creator="new" javascript="Test" scope="application">
       <param name="class" value="org.testdwr.plain.Test"/>
     </create>
-    <convert converter="bean" match="org.testdwr.plain.TestBean"/>
-    <convert converter="bean" javascript="ObjB" match="org.testdwr.plain.ObjB"/>
-    <convert converter="object" javascript="ObjA" match="org.testdwr.plain.ObjA">
+
+    <convert match="org.testdwr.plain.TestBean" converter="bean"/>
+    <convert match="org.testdwr.plain.ObjB" converter="bean" javascript="ObjB"/>
+    <convert match="org.testdwr.plain.ObjA" converter="object" javascript="ObjA">
       <param name="force" value="true"/>
     </convert>
 
-    <!-- test -->
+    <convert match="org.testdwr.convert.AbstractBase" converter="object" javascript="AbstractBase"/>
+    <convert match="org.testdwr.convert.ConcreteBBase" converter="object" javascript="ConcreteBBase"/>
+    <convert match="org.testdwr.convert.ConcreteCBase" converter="object" javascript="ConcreteCBase"/>
+    <convert match="org.testdwr.convert.IFace" converter="bean" javascript="IFace"/>
+    <convert match="org.testdwr.convert.ConcreteIFace" converter="bean" javascript="ConcreteIFace"/>
+
+    <convert match="org.testdwr.convert.OnePackage" converter="object" javascript="pkg1.OnePackage"/>
+    <convert match="org.testdwr.convert.TwoPackages" converter="object" javascript="pkg1.pkg2.TwoPackages"/>
+
+    <convert match="org.testdwr.convert.MyFancyException" converter="exception" javascript="MyFancyException"/>
+    <convert match="org.testdwr.convert.MyFancyExceptionInPackage" converter="exception" javascript="pkg1.MyFancyExceptionInPackage"/>
+
+    <convert match="java.lang.NullPointerException" converter="exception"/>
+    <convert match="org.xml.sax.SAXParseException" converter="exception"/>
+    <convert match="java.lang.StackTraceElement" converter="bean"/>
+
+    <!-- recording results -->
     <create creator="new" javascript="Recorder" scope="application">
       <param name="class" value="org.testdwr.plain.Recorder"/>
     </create>
     <convert converter="bean" match="org.testdwr.plain.TestResult"/>
-
-    <convert converter="exception" match="java.lang.NullPointerException"/>
-    <convert converter="exception" match="org.xml.sax.SAXParseException"/>
-    <convert converter="bean" match="java.lang.StackTraceElement"/>
 
   </allow>
 
