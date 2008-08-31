@@ -58,24 +58,29 @@ function testErrorLevels() {
   var oldWarningHandler = dwr.engine._warningHandler;
   var oldErrorHandler = dwr.engine._errorHandler;
 
-  // Check bounce to global error handler
-  dwr.engine.setWarningHandler(createDelayedError());
+  // Check handle by global error handler
+  dwr.engine.setWarningHandler(createDelayedError("error gone to global-warning not global-error"));
   dwr.engine.setErrorHandler(createDelayed());
-  Test.throwNPE();
+  Test.throwNPE("handle by global-error");
 
-  // Check bouncing to batch handler
-  dwr.engine.setErrorHandler(createDelayedError());
+  // Check handle by batch handler
+  dwr.engine.setErrorHandler(createDelayedError("error gone to global-error not batch-error"));
+  dwr.engine.setWarningHandler(createDelayedError("error gone to global-warning not batch-error"));
   dwr.engine.beginBatch();
-  Test.throwNPE();
+  Test.throwNPE("handle by batch-error");
   dwr.engine.endBatch({
+    callback:function() {},
     errorHandler:createDelayed(),
-    warningHandler:createDelayedError()
+    warningHandler:createDelayedError("error gone to batch-warning not batch-error")
   });
 
-  // Check bouncing to call handler
-  Test.throwNPE({
+  // Check handle by call handler
+  dwr.engine.setErrorHandler(createDelayedError("error gone to global-error not call-error"));
+  dwr.engine.setWarningHandler(createDelayedError("error gone to global-warning not call-error"));
+  Test.throwNPE("handle by call", {
+    callback:function() {},
     errorHandler:createDelayed(),
-    warningHandler:createDelayedError()
+    warningHandler:createDelayedError("error gone to call-warning not call-error")
   });
 
   // Undo setup

@@ -82,12 +82,14 @@ function displayTestTable() {
     dwr.util.addRows("groupTests" + groupName, testNames, [
       function num(testName, options) { return options.rowNum + 1; },
       function name(testName, options) {
+        var name;
         if (groupName == "Global") {
-          return _addSpaces(testName.substring(4));
+          name = _addSpaces(testName.substring(4));
         }
         else {
-          return _addSpaces(testName.substring(4 + groupName.length));
+          name = _addSpaces(testName.substring(4 + groupName.length));
         }
+        return "<div class='hover' title='" + dwr.util.escapeHtml(tests[testName].func.toString()) + "'>" + name + "</div>";
       },
       function async(testName, options) {
         return "<span id='asyncReturn" + testName + "'>0</span>/<span id='asyncSent" + testName + "'>0</span>";
@@ -407,7 +409,7 @@ function createDelayed(func, scope) {
     var isSync = (currentTest != null);
     currentTest = delayedTest;
     var obj = scope || window;
-    if (func) {
+    if (typeof func == "function") {
       try {
         func.apply(obj, arguments);
       }
@@ -441,10 +443,16 @@ function createDelayedError(func, scope) {
   return function() {
     currentTest = delayedTest;
     _setStatus(currentTest, status.fail);
-    _record(currentTest, "Executing delayed error handler");
     var obj = scope || window;
-    if (func) {
+    if (typeof func == "function") {
+      _record(currentTest, "Executing delayed error handler");
       func.apply(obj, arguments);
+    }
+    else if (typeof func == "string") {
+      _record(currentTest, "Executing delayed error handler: " + func);
+    }
+    else {
+      _record(currentTest, "Executing delayed error handler");
     }
     currentTest = null;
     updateTestResults(false);
@@ -726,11 +734,15 @@ function _record() {
   console.error(arguments);
   _setStatus(currentTest, status.fail);
   var message = arguments[0] + "(";
-  for (var i = 0; i < arguments[1].length; i++) {
-    if (i != 0) {
-      message += ", ";
+  var data = arguments[1];
+  if (typeof data == "string") {
+    message += data;
+  }
+  else {
+    for (var i = 0; i < data.length; i++) {
+      if (i != 0) message += ", ";
+      message += data[i];
     }
-    message += arguments[1][i];
   }
   message += ")";
   _appendMessage(currentTest, message);

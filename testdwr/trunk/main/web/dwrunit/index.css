@@ -74,3 +74,5 @@ pre { background:#f4f4f4; padding:10px; }
 #settingsPanel hr { color:#FFF; }
 #reportHelp { max-width:200px; font-size:75%; }
 #reportResult { margin:5px 0; color:#F00; }
+.hover { cursor:help; }
+

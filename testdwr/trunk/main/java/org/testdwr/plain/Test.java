@@ -97,6 +97,12 @@ public class Test
         throw new NullPointerException("NullPointerException");
     }
 
+    public void throwNPE(String message)
+    {
+        // This is exported by dwr.xml
+        throw new NullPointerException(message);
+    }
+
     public void throwIAE()
     {
         // This is NOT exported by dwr.xml
