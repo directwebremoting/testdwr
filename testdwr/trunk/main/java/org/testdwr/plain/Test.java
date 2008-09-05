@@ -73,6 +73,7 @@ import org.testdwr.convert.IFace;
 import org.testdwr.convert.MyFancyException;
 import org.testdwr.convert.MyFancyExceptionInPackage;
 import org.testdwr.convert.MyUnmappedException;
+import org.testdwr.convert.ObjectWithLightClassMapping;
 import org.testdwr.convert.OnePackage;
 import org.testdwr.convert.TwoPackages;
 import org.testdwr.event.Test2ScriptSessionListener;
@@ -695,6 +696,20 @@ public class Test
             return "null";
         }
         return unmappedBase.getClass().getName();
+    }
+
+    public ObjectWithLightClassMapping downloadLightlyMapped()
+    {
+        return new ObjectWithLightClassMapping();
+    }
+
+    public String uploadLightlyMapped(ObjectWithLightClassMapping lightObj)
+    {
+        if (lightObj == null)
+        {
+            return "null";
+        }
+        return lightObj.getClass().getName();
     }
 
     public void throwMapped() throws MyFancyException

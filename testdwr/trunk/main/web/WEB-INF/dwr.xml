@@ -30,6 +30,8 @@
     <convert match="org.testdwr.convert.MyFancyException" converter="exception" javascript="MyFancyException"/>
     <convert match="org.testdwr.convert.MyFancyExceptionInPackage" converter="exception" javascript="pkg1.MyFancyExceptionInPackage"/>
 
+    <convert match="org.testdwr.convert.ObjectWithLightClassMapping" converter="object" javascript="ObjectWithLightClassMapping"/>
+
     <convert match="java.lang.NullPointerException" converter="exception"/>
     <convert match="org.xml.sax.SAXParseException" converter="exception"/>
     <convert match="java.lang.StackTraceElement" converter="bean"/>

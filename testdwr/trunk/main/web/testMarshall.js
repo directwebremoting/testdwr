@@ -629,7 +629,6 @@ function testMarshallPackagedEx() {
  */
 function testMarshallEnforceTypesOnMappedArguments() {
   var obj = new pkg1.OnePackage();
-  obj.i = 42;
 
   // Note that we are sending an argument with the wrong type to this method!
   // Either a TwoPackages object or an untyped object should be marshalled and 
@@ -639,4 +638,28 @@ function testMarshallEnforceTypesOnMappedArguments() {
     exceptionHandler: createDelayed(function(message, ex) {
       verifyEqual(ex.javaClassName, "org.directwebremoting.ConversionException");
     })});
+}
+
+/**
+ *
+ */
+function testMarshallLightClassMapping() {
+  // As this is a test for the light class-mapping scheme we don't want the
+  // generated mapped JavaScript class for our objects. We remove any trace
+  // of the class in case it has been included:
+  if (typeof this.ObjectWithLightClassMapping == "function") {
+    delete this.ObjectWithLightClassMapping;
+    delete dwr.engine._mappedClasses["ObjectWithLightClassMapping"];
+  }
+  
+  // We should add type as object property for light class-mapping
+  var obj = {$dwrClassName:"ObjectWithLightClassMapping"};
+
+  Test.uploadLightlyMapped(obj, createDelayed(function(reply) {
+    verifyEqual(reply, "org.testdwr.convert.ObjectWithLightClassMapping");
+  }));
+
+  Test.downloadLightlyMapped(null, createDelayed(function(reply) {
+    verifyEqual(reply.$dwrClassName, "ObjectWithLightClassMapping");
+  }));
 }
