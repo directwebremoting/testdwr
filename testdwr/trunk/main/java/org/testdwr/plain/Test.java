@@ -688,6 +688,15 @@ public class Test
         return abstractBase.getClass().getName();
     }
 
+    public String uploadMappedToUnmappedParamClass(Object unmappedBase)
+    {
+        if (unmappedBase == null)
+        {
+            return "null";
+        }
+        return unmappedBase.getClass().getName();
+    }
+
     public void throwMapped() throws MyFancyException
     {
         throw new MyFancyException("fancy");
