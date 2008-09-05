@@ -623,3 +623,20 @@ function testMarshallPackagedEx() {
     })
   });
 }
+
+/**
+ *
+ */
+function testMarshallEnforceTypesOnMappedArguments() {
+  var obj = new pkg1.OnePackage();
+  obj.i = 42;
+
+  // Note that we are sending an argument with the wrong type to this method!
+  // Either a TwoPackages object or an untyped object should be marshalled and 
+  // run for this method, but not a mapped object of the wrong class.
+  Test.package2(obj, {
+    callback:createDelayedError(),
+    exceptionHandler: createDelayed(function(message, ex) {
+      verifyEqual(ex.javaClassName, "org.directwebremoting.ConversionException");
+    })});
+}
