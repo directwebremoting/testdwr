@@ -525,6 +525,21 @@ function testMarshallUploadMapped() {
 }
 
 /**
+ *
+ */
+function testMarshallUploadMappedToUnmappedParamClass() {
+  Test.uploadMappedToUnmappedParamClass(new ConcreteBBase(), createDelayed(function(reply) {
+    verifyEqual(reply, "org.testdwr.convert.ConcreteBBase");
+  }));
+  Test.uploadMappedToUnmappedParamClass(new ConcreteCBase(), createDelayed(function(reply) {
+    verifyEqual(reply, "org.testdwr.convert.ConcreteCBase");
+  }));
+  Test.uploadMappedToUnmappedParamClass(null, createDelayed(function(reply) {
+    verifyEqual(reply, "null");
+  }));
+}
+
+/**
  * Receive a mapped exception from server
  */
 function testMarshallThrowMapped() {
