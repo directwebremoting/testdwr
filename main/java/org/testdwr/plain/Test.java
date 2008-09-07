@@ -161,7 +161,7 @@ public class Test
     {
     }
 
-    public boolean areIdentical(List<?> a, List<?> b)
+    public boolean areIdentical(List<String> a, List<String> b)
     {
         return a == b;
     }
@@ -411,6 +411,22 @@ public class Test
         return test;
     }
 
+    @SuppressWarnings("unchecked")
+    public List<?> untypedTestBeanListParam(List<?> test)
+    {
+        if (test.size() > 1)
+        {
+            for (Iterator<TestBean> it = (Iterator<TestBean>) test.iterator(); it.hasNext();)
+            {
+                TestBean ele = it.next();
+                TestBean ignore = ele;
+                ele = ignore;
+            }
+        }
+
+        return test;
+    }
+
     public HashSet<String> stringHashSetParam(HashSet<String> test)
     {
         return test;
@@ -451,6 +467,16 @@ public class Test
         return test;
     }
 
+    public FinalBean finalBeanParam(FinalBean test)
+    {
+        return test;
+    }
+
+    public FinalBean[] finalBeanArrayParam(FinalBean[] test)
+    {
+        return test;
+    }
+
     public List<Set<Map<String, TestBean>>> testComplex(List<Set<Map<String, TestBean>>> test)
     {
         return test;
@@ -478,6 +504,16 @@ public class Test
         default :
             throw new IllegalArgumentException("" + type);
         }
+    }
+
+    public String[] stringVarArgs(String... value)
+    {
+        return value;
+    }
+
+    public TestBean[] testBeanVarArgs(TestBean... value)
+    {
+        return value;
     }
 
     public class InnerSubTestBean extends TestBean
@@ -942,6 +978,23 @@ public class Test
             Browser.withSession(otherContext, scriptSession.getId(), new FilterCheckNone("withSession:Other", attributeName, verify));
 
             Browser.withPageFiltered(otherContext, page, filter, new CheckNone("withPageFiltered:Other", verify));
+        }
+
+        return verify.getReport();
+    }
+
+    public List<String> variousChecks()
+    {
+        Verify verify = new Verify();
+
+        if (!Test1Filter.isFiltered())
+        {
+            verify.fail("Missing Test1Filter (should be global in dwr.xml)");
+        }
+
+        if (!Test2Filter.isFiltered())
+        {
+            verify.fail("Missing Test2Filter (should be local to Test in dwr.xml)");
         }
 
         return verify.getReport();

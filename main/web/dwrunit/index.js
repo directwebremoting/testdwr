@@ -17,7 +17,7 @@ var statusNames = [ "Skipped", "Executing", "Waiting for results", "Pass", "Fail
  */
 function init() {
   for (var prop in window) {
-    if (prop.match(/test/) && typeof window[prop] == "function" && prop != "testEquals") {
+    if (prop.match(/test/) && typeof window[prop] == "function") {
       addTest(prop, window[prop]);
     }
   }
@@ -445,14 +445,14 @@ function createDelayedError(func, scope) {
     _setStatus(currentTest, status.fail);
     var obj = scope || window;
     if (typeof func == "function") {
-      _record(currentTest, "Executing delayed error handler");
+      _record(currentTest.name, "Executing delayed error handler: " + dwr.util.toDescriptiveString(arguments));
       func.apply(obj, arguments);
     }
     else if (typeof func == "string") {
-      _record(currentTest, "Executing delayed error handler: " + func);
+      _record(currentTest.name, "Executing delayed error handler: " + func);
     }
     else {
-      _record(currentTest, "Executing delayed error handler");
+      _record(currentTest.name, "Executing delayed error handler: " + dwr.util.toDescriptiveString(arguments));
     }
     currentTest = null;
     updateTestResults(false);
@@ -818,7 +818,7 @@ function _isEqual(actual, expected, depth) {
     var actualLength = 0;
     for (var prop in actual) {
       if (typeof actual[prop] != "function" || typeof expected[prop] != "function") {
-        var nest = testEquals(actual[prop], expected[prop], depth + 1);
+        var nest = _isEqual(actual[prop], expected[prop], depth + 1);
         if (typeof nest != "boolean" || !nest) {
           return "element '" + prop + "' does not match: " + nest;
         }
@@ -847,7 +847,7 @@ function _isEqual(actual, expected, depth) {
       return "expected array length = " + expected.length + ", actual array length = " + actual.length;
     }
     for (var i = 0; i < actual.length; i++) {
-      var inner = testEquals(actual[i], expected[i], depth + 1);
+      var inner = _isEqual(actual[i], expected[i], depth + 1);
       if (typeof inner != "boolean" || !inner) {
         return "element " + i + " does not match: " + inner;
       }
