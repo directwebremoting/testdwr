@@ -13,6 +13,13 @@ function testRemotingGetPath() {
 /**
  *
  */
+function testRemotingVarious() {
+  Test.variousChecks(createReplyIsErrorCallback());
+}
+
+/**
+ *
+ */
 function testRemotingScopeAndArgs() {
   var args = [ 1, "two" ];
   var scope = {
