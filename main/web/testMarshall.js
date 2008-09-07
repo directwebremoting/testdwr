@@ -1,6 +1,77 @@
 
 createTestGroup("Marshall");
 
+function testMarshallComplex() {
+  Test.testComplex(createDelayed(function (data) {
+    verifyNull(data);
+  }));
+  Test.testComplex([], createDelayed(function (data) {
+    verifyEqual(data, []);
+  }));
+  Test.testComplex([[]], createDelayed(function (data) {
+    verifyEqual(data, [[]]);
+  }));
+  Test.testComplex([[], []], createDelayed(function (data) {
+    verifyEqual(data, [[], []]);
+  }));
+  Test.testComplex([[{}]], createDelayed(function (data) {
+    verifyEqual(data, [[{}]]);
+  }));
+  Test.testComplex([[{}], [{}]], createDelayed(function (data) {
+    verifyEqual(data, [[{}], [{}]]);
+  }));
+  Test.testComplex([[{}, {}], [{}, {}]], createDelayed(function (data) {
+    verifyEqual(data, [[{}, {}], [{}, {}]]);
+  }));
+  Test.testComplex([[{"a":nested}]], createDelayed(function (data) {
+    verifyEqual(data, [[{"a":nested}]]);
+  }));
+  Test.testComplex([[{}, {"a":nested}], [{"b":nested}, {"a":nested, "c":nested}]], createDelayed(function (data) {
+    verifyEqual(data, [[{}, {"a":nested}], [{"b":nested}, {"a":nested, "c":nested}]]);
+  }));
+}
+
+function testMarshallStringVarArgs() {
+  Test.stringVarArgs(createDelayed(function (data) {
+    verifyEqual(data, [ ]);
+  }));
+  Test.stringVarArgs("1", createDelayed(function (data) {
+    verifyEqual(data, [ "1" ]);
+  }));
+  Test.stringVarArgs("1", "2", createDelayed(function (data) {
+    verifyEqual(data, [ "1", "2" ]);
+  }));
+  Test.stringVarArgs("1", "2", "3", createDelayed(function (data) {
+    verifyEqual(data, [ "1", "2", "3" ]);
+  }));
+}
+
+function testMarshallBeanVarArgs() {
+  dwr.engine.beginBatch();
+  Test.testBeanVarArgs(createDelayed(function (data) {
+    verifyEqual(data, [ ]);
+  }));
+  Test.testBeanVarArgs(nested, createDelayed(function (data) {
+    verifyEqual(data, [ nested ]);
+  }));
+  Test.testBeanVarArgs(nested, nested, createDelayed(function (data) {
+    verifyEqual(data, [ nested, nested ]);
+  }));
+  Test.testBeanVarArgs(nested, nested, nested, createDelayed(function (data) {
+    verifyEqual(data, [ nested, nested, nested ]);
+  }));
+  dwr.engine.endBatch({
+    errorHandler:createDelayedError()
+  });
+
+  Test.testBeanVarArgs(nested, nested, nested, {
+    callback:createDelayed(function (data) {
+      verifyEqual(data, [ nested, nested, nested ]);
+    }),
+    exceptionHandler:createDelayedError()
+  });
+}
+
 function testMarshallByteParam() {
   runComparisonTests([
     { code:"byteParam", data:-128 },
@@ -332,12 +403,40 @@ function testMarshallTestBeanSetParam() {
   ]);
 }
 
-function testMarshallBeanListParam() {
+function testMarshallTestBeanListParam() {
   runComparisonTests([
     { code:"testBeanListParam", data:[ ] },
     { code:"testBeanListParam", data:[ nested ] },
     { code:"testBeanListParam", data:[ nested, nested ] },
     { code:"testBeanListParam", data:[ nested, nested, nested ] }
+  ]);
+}
+
+var finalBean = { integer:0, string:'0123456789', testBean:nested };
+
+function testMarshallFinalBeanParam() {
+  runComparisonTests([
+    { code:"finalBeanParam", data:null },
+    { code:"finalBeanParam", data:finalBean }
+  ]);
+}
+
+function testMarshallFinalBeanListParam() {
+  runComparisonTests([
+    { code:"finalBeanListParam", data:null },
+    { code:"finalBeanListParam", data:[ ] },
+    { code:"finalBeanListParam", data:[ finalBean ] },
+    { code:"finalBeanListParam", data:[ finalBean, finalBean ] },
+    { code:"finalBeanListParam", data:[ finalBean, finalBean, finalBean ] }
+  ]);
+}
+
+function testMarshallUntypedTestBeanListParam() {
+  runComparisonTests([
+    { code:"untypedTestBeanListParam", data:[ ] },
+    { code:"untypedTestBeanListParam", data:[ nested ] },
+    { code:"untypedTestBeanListParam", data:[ nested, nested ] },
+    { code:"untypedTestBeanListParam", data:[ nested, nested, nested ] }
   ]);
 }
 
