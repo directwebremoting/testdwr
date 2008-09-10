@@ -391,6 +391,17 @@ function runAllTests() {
 }
 
 /**
+ * 
+ */
+function createOptions(func, message) {
+  return {
+      callback:createDelayed(func),
+      exceptionHandler:createDelayedError(message || func.toString()),
+      errorHandler:createDelayedError(message || func.toString())
+  };
+}
+
+/**
  *
  */
 function createDelayed(func, scope) {

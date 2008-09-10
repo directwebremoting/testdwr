@@ -2,62 +2,62 @@
 createTestGroup("Marshall");
 
 function testMarshallComplex() {
-  Test.testComplex(createDelayed(function (data) {
+  Test.testComplex(createOptions(function (data) {
     verifyNull(data);
   }));
-  Test.testComplex([], createDelayed(function (data) {
+  Test.testComplex([], createOptions(function (data) {
     verifyEqual(data, []);
   }));
-  Test.testComplex([[]], createDelayed(function (data) {
+  Test.testComplex([[]], createOptions(function (data) {
     verifyEqual(data, [[]]);
   }));
-  Test.testComplex([[], []], createDelayed(function (data) {
+  Test.testComplex([[], []], createOptions(function (data) {
     verifyEqual(data, [[], []]);
   }));
-  Test.testComplex([[{}]], createDelayed(function (data) {
+  Test.testComplex([[{}]], createOptions(function (data) {
     verifyEqual(data, [[{}]]);
   }));
-  Test.testComplex([[{}], [{}]], createDelayed(function (data) {
+  Test.testComplex([[{}], [{}]], createOptions(function (data) {
     verifyEqual(data, [[{}], [{}]]);
   }));
-  Test.testComplex([[{}, {}], [{}, {}]], createDelayed(function (data) {
+  Test.testComplex([[{}, {}], [{}, {}]], createOptions(function (data) {
     verifyEqual(data, [[{}, {}], [{}, {}]]);
   }));
-  Test.testComplex([[{"a":nested}]], createDelayed(function (data) {
+  Test.testComplex([[{"a":nested}]], createOptions(function (data) {
     verifyEqual(data, [[{"a":nested}]]);
   }));
-  Test.testComplex([[{}, {"a":nested}], [{"b":nested}, {"a":nested, "c":nested}]], createDelayed(function (data) {
+  Test.testComplex([[{}, {"a":nested}], [{"b":nested}, {"a":nested, "c":nested}]], createOptions(function (data) {
     verifyEqual(data, [[{}, {"a":nested}], [{"b":nested}, {"a":nested, "c":nested}]]);
   }));
 }
 
 function testMarshallStringVarArgs() {
-  Test.stringVarArgs(createDelayed(function (data) {
+  Test.stringVarArgs(createOptions(function (data) {
     verifyEqual(data, [ ]);
   }));
-  Test.stringVarArgs("1", createDelayed(function (data) {
+  Test.stringVarArgs("1", createOptions(function (data) {
     verifyEqual(data, [ "1" ]);
   }));
-  Test.stringVarArgs("1", "2", createDelayed(function (data) {
+  Test.stringVarArgs("1", "2", createOptions(function (data) {
     verifyEqual(data, [ "1", "2" ]);
   }));
-  Test.stringVarArgs("1", "2", "3", createDelayed(function (data) {
+  Test.stringVarArgs("1", "2", "3", createOptions(function (data) {
     verifyEqual(data, [ "1", "2", "3" ]);
   }));
 }
 
 function testMarshallBeanVarArgs() {
   dwr.engine.beginBatch();
-  Test.testBeanVarArgs(createDelayed(function (data) {
+  Test.testBeanVarArgs(createOptions(function (data) {
     verifyEqual(data, [ ]);
   }));
-  Test.testBeanVarArgs(nested, createDelayed(function (data) {
+  Test.testBeanVarArgs(nested, createOptions(function (data) {
     verifyEqual(data, [ nested ]);
   }));
-  Test.testBeanVarArgs(nested, nested, createDelayed(function (data) {
+  Test.testBeanVarArgs(nested, nested, createOptions(function (data) {
     verifyEqual(data, [ nested, nested ]);
   }));
-  Test.testBeanVarArgs(nested, nested, nested, createDelayed(function (data) {
+  Test.testBeanVarArgs(nested, nested, nested, createOptions(function (data) {
     verifyEqual(data, [ nested, nested, nested ]);
   }));
   dwr.engine.endBatch({
@@ -65,7 +65,7 @@ function testMarshallBeanVarArgs() {
   });
 
   Test.testBeanVarArgs(nested, nested, nested, {
-    callback:createDelayed(function (data) {
+    callback:createOptions(function (data) {
       verifyEqual(data, [ nested, nested, nested ]);
     }),
     exceptionHandler:createDelayedError()
@@ -421,13 +421,13 @@ function testMarshallFinalBeanParam() {
   ]);
 }
 
-function testMarshallFinalBeanListParam() {
+function testMarshallFinalBeanArrayParam() {
   runComparisonTests([
-    { code:"finalBeanListParam", data:null },
-    { code:"finalBeanListParam", data:[ ] },
-    { code:"finalBeanListParam", data:[ finalBean ] },
-    { code:"finalBeanListParam", data:[ finalBean, finalBean ] },
-    { code:"finalBeanListParam", data:[ finalBean, finalBean, finalBean ] }
+    { code:"finalBeanArrayParam", data:null },
+    { code:"finalBeanArrayParam", data:[ ] },
+    { code:"finalBeanArrayParam", data:[ finalBean ] },
+    { code:"finalBeanArrayParam", data:[ finalBean, finalBean ] },
+    { code:"finalBeanArrayParam", data:[ finalBean, finalBean, finalBean ] }
   ]);
 }
 
@@ -573,13 +573,9 @@ function testMarshallDomElementParam() {
 function runComparisonTests(compares) {
   for (var i = 0; i < compares.length; i++) {
     var compare = compares[i];
-
-    Test[compare.code](compare.data, {
-      callback:createDelayed(function(data) {
-        assertEqual(data, compare.data);
-      }),
-      exceptionHandler:createDelayedError()
-    });
+    Test[compare.code](compare.data, createOptions(function(data) {
+      assertEqual(data, compare.data);
+    }));
   }
 }
 
@@ -593,7 +589,7 @@ ConcreteCBase.prototype.constructor = ConcreteCBase;
  *
  */
 function testMarshallDownloadMapped() {
-  Test.downloadMapped(createDelayed(function(arr) {
+  Test.downloadMapped(createOptions(function(arr) {
     var b = arr[0];
     verifyTrue(b instanceof AbstractBase, "b instanceof AbstractBase");
     verifyTrue(b instanceof ConcreteBBase, "b instanceof ConcreteBBase");
@@ -612,13 +608,13 @@ function testMarshallDownloadMapped() {
  *
  */
 function testMarshallUploadMapped() {
-  Test.uploadMapped(new ConcreteBBase(), createDelayed(function(reply) {
+  Test.uploadMapped(new ConcreteBBase(), createOptions(function(reply) {
     verifyEqual(reply, "org.testdwr.convert.ConcreteBBase");
   }));
-  Test.uploadMapped(new ConcreteCBase(), createDelayed(function(reply) {
+  Test.uploadMapped(new ConcreteCBase(), createOptions(function(reply) {
     verifyEqual(reply, "org.testdwr.convert.ConcreteCBase");
   }));
-  Test.uploadMapped(null, createDelayed(function(reply) {
+  Test.uploadMapped(null, createOptions(function(reply) {
     verifyEqual(reply, "null");
   }));
 }
@@ -627,13 +623,13 @@ function testMarshallUploadMapped() {
  *
  */
 function testMarshallUploadMappedToUnmappedParamClass() {
-  Test.uploadMappedToUnmappedParamClass(new ConcreteBBase(), createDelayed(function(reply) {
+  Test.uploadMappedToUnmappedParamClass(new ConcreteBBase(), createOptions(function(reply) {
     verifyEqual(reply, "org.testdwr.convert.ConcreteBBase");
   }));
-  Test.uploadMappedToUnmappedParamClass(new ConcreteCBase(), createDelayed(function(reply) {
+  Test.uploadMappedToUnmappedParamClass(new ConcreteCBase(), createOptions(function(reply) {
     verifyEqual(reply, "org.testdwr.convert.ConcreteCBase");
   }));
-  Test.uploadMappedToUnmappedParamClass(null, createDelayed(function(reply) {
+  Test.uploadMappedToUnmappedParamClass(null, createOptions(function(reply) {
     verifyEqual(reply, "null");
   }));
 }
@@ -674,11 +670,11 @@ function testMarshallThrowUnmapped() {
 function testMarshallUploadInterface() {
   var c = new ConcreteIFace();
   c.i = 42;
-  Test.uploadInterface(c, createDelayed(function(reply) {
+  Test.uploadInterface(c, createOptions(function(reply) {
     verifyEqual(reply, "org.testdwr.convert.ConcreteIFace");
   }));
 
-  Test.uploadInterface(null, createDelayed(function(reply) {
+  Test.uploadInterface(null, createOptions(function(reply) {
     verifyEqual(reply, "null");
   }));
 }
@@ -691,7 +687,7 @@ function testMarshallPackage1() {
   obj.i = 42;
   obj.extraProperty = "THIS TEXT SHOULDN'T BE MARSHALLED TO SERVER";
 
-  Test.package1(obj, createDelayed(function(retval) {
+  Test.package1(obj, createOptions(function(retval) {
     verifyEqual(retval.i, 43);
   }));
 }
@@ -703,7 +699,7 @@ function testMarshallPackage2() {
   var obj = new pkg1.pkg2.TwoPackages();
   obj.i = 42;
 
-  Test.package2(obj, createDelayed(function(retval) {
+  Test.package2(obj, createOptions(function(retval) {
     verifyEqual(retval.i, 43);
   }));
 }
@@ -734,7 +730,7 @@ function testMarshallEnforceTypesOnMappedArguments() {
   // run for this method, but not a mapped object of the wrong class.
   Test.package2(obj, {
     callback:createDelayedError(),
-    exceptionHandler: createDelayed(function(message, ex) {
+    exceptionHandler:createDelayed(function(message, ex) {
       verifyEqual(ex.javaClassName, "org.directwebremoting.ConversionException");
     })});
 }
@@ -754,11 +750,11 @@ function testMarshallLightClassMapping() {
   // We should add type as object property for light class-mapping
   var obj = {$dwrClassName:"ObjectWithLightClassMapping"};
 
-  Test.uploadLightlyMapped(obj, createDelayed(function(reply) {
+  Test.uploadLightlyMapped(obj, createOptions(function(reply) {
     verifyEqual(reply, "org.testdwr.convert.ObjectWithLightClassMapping");
   }));
 
-  Test.downloadLightlyMapped(null, createDelayed(function(reply) {
+  Test.downloadLightlyMapped(createOptions(function(reply) {
     verifyEqual(reply.$dwrClassName, "ObjectWithLightClassMapping");
   }));
 }
