@@ -30,6 +30,7 @@
     <mkdir dir="${basedir}/main/web/WEB-INF/classes"/>
     <javac debug="on" destdir="${basedir}/main/web/WEB-INF/classes" srcdir="${basedir}/main/java" includes="**/*.java" excludes="**/package-info.java">
       <classpath>
+        <fileset dir="${basedir}/main/lib" includes="**/*.jar"/>
         <fileset dir="${basedir}/main/web/WEB-INF/lib" includes="**/*.jar"/>
       </classpath>
     </javac>
