@@ -579,16 +579,10 @@ function runComparisonTests(compares) {
   }
 }
 
-// Manual setup of inheritance (could be implemented in the interface file instead)
-ConcreteBBase.prototype = new AbstractBase();
-ConcreteBBase.prototype.constructor = ConcreteBBase;
-ConcreteCBase.prototype = new AbstractBase();
-ConcreteCBase.prototype.constructor = ConcreteCBase;
-
 /**
  *
  */
-function testMarshallDownloadMapped() {
+function testMarshallDownloadMappedWithInheritance() {
   Test.downloadMapped(createOptions(function(arr) {
     var b = arr[0];
     verifyTrue(b instanceof AbstractBase, "b instanceof AbstractBase");
