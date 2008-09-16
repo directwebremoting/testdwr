@@ -89,7 +89,10 @@ function displayTestTable() {
         else {
           name = _addSpaces(testName.substring(4 + groupName.length));
         }
-        return "<div class='hover' title='" + dwr.util.escapeHtml(tests[testName].func.toString()) + "'>" + name + "</div>";
+        // We did add  title='" + dwr.util.escapeHtml(tests[testName].func.toString()) + "'
+        // But this confuses things because we're not currently escaping for attributes properly
+        // The best solution is a better drilldown thing anyway because the wrapping is wrong here
+        return "<div class='hover'>" + name + "</div>";
       },
       function async(testName, options) {
         return "<span id='asyncReturn" + testName + "'>0</span>/<span id='asyncSent" + testName + "'>0</span>";
