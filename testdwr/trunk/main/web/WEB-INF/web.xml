@@ -86,18 +86,25 @@
     <load-on-startup>2</load-on-startup>
   </servlet>
 
+  <!-- Part of Spring MVC -->
+  <servlet>
+    <servlet-name>springmvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>3</load-on-startup>
+  </servlet>
+
   <!-- Part of guice -->
   <servlet>
     <servlet-name>guice</servlet-name>
     <servlet-class>org.directwebremoting.guice.DwrGuiceServlet</servlet-class>
-    <load-on-startup>2</load-on-startup>
+    <load-on-startup>4</load-on-startup>
   </servlet>
 
   <!-- Part of the custom response system -->
   <servlet>
     <servlet-name>custom</servlet-name>
     <servlet-class>org.testdwr.custom.CustomResponseServlet</servlet-class>
-    <load-on-startup>3</load-on-startup>
+    <load-on-startup>5</load-on-startup>
   </servlet>
 
   <!-- Part of dwr -->
@@ -116,6 +123,12 @@
   <servlet-mapping>
     <servlet-name>springservlet</servlet-name>
     <url-pattern>/springservlet/*</url-pattern>
+  </servlet-mapping>
+
+  <!-- Part of Spring MVC -->
+  <servlet-mapping>
+    <servlet-name>springmvc</servlet-name>
+    <url-pattern>/springmvc/*</url-pattern>
   </servlet-mapping>
 
   <!-- Part of guice -->
