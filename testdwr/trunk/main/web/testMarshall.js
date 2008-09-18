@@ -1,7 +1,7 @@
 
 createTestGroup("Marshall");
 
-function testMarshallComplex() {
+window.testMarshallComplex = function() {
   Test.testComplex(createOptions(function (data) {
     verifyNull(data);
   }));
@@ -29,9 +29,9 @@ function testMarshallComplex() {
   Test.testComplex([[{}, {"a":nested}], [{"b":nested}, {"a":nested, "c":nested}]], createOptions(function (data) {
     verifyEqual(data, [[{}, {"a":nested}], [{"b":nested}, {"a":nested, "c":nested}]]);
   }));
-}
+};
 
-function testMarshallStringVarArgs() {
+window.testMarshallStringVarArgs = function() {
   Test.stringVarArgs(createOptions(function (data) {
     verifyEqual(data, [ ]);
   }));
@@ -44,9 +44,9 @@ function testMarshallStringVarArgs() {
   Test.stringVarArgs("1", "2", "3", createOptions(function (data) {
     verifyEqual(data, [ "1", "2", "3" ]);
   }));
-}
+};
 
-function testMarshallBeanVarArgs() {
+window.testMarshallBeanVarArgs = function() {
   dwr.engine.beginBatch();
   Test.testBeanVarArgs(createOptions(function (data) {
     verifyEqual(data, [ ]);
@@ -70,9 +70,9 @@ function testMarshallBeanVarArgs() {
     }),
     exceptionHandler:createDelayedError()
   });
-}
+};
 
-function testMarshallByteParam() {
+window.testMarshallByteParam = function() {
   runComparisonTests([
     { code:"byteParam", data:-128 },
     { code:"byteParam", data:-1 },
@@ -80,16 +80,16 @@ function testMarshallByteParam() {
     { code:"byteParam", data:1 },
     { code:"byteParam", data:127 }
   ]);
-}
+};
 
-function testMarshallBooleanParam() {
+window.testMarshallBooleanParam = function() {
   runComparisonTests([
     { code:"booleanParam", data:true },
     { code:"booleanParam", data:false }
   ]);
-}
+};
 
-function testMarshallShortParam() {
+window.testMarshallShortParam = function() {
   runComparisonTests([
     { code:"shortParam", data:-32768 },
     { code:"shortParam", data:-1 },
@@ -97,9 +97,9 @@ function testMarshallShortParam() {
     { code:"shortParam", data:1 },
     { code:"shortParam", data:32767 }
   ]);
-}
+};
 
-function testMarshallIntParam() {
+window.testMarshallIntParam = function() {
   runComparisonTests([
     { code:"intParam", data:-2147483648 },
     { code:"intParam", data:-1 },
@@ -107,9 +107,9 @@ function testMarshallIntParam() {
     { code:"intParam", data:1 },
     { code:"intParam", data:2147483647 }
   ]);
-}
+};
 
-function testMarshallLongParam() {
+window.testMarshallLongParam = function() {
   runComparisonTests([
     // Mozilla rounds 9223372036854775808 to 9223372036854776000 which overflows so we round down
     { code:"longParam", data:-9223372036854775000 },
@@ -118,9 +118,9 @@ function testMarshallLongParam() {
     { code:"longParam", data:1 },
     { code:"longParam", data:9223372036854775000 }
   ]);
-}
+};
 
-function testMarshallFloatParam() {
+window.testMarshallFloatParam = function() {
   runComparisonTests([
     { code:"floatParam", data:-100000000000000000000 },
     { code:"floatParam", data:-1 },
@@ -128,9 +128,9 @@ function testMarshallFloatParam() {
     { code:"floatParam", data:1 },
     { code:"floatParam", data:100000000000000000000 }
   ]);
-}
+};
 
-function testMarshallDoubleParam() {
+window.testMarshallDoubleParam = function() {
   runComparisonTests([
     { code:"doubleParam", data:-100000000000000000000 },
     { code:"doubleParam", data:-1 },
@@ -143,9 +143,9 @@ function testMarshallDoubleParam() {
     { code:"doubleParam", data:Number.NEGATIVE_INFINITY },
     { code:"doubleParam", data:Number.POSITIVE_INFINITY }
   ]);
-}
+};
 
-function testMarshallBigDecimalParam() {
+window.testMarshallBigDecimalParam = function() {
   runComparisonTests([
     { code:"bigDecimalParam", data:-100000000000000000000 },
     { code:"bigDecimalParam", data:-1 },
@@ -153,9 +153,9 @@ function testMarshallBigDecimalParam() {
     { code:"bigDecimalParam", data:1 },
     { code:"bigDecimalParam", data:100000000000000000000 }
   ]);
-}
+};
 
-function testMarshallBigIntegerParam() {
+window.testMarshallBigIntegerParam = function() {
   runComparisonTests([
     { code:"bigIntegerParam", data:-100000000000000000000 },
     { code:"bigIntegerParam", data:-1 },
@@ -163,9 +163,9 @@ function testMarshallBigIntegerParam() {
     { code:"bigIntegerParam", data:1 },
     { code:"bigIntegerParam", data:100000000000000000000 }
   ]);
-}
+};
 
-function testMarshallCharParam() {
+window.testMarshallCharParam = function() {
   runComparisonTests([
     // Opera 8 has issues with this one. It appears to not like \0
     //{ code:"charParam", data:"\0" },
@@ -235,9 +235,9 @@ function testMarshallCharParam() {
     { code:"charParam", data:"\u00DF" },
     { code:"charParam", data:"\u00FF" }
   ]);
-}
+};
 
-function testMarshallStringParam() {
+window.testMarshallStringParam = function() {
   runComparisonTests([
     { code:"stringParam", data:" " },
     { code:"stringParam", data:"!" },
@@ -297,38 +297,38 @@ function testMarshallStringParam() {
     { code:"stringParam", data:"??BBC?1994??????~~??????????????????~~?á?????????????~~?????????????????BBC?1994??????~~??????????????????~~?á?????????????~~???????????????" },
     { code:"stringParam", data:"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\" }
   ]);
-}
+};
 
-function testMarshallBooleanArrayParam() {
+window.testMarshallBooleanArrayParam = function() {
   runComparisonTests([
     { code:"booleanArrayParam", data:[ ] },
     { code:"booleanArrayParam", data:[ true, false, true, false ] }
   ]);
-}
+};
 
-function testMarshallCharArrayParam() {
+window.testMarshallCharArrayParam = function() {
   runComparisonTests([
     { code:"charArrayParam", data:[ ] },
     { code:"charArrayParam", data:[ 'a', ',', '[', ']' ] }
   ]);
-}
+};
 
-function testMarshallByteArrayParam() {
+window.testMarshallByteArrayParam = function() {
   runComparisonTests([
     { code:"byteArrayParam", data:[ ] },
     { code:"byteArrayParam", data:[ -128, -128, -128, -128, -127 ] },
     { code:"byteArrayParam", data:[ -128, -1, 0, 1, 127 ] }
   ]);
-}
+};
 
-function testMarshallShortArrayParam() {
+window.testMarshallShortArrayParam = function() {
   runComparisonTests([
     { code:"shortArrayParam", data:[ ] },
     { code:"shortArrayParam", data:[ -32768, -1, 0, 1, 32767 ] }
   ]);
-}
+};
 
-function testMarshallIntArrayParam() {
+window.testMarshallIntArrayParam = function() {
   runComparisonTests([
     { code:"intArrayParam", data:[ ] },
     { code:"intArrayParam", data:[ -2147483648 ] },
@@ -338,23 +338,23 @@ function testMarshallIntArrayParam() {
     { code:"intArrayParam", data:[ 2147483647 ] },
     { code:"intArrayParam", data:[ -2147483648, -1, 0, 1, 2147483647 ] }
   ]);
-}
+};
 
-function testMarshallLongArrayParam() {
+window.testMarshallLongArrayParam = function() {
   runComparisonTests([
     { code:"longArrayParam", data:[ ] },
     { code:"longArrayParam", data:[ -9223372036854775000, -1, 0, 1, 9223372036854775000 ] }
   ]);
-}
+};
 
-function testMarshallFloatArrayParam() {
+window.testMarshallFloatArrayParam = function() {
   runComparisonTests([
     { code:"floatArrayParam", data:[ ] },
     { code:"floatArrayParam", data:[ -100000000000000000000, -1, 0, 1, 100000000000000000000 ] }
   ]);
-}
+};
 
-function testMarshallXDArrayParam() {
+window.testMarshallXDArrayParam = function() {
   var double1D = [ -100000000000000000000, -1, 0, 1, 100000000000000000000 ];
   var double2D = [ double1D, double1D ];
   var double3D = [ double2D, double2D ];
@@ -368,7 +368,7 @@ function testMarshallXDArrayParam() {
     { code:"double4DArrayParam", data:double4D },
     { code:"double5DArrayParam", data:double5D }
   ]);
-}
+};
 
 // Used in a few tests
 var nested = { integer:0, string:'0123456789' };
@@ -380,48 +380,48 @@ objb.objA = obja;
 obja.objB = objb;
 
 
-function testMarshallLoopedParam() {
+window.testMarshallLoopedParam = function() {
   runComparisonTests([
     { code:"testLooped", data:obja }
   ]);
-}
+};
 
-function testMarshallTestBeanParam() {
+window.testMarshallTestBeanParam = function() {
   runComparisonTests([
     { code:"testBeanParam", data:{ integer:-2147483648, string:'!"$%^&*()', testBean:null } },
     { code:"testBeanParam", data:{ integer:-1, string:'Null', testBean:null } },
     { code:"testBeanParam", data:{ integer:0, string:'null', testBean:null } },
     { code:"testBeanParam", data:{ integer:1, string:'0987654321', testBean:nested } }
   ]);
-}
+};
 
-function testMarshallTestBeanSetParam() {
+window.testMarshallTestBeanSetParam = function() {
   runComparisonTests([
     { code:"testBeanSetParam", data:[ ] },
     { code:"testBeanSetParam", data:[{ integer:1, string:'0987654321', testBean:nested }] },
     { code:"testBeanSetParam", data:[ nested ] }
   ]);
-}
+};
 
-function testMarshallTestBeanListParam() {
+window.testMarshallTestBeanListParam = function() {
   runComparisonTests([
     { code:"testBeanListParam", data:[ ] },
     { code:"testBeanListParam", data:[ nested ] },
     { code:"testBeanListParam", data:[ nested, nested ] },
     { code:"testBeanListParam", data:[ nested, nested, nested ] }
   ]);
-}
+};
 
 var finalBean = { integer:0, string:'0123456789', testBean:nested };
 
-function testMarshallFinalBeanParam() {
+window.testMarshallFinalBeanParam = function() {
   runComparisonTests([
     { code:"finalBeanParam", data:null },
     { code:"finalBeanParam", data:finalBean }
   ]);
-}
+};
 
-function testMarshallFinalBeanArrayParam() {
+window.testMarshallFinalBeanArrayParam = function() {
   runComparisonTests([
     { code:"finalBeanArrayParam", data:null },
     { code:"finalBeanArrayParam", data:[ ] },
@@ -429,25 +429,25 @@ function testMarshallFinalBeanArrayParam() {
     { code:"finalBeanArrayParam", data:[ finalBean, finalBean ] },
     { code:"finalBeanArrayParam", data:[ finalBean, finalBean, finalBean ] }
   ]);
-}
+};
 
-function testMarshallUntypedTestBeanListParam() {
+window.testMarshallUntypedTestBeanListParam = function() {
   runComparisonTests([
     { code:"untypedTestBeanListParam", data:[ ] },
     { code:"untypedTestBeanListParam", data:[ nested ] },
     { code:"untypedTestBeanListParam", data:[ nested, nested ] },
     { code:"untypedTestBeanListParam", data:[ nested, nested, nested ] }
   ]);
-}
+};
 
-function testMarshallTestBeanMapParam() {
+window.testMarshallTestBeanMapParam = function() {
   runComparisonTests([
     { code:"charTestBeanMapParam", data:{ } },
     { code:"charTestBeanMapParam", data:{ d:{ integer:1, string:'0987654321', testBean:nested } } }
   ]);
-}
+};
 
-function testMarshallStringCollectionParam() {
+window.testMarshallStringCollectionParam = function() {
   runComparisonTests([
     { code:"stringCollectionParam", data:[ ] },
     { code:"stringCollectionParam", data:[ 'abcdef' ] },
@@ -455,9 +455,9 @@ function testMarshallStringCollectionParam() {
     { code:"stringCollectionParam", data:[ 'abcdef', 'hgijklm', 'nopqrst' ] },
     { code:"stringCollectionParam", data:[ ",'{}[]", 'null', ",'{}[]" ] }
   ]);
-}
+};
 
-function testMarshallStringLinkedListParam() {
+window.testMarshallStringLinkedListParam = function() {
   runComparisonTests([
     { code:"stringLinkedListParam", data:[ ] },
     { code:"stringLinkedListParam", data:[ 'abcdef' ] },
@@ -465,9 +465,9 @@ function testMarshallStringLinkedListParam() {
     { code:"stringLinkedListParam", data:[ 'abcdef', 'hgijklm', 'nopqrst' ] },
     { code:"stringLinkedListParam", data:[ ",'{}[]", 'null', ",'{}[]" ] }
   ]);
-}
+};
 
-function testMarshallStringArrayListParam() {
+window.testMarshallStringArrayListParam = function() {
   runComparisonTests([
     { code:"stringArrayListParam", data:[ ] },
     { code:"stringArrayListParam", data:[ ",'{}[]" ] },
@@ -475,9 +475,9 @@ function testMarshallStringArrayListParam() {
     { code:"stringArrayListParam", data:[ 'abcdef', 'hgijklm', 'nopqrst' ] },
     { code:"stringArrayListParam", data:[ ",'{}[]", 'null', ",'{}[]" ] }
   ]);
-}
+};
 
-function testMarshallStringListParam() {
+window.testMarshallStringListParam = function() {
   runComparisonTests([
     { code:"stringListParam", data:[ ] },
     { code:"stringListParam", data:[ ",'{}[]" ] },
@@ -485,34 +485,34 @@ function testMarshallStringListParam() {
     { code:"stringListParam", data:[ 'abcdef', 'hgijklm', 'nopqrst' ] },
     { code:"stringListParam", data:[ ",'{}[]", 'null', ",'{}[]" ] }
   ]);
-}
+};
 
-function testMarshallStringSetParam() {
+window.testMarshallStringSetParam = function() {
   runComparisonTests([
     { code:"stringSetParam", data:[ ] },
     { code:"stringSetParam", data:[ 'abcdef' ] },
     { code:"stringSetParam", data:[ ",'{}[]" ] }
     // Unordered so we cheat by not using multiple elements
   ]);
-}
+};
 
-function testMarshallStringHashSetParam() {
+window.testMarshallStringHashSetParam = function() {
   runComparisonTests([
     { code:"stringHashSetParam", data:[ ] },
     { code:"stringHashSetParam", data:[ 'abcdef' ] },
     { code:"stringHashSetParam", data:[ ",'{}[]" ] }
     // Unordered so we cheat by not using multiple elements
   ]);
-}
+};
 
-function testMarshallStringTreeSetParam() {
+window.testMarshallStringTreeSetParam = function() {
   runComparisonTests([
     { code:"stringTreeSetParam", data:[ ] },
     { code:"stringTreeSetParam", data:[ 'abcdef' ] },
     { code:"stringTreeSetParam", data:[ ",'{}[]" ] },
     { code:"stringTreeSetParam", data:[ 'abcdef', 'hgijklm', 'nopqrst' ] }
   ]);
-}
+};
 
 var map1 = { a:'a', b:'b', c:'c' };
 var map2 = { };
@@ -534,28 +534,28 @@ map2['p}'] = 'p}';
 map2['q,~#'] = 'q,~#';
 map2['r?/,'] = 'r?/,';
 
-function testMarshallStringStringMapParam() {
+window.testMarshallStringStringMapParam = function() {
   runComparisonTests([
     { code:"stringStringMapParam", data:map1 },
     { code:"stringStringMapParam", data:map2 }
   ]);
-}
+};
 
-function testMarshallStringStringHashMapParam() {
+window.testMarshallStringStringHashMapParam = function() {
   runComparisonTests([
     { code:"stringStringHashMapParam", data:map1 },
     { code:"stringStringHashMapParam", data:map2 }
   ]);
-}
+};
 
-function testMarshallStringStringTreeMapParam() {
+window.testMarshallStringStringTreeMapParam = function() {
   runComparisonTests([
     { code:"stringStringTreeMapParam", data:map1 },
     { code:"stringStringTreeMapParam", data:map2 }
   ]);
-}
+};
 
-function testMarshallDomElementParam() {
+window.testMarshallDomElementParam = function() {
   dwr.util.setValue(currentTest.scratch, '<p id="test">This is a <span style="color:#F00;">test node</span> to check on <strong>DOM</strong> <span class="small">manipulation</span>.</p>', { escapeHtml:false });
   var testNode = dwr.util.byId("test");
 
@@ -565,7 +565,7 @@ function testMarshallDomElementParam() {
     { code:"jdomElementParam", data:testNode },
     { code:"domElementParam", data:testNode }
   ]);
-}
+};
 
 /**
  *
@@ -582,7 +582,7 @@ function runComparisonTests(compares) {
 /**
  *
  */
-function testMarshallDownloadMappedWithInheritance() {
+window.testMarshallDownloadMappedWithInheritance = function() {
   Test.downloadMapped(createOptions(function(arr) {
     var b = arr[0];
     verifyTrue(b instanceof AbstractBase, "b instanceof AbstractBase");
@@ -596,12 +596,12 @@ function testMarshallDownloadMappedWithInheritance() {
     verifyUndefined(c.fieldB);
     verifyEqual(c.fieldC, 3.14);
   }));
-}
+};
 
 /**
  *
  */
-function testMarshallUploadMapped() {
+window.testMarshallUploadMapped = function() {
   Test.uploadMapped(new ConcreteBBase(), createOptions(function(reply) {
     verifyEqual(reply, "org.testdwr.convert.ConcreteBBase");
   }));
@@ -611,12 +611,12 @@ function testMarshallUploadMapped() {
   Test.uploadMapped(null, createOptions(function(reply) {
     verifyEqual(reply, "null");
   }));
-}
+};
 
 /**
  *
  */
-function testMarshallUploadMappedToUnmappedParamClass() {
+window.testMarshallUploadMappedToUnmappedParamClass = function() {
   Test.uploadMappedToUnmappedParamClass(new ConcreteBBase(), createOptions(function(reply) {
     verifyEqual(reply, "org.testdwr.convert.ConcreteBBase");
   }));
@@ -626,12 +626,12 @@ function testMarshallUploadMappedToUnmappedParamClass() {
   Test.uploadMappedToUnmappedParamClass(null, createOptions(function(reply) {
     verifyEqual(reply, "null");
   }));
-}
+};
 
 /**
  * Receive a mapped exception from server
  */
-function testMarshallThrowMapped() {
+window.testMarshallThrowMapped = function() {
   Test.throwMapped({
     callback:createDelayedError(),
     exceptionHandler:createDelayed(function(message, ex) {
@@ -641,12 +641,12 @@ function testMarshallThrowMapped() {
       verifyEqual(ex.javaClassName, "org.testdwr.convert.MyFancyException");
     })
   });
-}
+};
 
 /**
  *
  */
-function testMarshallThrowUnmapped() {
+window.testMarshallThrowUnmapped = function() {
   Test.throwUnmapped({
     callback:createDelayedError(),
     exceptionHandler:createDelayed(function(message, ex) {
@@ -656,12 +656,12 @@ function testMarshallThrowUnmapped() {
       verifyEqual(ex.javaClassName, "org.testdwr.convert.MyFancyException");
     })
   });
-}
+};
 
 /**
  *
  */
-function testMarshallUploadInterface() {
+window.testMarshallUploadInterface = function() {
   var c = new ConcreteIFace();
   c.i = 42;
   Test.uploadInterface(c, createOptions(function(reply) {
@@ -671,12 +671,12 @@ function testMarshallUploadInterface() {
   Test.uploadInterface(null, createOptions(function(reply) {
     verifyEqual(reply, "null");
   }));
-}
+};
 
 /**
  *
  */
-function testMarshallPackage1() {
+window.testMarshallPackage1 = function() {
   var obj = new pkg1.OnePackage();
   obj.i = 42;
   obj.extraProperty = "THIS TEXT SHOULDN'T BE MARSHALLED TO SERVER";
@@ -684,24 +684,24 @@ function testMarshallPackage1() {
   Test.package1(obj, createOptions(function(retval) {
     verifyEqual(retval.i, 43);
   }));
-}
+};
 
 /**
  *
  */
-function testMarshallPackage2() {
+window.testMarshallPackage2 = function() {
   var obj = new pkg1.pkg2.TwoPackages();
   obj.i = 42;
 
   Test.package2(obj, createOptions(function(retval) {
     verifyEqual(retval.i, 43);
   }));
-}
+};
 
 /**
  *
  */
-function testMarshallPackagedEx() {
+window.testMarshallPackagedEx = function() {
   Test.packagedException({
     callback:createDelayedError(),
     exceptionHandler: createDelayed(function(message, ex) {
@@ -711,12 +711,12 @@ function testMarshallPackagedEx() {
       verifyEqual(ex.javaClassName, "pkg1.MyFancyExceptionInPackage");
     })
   });
-}
+};
 
 /**
  *
  */
-function testMarshallEnforceTypesOnMappedArguments() {
+window.testMarshallEnforceTypesOnMappedArguments = function() {
   var obj = new pkg1.OnePackage();
 
   // Note that we are sending an argument with the wrong type to this method!
@@ -727,12 +727,12 @@ function testMarshallEnforceTypesOnMappedArguments() {
     exceptionHandler:createDelayed(function(message, ex) {
       verifyEqual(ex.javaClassName, "org.directwebremoting.ConversionException");
     })});
-}
+};
 
 /**
  *
  */
-function testMarshallLightClassMapping() {
+window.testMarshallLightClassMapping = function() {
   // As this is a test for the light class-mapping scheme we don't want the
   // generated mapped JavaScript class for our objects. We remove any trace
   // of the class in case it has been included:
@@ -740,7 +740,7 @@ function testMarshallLightClassMapping() {
     delete this.ObjectWithLightClassMapping;
     delete dwr.engine._mappedClasses["ObjectWithLightClassMapping"];
   }
-  
+
   // We should add type as object property for light class-mapping
   var obj = {$dwrClassName:"ObjectWithLightClassMapping"};
 
@@ -751,4 +751,19 @@ function testMarshallLightClassMapping() {
   Test.downloadLightlyMapped(createOptions(function(reply) {
     verifyEqual(reply.$dwrClassName, "ObjectWithLightClassMapping");
   }));
-}
+};
+
+
+/**
+ *
+ */
+window.testMarshallAreIdentical = function() {
+  var arr = [];
+  Test.areIdentical(arr, arr, createOptions(function(reply) {
+    verifyTrue(reply, "isIdentical:true");
+  }));
+
+  Test.areIdentical([], [], createOptions(function(reply) {
+    verifyFalse(reply, "isIdentical:false");
+  }));
+};

@@ -4,7 +4,7 @@ createTestGroup("Error");
 /**
  *
  */
-function testErrorTransportTypes() {
+window.testErrorTransportTypes = function() {
 
   var exceptionHandler = function(message, ex) {
     verifyNotNull(message);
@@ -48,12 +48,12 @@ function testErrorTransportTypes() {
   Test.throwNPE(callData);
 
   callData.rpcType = dwr.engine.XMLHttpRequest;
-}
+};
 
 /**
  *
  */
-function testErrorLevels() {
+window.testErrorLevels = function() {
   // Setup
   var oldWarningHandler = dwr.engine._warningHandler;
   var oldErrorHandler = dwr.engine._errorHandler;
@@ -86,12 +86,12 @@ function testErrorLevels() {
   // Undo setup
   dwr.engine.setWarningHandler(oldWarningHandler);
   dwr.engine.setErrorHandler(oldErrorHandler);
-}
+};
 
 /**
  *
  */
-function testError404Handling() {
+window.testError404Handling = function() {
   var oldPath = Test._path;
   Test._path = "/thisPathDoesNotExist/dwr";
   Test.intParam(1, {
@@ -108,12 +108,12 @@ function testError404Handling() {
   });
   Test._path = oldPath;
   Test.intParam(1, createDelayed());
-}
+};
 
 /**
  *
  */
-function testErrorExceptionDetail() {
+window.testErrorExceptionDetail = function() {
   Test.throwNPE({
     callback:createDelayedError(),
     exceptionHandler:createDelayed(function(message, ex) {
@@ -145,4 +145,4 @@ function testErrorExceptionDetail() {
       verifyEqual(ex.exception.javaClassName, "java.lang.NullPointerException");
     })
   });
-}
+};

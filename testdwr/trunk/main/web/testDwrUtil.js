@@ -4,10 +4,10 @@ createTestGroup("DwrUtil");
 /**
  *
  */
-function testDwrUtilXss() {
+window.testDwrUtilXss = function() {
   assertTrue(dwr.util.containsXssRiskyCharacters("dd<"));
   assertFalse(dwr.util.containsXssRiskyCharacters("dd"));
-}
+};
 
 var arrayFive = [ 'One', 'Two', 'Three', 'Four', 'Five' ];
 var arrayObject = [
@@ -22,7 +22,7 @@ var map = { one:1, two:2, three:3, four:4, five:5 };
 /**
  * 
  */
-function testDwrUtilAddOptionsBasic() {
+window.testDwrUtilAddOptionsBasic = function() {
   useHtml('<select id="addOptionsBasic"> </select>');
 
   dwr.util.addOptions('addOptionsBasic', arrayFive);
@@ -30,12 +30,12 @@ function testDwrUtilAddOptionsBasic() {
   assertEqual("One", dwr.util.getValue('addOptionsBasic'));
   assertEqual("One", dwr.util.getText('addOptionsBasic'));
   assertTrue(dwr.util.byId('addOptionsBasic').innerHTML.match(/option/));
-}
+};
 
 /**
  * 
  */
-function testDwrUtilRemoveAllOptions() {
+window.testDwrUtilRemoveAllOptions = function() {
   useHtml('<select id="removeAllOptions">' +
     '<option value="v1">One</option>' +
     '<option value="v2">Two</option>' +
@@ -49,12 +49,12 @@ function testDwrUtilRemoveAllOptions() {
   // TODO: shouldn't this be better defined?
   assertTrue(value == null || value.length == 0);
   assertFalse(dwr.util.byId('removeAllOptions').innerHTML.match(/option/));
-}
+};
 
 /**
  * 
  */
-function testDwrUtilAddOptionsObject1() {
+window.testDwrUtilAddOptionsObject1 = function() {
   useHtml('<select id="addOptionsObject1"> </select>');
 
   dwr.util.addOptions('addOptionsObject1', arrayObject, "name");
@@ -62,12 +62,12 @@ function testDwrUtilAddOptionsObject1() {
   assertEqual("One", dwr.util.getValue('addOptionsObject1'));
   assertEqual("One", dwr.util.getText('addOptionsObject1'));
   assertTrue(dwr.util.byId('addOptionsObject1').innerHTML.match(/option/));
-}
+};
 
 /**
  * 
  */
-function testDwrUtilAddOptionsObject2() {
+window.testDwrUtilAddOptionsObject2 = function() {
   useHtml('<select id="addOptionsObject2"> </select>');
 
   dwr.util.addOptions('addOptionsObject2', arrayObject, "name", "value");
@@ -75,12 +75,12 @@ function testDwrUtilAddOptionsObject2() {
   assertEqual("One", dwr.util.getValue('addOptionsObject2'));
   assertEqual("1", dwr.util.getText('addOptionsObject2'));
   assertTrue(dwr.util.byId('addOptionsObject2').innerHTML.match(/option/));
-}
+};
 
 /**
  * 
  */
-function testDwrUtilAddOptionsObject3() {
+window.testDwrUtilAddOptionsObject3 = function() {
   useHtml('<select id="addOptionsObject3"> </select>');
 
   dwr.util.addOptions('addOptionsObject3', arrayObject, "value");
@@ -88,12 +88,12 @@ function testDwrUtilAddOptionsObject3() {
   assertEqual("1", dwr.util.getValue('addOptionsObject3'));
   assertEqual("1", dwr.util.getText('addOptionsObject3'));
   assertTrue(dwr.util.byId('addOptionsObject3').innerHTML.match(/option/));
-}
+};
 
 /**
  * 
  */
-function testDwrUtilAddOptionsObject4() {
+window.testDwrUtilAddOptionsObject4 = function() {
   useHtml('<select id="addOptionsObject4"> </select>');
 
   dwr.util.addOptions('addOptionsObject4', arrayObject, "value", "name");
@@ -101,12 +101,12 @@ function testDwrUtilAddOptionsObject4() {
   assertEqual("1", dwr.util.getValue('addOptionsObject4'));
   assertEqual("One", dwr.util.getText('addOptionsObject4'));
   assertTrue(dwr.util.byId('addOptionsObject4').innerHTML.match(/option/));
-}
+};
 
 /**
  * 
  */
-function testDwrUtilAddOptionsMap1() {
+window.testDwrUtilAddOptionsMap1 = function() {
   useHtml('<select id="addOptionsMap1"> </select>');
 
   dwr.util.addOptions('addOptionsMap1', map);
@@ -114,12 +114,12 @@ function testDwrUtilAddOptionsMap1() {
   assertEqual("one", dwr.util.getValue('addOptionsMap1'));
   assertEqual("1", dwr.util.getText('addOptionsMap1'));
   assertTrue(dwr.util.byId('addOptionsMap1').innerHTML.match(/option/));
-}
+};
 
 /**
  * 
  */
-function testDwrUtilAddOptionsMap2() {
+window.testDwrUtilAddOptionsMap2 = function() {
   useHtml('<select id="addOptionsMap2"> </select>');
 
   dwr.util.addOptions('addOptionsMap2', map, true);
@@ -127,12 +127,12 @@ function testDwrUtilAddOptionsMap2() {
   assertEqual("1", dwr.util.getValue('addOptionsMap2'));
   assertEqual("one", dwr.util.getText('addOptionsMap2'));
   assertTrue(dwr.util.byId('addOptionsMap2').innerHTML.match(/option/));
-}
+};
 
 /**
  * 
  */
-function testDwrUtilRemoveItems() {
+window.testDwrUtilRemoveItems = function() {
   useHtml('<ul id="removeItems">' +
     '<li>One</li> <li>Two</li> <li>Three</li> <li>Four</li> <li>Five</li>' +
     '</ul>');
@@ -143,12 +143,12 @@ function testDwrUtilRemoveItems() {
   // TODO: shouldn't this be better defined?
   assertTrue(value == null || value.length == 0);
   assertFalse(dwr.util.byId('removeItems').innerHTML.match(/option/));
-}
+};
 
 /**
  * 
  */
-function testDwrUtilAddItemsBasic() {
+window.testDwrUtilAddItemsBasic = function() {
   useHtml('<ul id="addItemsBasic"> </ul>');
 
   dwr.util.addOptions('addItemsBasic', arrayFive);
@@ -157,12 +157,12 @@ function testDwrUtilAddItemsBasic() {
   assertTrue(innerHtml.match(/li/));
   assertTrue(innerHtml.match(/One/));
   assertFalse(innerHtml.match(/1/));
-}
+};
 
 /**
  * 
  */
-function testDwrUtilAddItemsObject1() {
+window.testDwrUtilAddItemsObject1 = function() {
   useHtml('<ul id="addItemsObject1"> </ul>');
 
   dwr.util.addOptions('addItemsObject1', arrayObject, "name");
@@ -171,12 +171,12 @@ function testDwrUtilAddItemsObject1() {
   assertTrue(innerHtml.match(/li/));
   assertTrue(innerHtml.match(/One/));
   assertFalse(innerHtml.match(/1/));
-}
+};
 
 /**
  * 
  */
-function testDwrUtilAddItemsObject2() {
+window.testDwrUtilAddItemsObject2 = function() {
   useHtml('<ul id="addItemsObject2"> </ul>');
 
   dwr.util.addOptions('addItemsObject2', arrayObject, "name", "value");
@@ -185,12 +185,12 @@ function testDwrUtilAddItemsObject2() {
   assertTrue(innerHtml.match(/li/));
   assertTrue(innerHtml.match(/One/));
   assertFalse(innerHtml.match(/1/));
-}
+};
 
 /**
  * 
  */
-function testDwrUtilAddItemsObject3() {
+window.testDwrUtilAddItemsObject3 = function() {
   useHtml('<ul id="addItemsObject3"> </ul>');
 
   dwr.util.addOptions('addItemsObject3', arrayObject, "value");
@@ -199,12 +199,12 @@ function testDwrUtilAddItemsObject3() {
   assertTrue(innerHtml.match(/li/));
   assertFalse(innerHtml.match(/One/));
   assertTrue(innerHtml.match(/1/));
-}
+};
 
 /**
  * 
  */
-function testDwrUtilAddItemsObject4() {
+window.testDwrUtilAddItemsObject4 = function() {
   useHtml('<ul id="addItemsObject4"> </ul>');
 
   dwr.util.addOptions('addItemsObject4', arrayObject, "value", "name");
@@ -213,12 +213,12 @@ function testDwrUtilAddItemsObject4() {
   assertTrue(innerHtml.match(/li/));
   assertFalse(innerHtml.match(/One/));
   assertTrue(innerHtml.match(/1/));
-}
+};
 
 /**
  * 
  */
-function testDwrUtilCloneNode1() {
+window.testDwrUtilCloneNode1 = function() {
   useHtml('<div id="cloneNode1">' +
     '<ul id="cloneNode1Inner1">' +
     '<li>One</li><li>Two</li><li>Three</li><li>Four</li>' +
@@ -239,12 +239,12 @@ function testDwrUtilCloneNode1() {
   assertNotNull(dwr.util.byId('precloneNode1suf'));
   assertNotNull(dwr.util.byId('precloneNode1Inner2suf'));
   assertNotNull(dwr.util.byId('precloneNode1Inner1suf'));
-}
+};
 
 /**
  * 
  */
-function testDwrUtilAddRowsBasic() {
+window.testDwrUtilAddRowsBasic = function() {
   useHtml('<table border="1" id="addRowsBasic"></table>');
 
   dwr.util.addRows('addRowsBasic', arrayFive, [
@@ -265,5 +265,5 @@ function testDwrUtilAddRowsBasic() {
   assertTrue(innerHtml.match(/td/));
   assertTrue(innerHtml.match(/innerHTML Test/));
   assertTrue(innerHtml.match(/DOM Test/));
-}
+};
 

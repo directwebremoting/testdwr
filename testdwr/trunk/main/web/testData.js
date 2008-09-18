@@ -1,5 +1,5 @@
 
-function testDataSimple() {
+window.testDataSimple = function() {
   // This is a demo of the simplest use-case of the data API
   // The first param is the widget ID must be unique to this page. The second,
   // is the server data ID. In this case 'testServerData' should have been
@@ -32,7 +32,7 @@ function testDataSimple() {
   setTimeout(function() {
     //dwr.data.unsubscribe('widgetA');
   }, 4000);
-}
+};
 
 function widgetCallback(subscriptionId, reason, data, matchCount) {
   var reasons = [ "initial", "insert", "update", "remove" ];

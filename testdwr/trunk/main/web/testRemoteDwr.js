@@ -4,7 +4,7 @@ createTestGroup("RemoteDwr");
 /**
  * 
  */
-function testRemoteDwrSetValue() {
+window.testRemoteDwrSetValue = function() {
   useHtml('<input id="remoteDwrSetValue" value="start"/>');
   
   Test.setValue("remoteDwrSetValue", "changed", createDelayed(function(data) {
@@ -12,16 +12,16 @@ function testRemoteDwrSetValue() {
     var remoteDwrSetValue = dwr.util.getValue("remoteDwrSetValue");
     assertEqual("changed", remoteDwrSetValue);
   }));
-}
+};
 
 /**
  * 
  */
-function testRemoteDwrSetCookie() {
+window.testRemoteDwrSetCookie = function() {
   var value = "someCookieValue\\!!\'\"&&amp";
   Test.setCookie("someCookieName", value, createDelayed(function() {
     var result = document.cookie;
     verifyTrue(result.indexOf("someCookieName") > -1);
     verifyTrue(result.indexOf(value) > -1);
   }));
-}
+};
