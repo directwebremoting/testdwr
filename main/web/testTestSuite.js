@@ -1,62 +1,63 @@
 
 createTestGroup("TestSuite");
 
-function testTestSuiteNothing() {
-}
+window.testTestSuiteNothing = function() {
+};
 
-function testTestSuiteWillFail() {
+window.testTestSuiteWillFail = function() {
   verifyTrue(false);
   fail("This should fail");
   verifyFalse(true);
-}
+};
 
-function testTestSuiteWillFailLater() {
+window.testTestSuiteWillFailLater = function() {
   setTimeout(createDelayed(function() {
     verifyTrue(false);
     fail("This should fail");
     verifyFalse(true);
   }), 1000);
-}
+};
 
-function testTestSuiteWillPassLater() {
+window.testTestSuiteWillPassLater = function() {
   setTimeout(createDelayed(function() {
     verifyTrue(true);
   }), 1000);
-}
+};
 
-function testTestSuiteWillDelayError() {
+window.testTestSuiteWillDelayError = function() {
   setTimeout(createDelayedError(function() {
     verifyTrue(false);
   }), 1000);
-}
+};
 
-function testTestSuiteWillNotComplete() {
+window.testTestSuiteWillNotComplete = function() {
   createDelayed(function() {
     verifyTrue(true);
   });
-}
+};
 
-function testTestSuitePartialComplete() {
+window.testTestSuitePartialComplete = function() {
   createDelayed(function() {
     verifyTrue(true);
   });
   setTimeout(createDelayed(function() {
     verifyTrue(true);
   }), 1000);
-}
+};
 
-function testTestSuiteSyncAsync() {
+window.testTestSuiteSyncAsync = function() {
   createDelayed(function() {
     verifyTrue(true);
   })();
-}
+};
 
 /**
  * The ability to test the groups isn't working
  */
 createTestGroup("Combination");
-function testCombinationMarshalling() {
+window.testCombinationMarshalling = function() {
   dwr.engine.setAsync(true);
   runTestGroup('Marshall');
   dwr.engine.setAsync(false);
-}
+};
+

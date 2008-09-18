@@ -2,23 +2,23 @@
 /**
  *
  */
-function testAreIdentical() {
+window.testAreIdentical = function() {
   var data = [ 1, 2, 3, 4 ];
   Test.areIdentical(data, data, function(reply) {
     assertTrue(reply);
   });
-}
+};
 
 /**
  *
  */
-function testScriptSessionBindingListener() {
+window.testScriptSessionBindingListener = function() {
   Test.checkScriptSessionBindingListener(createReplyIsErrorCallback());
-}
+};
 
 /**
  *
  */
-function testImHere() {
+window.testImHere = function() {
   Test.checkImHere(createReplyIsErrorCallback());
-}
+};

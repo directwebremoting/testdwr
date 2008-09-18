@@ -2,7 +2,7 @@
 /**
  *
  */
-function testMemoryLeaks(count) {
+window.testMemoryLeaks = function(count) {
   if (count == null) {
     count = 0;
   }
@@ -17,12 +17,12 @@ function testMemoryLeaks(count) {
       }, 0);
     });
   }
-}
+};
 
 /**
  * Changing the _path clashes with other tests
  */
-function testErrorRedirect(){
+window.testErrorRedirect = function(){
   var oldPath = Test._path;
   Test._path = "/test-dwr/custom/307";
   Test.doNothing({
@@ -35,23 +35,23 @@ function testErrorRedirect(){
       Test._path = oldPath;
     })
   });
-}
+};
 
 /**
  *
  */
-function testServerChecks() {
+window.testServerChecks = function() {
   Test.serverChecks({
     callback:createDelayed(),
     exceptionHandler:createDelayedError()
   });
-}
+};
 
 /**
  * This doesn't always work when there is lots going on, and it requires to not
  * be the last test in a run because it delays reports
  */
-function testScriptSessionListener() {
+window.testScriptSessionListener = function() {
   var progress1 = createDelayed(function(results) {
     if (results == null || results.length == 0) {
       return;
@@ -65,4 +65,5 @@ function testScriptSessionListener() {
     fail(results.join("<br/>"));
   });
   Test.checkScriptSessionListener(progress1, progress2, createReplyIsErrorCallback());
-}
+};
+

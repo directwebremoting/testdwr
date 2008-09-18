@@ -4,13 +4,13 @@ createTestGroup("Guice");
 /**
  *
  */
-function testGuiceGetPath() {
+window.testGuiceGetPath = function() {
   GuiceTest.getPath(createDelayed(function(data) {
     verifyEqual("/guice", data);
   }));
-}
+};
 
-function testGuiceByteParam() {
+window.testGuiceByteParam = function() {
   runGuiceComparisonTests([
     { code:"byteParam", data:-128 },
     { code:"byteParam", data:-1 },
@@ -18,16 +18,16 @@ function testGuiceByteParam() {
     { code:"byteParam", data:1 },
     { code:"byteParam", data:127 }
   ]);
-}
+};
 
-function testGuiceBooleanParam() {
+window.testGuiceBooleanParam = function() {
   runGuiceComparisonTests([
     { code:"booleanParam", data:true },
     { code:"booleanParam", data:false }
   ]);
-}
+};
 
-function testGuiceShortParam() {
+window.testGuiceShortParam = function() {
   runGuiceComparisonTests([
     { code:"shortParam", data:-32768 },
     { code:"shortParam", data:-1 },
@@ -35,9 +35,9 @@ function testGuiceShortParam() {
     { code:"shortParam", data:1 },
     { code:"shortParam", data:32767 }
   ]);
-}
+};
 
-function testGuiceIntParam() {
+window.testGuiceIntParam = function() {
   runGuiceComparisonTests([
     { code:"intParam", data:-2147483648 },
     { code:"intParam", data:-1 },
@@ -45,9 +45,9 @@ function testGuiceIntParam() {
     { code:"intParam", data:1 },
     { code:"intParam", data:2147483647 }
   ]);
-}
+};
 
-function testGuiceLongParam() {
+window.testGuiceLongParam = function() {
   runGuiceComparisonTests([
     // Mozilla rounds 9223372036854775808 to 9223372036854776000 which overflows so we round down
     { code:"longParam", data:-9223372036854775000 },
@@ -56,9 +56,9 @@ function testGuiceLongParam() {
     { code:"longParam", data:1 },
     { code:"longParam", data:9223372036854775000 }
   ]);
-}
+};
 
-function testGuiceFloatParam() {
+window.testGuiceFloatParam = function() {
   runGuiceComparisonTests([
     { code:"floatParam", data:-100000000000000000000 },
     { code:"floatParam", data:-1 },
@@ -66,9 +66,9 @@ function testGuiceFloatParam() {
     { code:"floatParam", data:1 },
     { code:"floatParam", data:100000000000000000000 }
   ]);
-}
+};
 
-function testGuiceDoubleParam() {
+window.testGuiceDoubleParam = function() {
   runGuiceComparisonTests([
     { code:"doubleParam", data:-100000000000000000000 },
     { code:"doubleParam", data:-1 },
@@ -81,9 +81,9 @@ function testGuiceDoubleParam() {
     { code:"doubleParam", data:Number.NEGATIVE_INFINITY },
     { code:"doubleParam", data:Number.POSITIVE_INFINITY }
   ]);
-}
+};
 
-function testGuiceCharParam() {
+window.testGuiceCharParam = function() {
   runGuiceComparisonTests([
     // Opera 8 has issues with this one. It appears to not like \0
     //{ code:"charParam", data:"\0" },
@@ -98,9 +98,9 @@ function testGuiceCharParam() {
     { code:"charParam", data:"\u0080" },
     { code:"charParam", data:"\u00FF" }
   ]);
-}
+};
 
-function testGuiceStringParam() {
+window.testGuiceStringParam = function() {
   runGuiceComparisonTests([
     { code:"stringParam", data:" " },
     { code:"stringParam", data:"$" },
@@ -115,7 +115,7 @@ function testGuiceStringParam() {
     { code:"stringParam", data:"{|}~" },
     { code:"stringParam", data:"call.callback = null" }
   ]);
-}
+};
 
 /**
  *

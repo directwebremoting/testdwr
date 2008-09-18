@@ -4,23 +4,23 @@ createTestGroup("Remoting");
 /**
  *
  */
-function testRemotingGetPath() {
+window.testRemotingGetPath = function() {
   Test.getPath(createDelayed(function(data) {
     verifyEqual("/dwr", data);
   }));
-}
+};
 
 /**
  *
  */
-function testRemotingVarious() {
+window.testRemotingVarious = function() {
   Test.variousChecks(createReplyIsErrorCallback());
-}
+};
 
 /**
  *
  */
-function testRemotingScopeAndArgs() {
+window.testRemotingScopeAndArgs = function() {
   var args = [ 1, "two" ];
   var scope = {
     callback:createDelayed(function(data, passedArgs) {
@@ -36,12 +36,12 @@ function testRemotingScopeAndArgs() {
     scope:scope,
     args:args
   });
-}
+};
 
 /**
  *
  */
-function testRemotingAsyncNesting() {
+window.testRemotingAsyncNesting = function() {
   var count = 0;
   Test.slowStringParam("1", 100, createDelayed(function(data1) {
     assertEqual(data1, 1);
@@ -60,12 +60,12 @@ function testRemotingAsyncNesting() {
 
   count++;
   assertEqual(count, 1);
-}
+};
 
 /**
  *
  */
-function testRemotingSyncNesting() {
+window.testRemotingSyncNesting = function() {
   dwr.engine.setAsync(false);
   var count = 0;
 
@@ -88,24 +88,24 @@ function testRemotingSyncNesting() {
   assertEqual(count, 4);
 
   dwr.engine.setAsync(true);
-}
+};
 
 /**
  *
  */
-function testRemotingSyncReturning() {
+window.testRemotingSyncReturning = function() {
   dwr.engine.setAsync(false);
   var data1 = Test.slowStringParam("1", 100);
   assertEqual(data1, "1");
   var data2 = Test.slowStringParam("SyncNesting-2", 100);
   assertEqual(data2, "2");
   dwr.engine.setAsync(true);
-}
+};
 
 /**
  *
  */
-function testRemotingSyncCallMetaData() {
+window.testRemotingSyncCallMetaData = function() {
   var count = 0;
   Test.slowStringParam("1", 100, {
     async:false,
@@ -117,12 +117,12 @@ function testRemotingSyncCallMetaData() {
   });
   count++;
   assertEqual(count, 2);
-}
+};
 
 /**
  *
  */
-function testRemotingAsyncCallMetaData() {
+window.testRemotingAsyncCallMetaData = function() {
   var count = 0;
   Test.slowStringParam("1", 100, {
     async:true,
@@ -134,12 +134,12 @@ function testRemotingAsyncCallMetaData() {
   });
   count++;
   assertEqual(count, 1);
-}
+};
 
 /**
  *
  */
-function testRemotingParameters() {
+window.testRemotingParameters = function() {
   Test.listParameters({
     callback:createDelayed(function(data) {
       assertEqual(data.param1, "value1");
@@ -152,12 +152,12 @@ function testRemotingParameters() {
       'param2':'value2'
     }
   });
-}
+};
 
 /**
  *
  */
-function testRemotingHeaders() {
+window.testRemotingHeaders = function() {
   Test.listHeaders({
     callback:createDelayed(function(data) {
       assertEqual(data.param1, "value1");
@@ -170,12 +170,12 @@ function testRemotingHeaders() {
       'param2':'value2'
     }
   });
-}
+};
 
 /**
  *
  */
-function testRemotingTimeout() {
+window.testRemotingTimeout = function() {
   Test.waitFor(3000, {
     callback:createDelayedError(),
     timeout:1000,
@@ -183,4 +183,4 @@ function testRemotingTimeout() {
       verifyNotNull(ex);
     })
   });
-}
+};
