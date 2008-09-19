@@ -328,7 +328,7 @@ function runTest(testName) {
     if (ex.message && ex.message.length > 0) {
       _record(currentTest, ex.message);
     }
-    console.trace();
+    window.console && console.trace();
   }
   if (_getStatus(currentTest) == status.executing) {
     _setStatus(currentTest, status.pass, true);
@@ -432,7 +432,7 @@ function createDelayed(func, scope) {
         if (ex.message && ex.message.length > 0) {
           _record(currentTest, ex.message);
         }
-        console.trace();
+        window.console && console.trace();
       }
     }
     delayedTest.outstanding--;
@@ -723,7 +723,7 @@ function verifyNotEqual(value1, value2) {
  */
 function _recordTrace() {
   _record.apply(this, arguments);
-  console.trace();
+  window.console && console.trace();
 }
 
 /**
@@ -745,7 +745,7 @@ function success(message) {
  *
  */
 function _record() {
-  console.error(arguments);
+  window.console && console.error(arguments);
   _setStatus(currentTest, status.fail);
   var message = arguments[0] + "(";
   var data = arguments[1];
@@ -805,28 +805,32 @@ function _isEqual(actual, expected, depth) {
 
   if (expected == null) {
     if (actual != null) {
-      return "expected: null, actual non-null: " + dwr.util.toDescriptiveString(actual);
+//      return "expected: null, actual non-null: " + dwr.util.toDescriptiveString(actual);
+      return false;
     }
     return true;
   }
 
-  if (isNaN(expected)) {
-    if (!isNaN(actual)) {
-      return "expected: NaN, actual non-NaN: " + dwr.util.toDescriptiveString(actual);
+  if (typeof(expected) == "number" && isNaN(expected)) {
+    if (!(typeof(actual) == "number" && isNaN(actual))) {
+//      return "expected: NaN, actual non-NaN: " + dwr.util.toDescriptiveString(actual);
+      return false;
     }
     return true;
   }
 
   if (actual == null) {
     if (expected != null) {
-      return "actual: null, expected non-null: " + dwr.util.toDescriptiveString(expected);
+//      return "actual: null, expected non-null: " + dwr.util.toDescriptiveString(expected);
+      return false;
     }
     return true; // we wont get here of course ...
   }
 
   if (typeof expected == "object") {
     if (!(typeof actual == "object")) {
-      return "expected object, actual not an object";
+//      return "expected object, actual not an object";
+      return false;
     }
 
     var actualLength = 0;
@@ -834,7 +838,8 @@ function _isEqual(actual, expected, depth) {
       if (typeof actual[prop] != "function" || typeof expected[prop] != "function") {
         var nest = _isEqual(actual[prop], expected[prop], depth + 1);
         if (typeof nest != "boolean" || !nest) {
-          return "element '" + prop + "' does not match: " + nest;
+//          return "element '" + prop + "' does not match: " + nest;
+          return false;
         }
       }
       actualLength++;
@@ -844,26 +849,31 @@ function _isEqual(actual, expected, depth) {
     var expectedLength = 0;
     for (prop in expected) expectedLength++;
     if (actualLength != expectedLength) {
-      return "expected object size = " + expectedLength + ", actual object size = " + actualLength;
+//      return "expected object size = " + expectedLength + ", actual object size = " + actualLength;
+      return false;
     }
     return true;
   }
 
   if (actual != expected) {
-    return "expected = " + expected + " (type=" + typeof expected + "), actual = " + actual + " (type=" + typeof actual + ")";
+//    return "expected = " + expected + " (type=" + typeof expected + "), actual = " + actual + " (type=" + typeof actual + ")";
+    return false;
   }
 
   if (expected instanceof Array) {
     if (!(actual instanceof Array)) {
-      return "expected array, actual not an array";
+//      return "expected array, actual not an array";
+      return false;
     }
     if (actual.length != expected.length) {
-      return "expected array length = " + expected.length + ", actual array length = " + actual.length;
+//      return "expected array length = " + expected.length + ", actual array length = " + actual.length;
+      return false;
     }
     for (var i = 0; i < actual.length; i++) {
       var inner = _isEqual(actual[i], expected[i], depth + 1);
       if (typeof inner != "boolean" || !inner) {
-        return "element " + i + " does not match: " + inner;
+//        return "element " + i + " does not match: " + inner;
+        return false;
       }
     }
 
