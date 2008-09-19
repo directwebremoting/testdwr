@@ -4,6 +4,40 @@ createTestGroup("DwrUtil");
 /**
  *
  */
+window.testDwrUtilByIdAvoidNames = function() {
+  useHtml(
+	'<form name="byIdAvoidNamesForm">' +
+	'  <input name="byIdAvoidNames">' +
+	'  <input name="byIdAvoidNames2">' +
+	'</form>' +
+	'<span id="byIdAvoidNames"></span>'
+  );
+  
+  var elem = dwr.util.byId('byIdAvoidNames');
+  assertNotNull(elem);
+  assertEqual("span", elem.tagName.toLowerCase());
+  var elem2 = dwr.util.byId('byIdAvoidNames2');
+  assertNull(elem2);
+}
+
+/**
+ *
+ */
+window.testDwrUtilByIdDontGetTrickedByFormIdElement = function() {
+  useHtml(
+	'<form id="byIdDontGetTrickedByFormIdElement">' +
+	'  <input name="id" value="blabla">' +
+	'</form>'
+  );
+  
+  var elem = dwr.util.byId('byIdDontGetTrickedByFormIdElement');
+  assertNotNull(elem);
+  assertEqual("form", elem.tagName.toLowerCase());
+}
+
+/**
+ *
+ */
 window.testDwrUtilXss = function() {
   assertTrue(dwr.util.containsXssRiskyCharacters("dd<"));
   assertFalse(dwr.util.containsXssRiskyCharacters("dd"));
