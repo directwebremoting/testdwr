@@ -2,7 +2,8 @@
 createTestGroup("DwrUtil");
 
 /**
- *
+ * Test inspired by:
+ * http://www.sixteensmallstones.org/ie-javascript-bugs-overriding-internet-explorers-documentgetelementbyid-to-be-w3c-compliant-exposes-an-additional-bug-in-getattributes
  */
 window.testDwrUtilByIdAvoidNames = function() {
   useHtml(
@@ -21,7 +22,8 @@ window.testDwrUtilByIdAvoidNames = function() {
 }
 
 /**
- *
+ * Test inspired by:
+ * http://www.sixteensmallstones.org/ie-javascript-bugs-overriding-internet-explorers-documentgetelementbyid-to-be-w3c-compliant-exposes-an-additional-bug-in-getattributes
  */
 window.testDwrUtilByIdDontGetTrickedByFormIdElement = function() {
   useHtml(
