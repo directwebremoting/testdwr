@@ -102,7 +102,6 @@ window.testError404Handling = function() {
       verifyNotNull(ex.message);
       verifyEqual(typeof ex.message, "string");
       verifyEqual(ex.message, message);
-      verifyEqual(ex.javaClassName, "java.lang.NullPointerException");
       verifyEqual(ex.name, "dwr.engine.http.404");
     })
   });
