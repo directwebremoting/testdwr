@@ -1,15 +1,6 @@
 
 createTestGroup("Annotate");
 
-/**
- *
- */
-window.testAnnotateGetPath = function() {
-  AnnotateTest.getPath(createDelayed(function(data) {
-    verifyEqual("/annotate", data);
-  }));
-};
-
 window.testAnnotateByteParam = function() {
   runAnnotateComparisonTests([
     { code:"byteParam", data:-128 },
@@ -121,7 +112,7 @@ window.testAnnotateStringParam = function() {
  *
  */
 function runAnnotateComparisonTests(compares) {
-  for (var i = 0; i < compares.length; i++) {
+  for (var i = 0; i < compares.length; i++) (function(i) {
     var compare = compares[i];
 
     AnnotateTest[compare.code](compare.data, {
@@ -130,5 +121,5 @@ function runAnnotateComparisonTests(compares) {
       }),
       exceptionHandler:createDelayedError()
     });
-  }
+  })(i)
 }

@@ -1,15 +1,6 @@
 
 createTestGroup("SpringServlet");
 
-/**
- *
- */
-window.testSpringServletGetPath = function() {
-  SpringServletTest.getPath(createDelayed(function(data) {
-    verifyEqual("/springservlet", data);
-  }));
-};
-
 window.testSpringServletByteParam = function() {
   runSpringServletComparisonTests([
     { code:"byteParam", data:-128 },
@@ -121,7 +112,7 @@ window.testSpringServletStringParam = function() {
  *
  */
 function runSpringServletComparisonTests(compares) {
-  for (var i = 0; i < compares.length; i++) {
+  for (var i = 0; i < compares.length; i++) (function(i) {
     var compare = compares[i];
 
     SpringServletTest[compare.code](compare.data, {
@@ -130,5 +121,5 @@ function runSpringServletComparisonTests(compares) {
       }),
       exceptionHandler:createDelayedError()
     });
-  }
+  })(i)
 }

@@ -74,11 +74,40 @@ function displayTestTable() {
     var testNames = groups[groupName];
     testNames.sort();
 
+    dwr.util.addRows("testSummary", [ groupName ], [
+      function name(groupName) {
+        return groupName + '<span class="headInline"> [' +
+          '<a href="#" id="groupDisplay' + groupName + '" onclick="_toggleDetail(\'' + groupName + '\');">Show</a>' +
+          ']</span>';
+      },
+      function started(groupName) { return ""; },
+      function outstanding(groupName) { return ""; },
+      function failed(groupName) { return ""; },
+      function passed(groupName) { return ""; },
+      function count(groupName) { return ""; },
+      function actions(groupName) { return '<input type="button" value="Run" onclick="runTestGroup(\'' + groupName + '\')"/>'; }
+    ], {
+      escapeHtml:false,
+      cellCreator:function(options) {
+        if (options.cellNum == 0) {
+          return document.createElement("th");
+        }
+        var td = document.createElement("td");
+        if (options.cellNum == 1) td.setAttribute("id", "groupStarted" + options.rowData);
+        if (options.cellNum == 2) td.setAttribute("id", "groupOutstanding" + options.rowData);
+        if (options.cellNum == 3) td.setAttribute("id", "groupFailed" + options.rowData);
+        if (options.cellNum == 4) td.setAttribute("id", "groupPassed" + options.rowData);
+        if (options.cellNum == 5) td.setAttribute("id", "groupCount" + options.rowData);
+        return td;
+      }
+    });
+
     dwr.util.cloneNode("groupTemplate", { idSuffix:groupName });
 
     dwr.util.setValue("groupTitle" + groupName, groupName);
     dwr.util.byId("groupDetail" + groupName).style.display = "none";
 
+    // A set of rows for the results
     dwr.util.addRows("groupTests" + groupName, testNames, [
       function num(testName, options) { return options.rowNum + 1; },
       function name(testName, options) {
@@ -114,33 +143,6 @@ function displayTestTable() {
     });
   }
 
-  dwr.util.addRows("testSummary", groupNames, [
-    function name(groupName) {
-      return groupName + '<span class="headInline"> [' +
-        '<a href="#" id="groupDisplay' + groupName + '" onclick="_toggleDetail(\'' + groupName + '\');">Show</a>' +
-        ']</span>';
-    },
-    function started(groupName) { return ""; },
-    function outstanding(groupName) { return ""; },
-    function failed(groupName) { return ""; },
-    function passed(groupName) { return ""; },
-    function count(groupName) { return ""; },
-    function actions(groupName) { return '<input type="button" value="Run" onclick="runTestGroup(\'' + groupName + '\')"/>'; }
-  ], {
-    escapeHtml:false,
-    cellCreator:function(options) {
-      if (options.cellNum == 0) {
-        return document.createElement("th");
-      }
-      var td = document.createElement("td");
-      if (options.cellNum == 1) td.setAttribute("id", "groupStarted" + options.rowData);
-      if (options.cellNum == 2) td.setAttribute("id", "groupOutstanding" + options.rowData);
-      if (options.cellNum == 3) td.setAttribute("id", "groupFailed" + options.rowData);
-      if (options.cellNum == 4) td.setAttribute("id", "groupPassed" + options.rowData);
-      if (options.cellNum == 5) td.setAttribute("id", "groupCount" + options.rowData);
-      return td;
-    }
-  });
   dwr.util.addRows("testSummary", [ 1 ], [
     function name() { return "All"; },
     function started() { return ""; },
