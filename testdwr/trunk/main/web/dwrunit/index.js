@@ -10,7 +10,7 @@ var currentTest = null;
 var status = { notrun:0, executing:1, asynchronous:2, pass:3, fail:4 };
 var statusBackgrounds = [ "#EEE", "#888", "#FFA", "#8F8", "#F00" ];
 var statusColors = [ "#000", "#FFF", "#000", "#000", "#FFF" ];
-var statusNames = [ "Skipped", "Executing", "Waiting for results", "Pass", "Fail" ];
+var statusNames = [ "Skipped", "Executing", "Waiting", "Pass", "Fail" ];
 
 /**
  *
@@ -69,23 +69,38 @@ function createTestGroup(groupName) {
  *
  */
 function displayTestTable() {
+  var html = "";
+  html += '<div id="settingsPanel">';
+  html += '  <strong>Settings:</strong>';
+  html += '  <label for="delay" class="hover" title="The delay between starting tests.">Inter-test delay:</label>';
+  html += '  <input id="delay" value="0" size="3"/> ms.';
+  html += '  <label for="autoSend" class="hover" title="DWR can record a test runs in (~/.dwr_test_results.xml) Do we automatically send the results to the server on completion?">Auto send results:</label>';
+  html += '  <input id="autoSend" type="checkbox"/>';
+  html += '</div>';
+  html += '<table class="grey form">';
+  html += '  <thead><tr><th>#</th><th>Group</th><th>Run</th><th>Results</th><th>Actions</th><th>Scratch</th></tr></thead>';
+  html += '  <tbody id="testSummary"> </tbody>';
+  html += '</table>';
+  html += '<div id="output"> </div>';
+  dwr.util.setValue('dwrUnit', html, { escapeHtml:false });
+
+  var testNum = 0;
   for (var i = 0; i < groupNames.length; i++) {
     var groupName = groupNames[i];
     var testNames = groups[groupName];
     testNames.sort();
 
     dwr.util.addRows("testSummary", [ groupName ], [
+      function number(groupName) {
+        return '<a class="headInline" href="#" id="groupDisplay' + groupName + '" onclick="_toggleDetail(\'' + groupName + '\');">Show</a>';
+      },
       function name(groupName) {
-        return groupName + '<span class="headInline"> [' +
-          '<a href="#" id="groupDisplay' + groupName + '" onclick="_toggleDetail(\'' + groupName + '\');">Show</a>' +
-          ']</span>';
+        return "<strong>" + groupName + "</strong>";
       },
       function started(groupName) { return ""; },
-      function outstanding(groupName) { return ""; },
-      function failed(groupName) { return ""; },
-      function passed(groupName) { return ""; },
       function count(groupName) { return ""; },
-      function actions(groupName) { return '<input type="button" value="Run" onclick="runTestGroup(\'' + groupName + '\')"/>'; }
+      function actions(groupName) { return '<input type="button" value="Run Group" onclick="runTestGroup(\'' + groupName + '\')"/>'; },
+      function scratchSpace(groupName) { return "<div id='scratch" + groupName + "'></div>"; }
     ], {
       escapeHtml:false,
       cellCreator:function(options) {
@@ -93,24 +108,15 @@ function displayTestTable() {
           return document.createElement("th");
         }
         var td = document.createElement("td");
-        if (options.cellNum == 1) td.setAttribute("id", "groupStarted" + options.rowData);
-        if (options.cellNum == 2) td.setAttribute("id", "groupOutstanding" + options.rowData);
-        if (options.cellNum == 3) td.setAttribute("id", "groupFailed" + options.rowData);
-        if (options.cellNum == 4) td.setAttribute("id", "groupPassed" + options.rowData);
-        if (options.cellNum == 5) td.setAttribute("id", "groupCount" + options.rowData);
+        if (options.cellNum == 2) td.setAttribute("id", "groupStarted" + options.rowData);
+        if (options.cellNum == 3) td.setAttribute("id", "groupCount" + options.rowData);
         return td;
       }
     });
 
-    dwr.util.cloneNode("groupTemplate", { idSuffix:groupName });
-
-    dwr.util.setValue("groupTitle" + groupName, groupName);
-    dwr.util.byId("groupDetail" + groupName).style.display = "none";
-
-    // A set of rows for the results
-    dwr.util.addRows("groupTests" + groupName, testNames, [
-      function num(testName, options) { return options.rowNum + 1; },
-      function name(testName, options) {
+    dwr.util.addRows("testSummary", testNames, [
+      function number(testName) { return "" + (++testNum); },
+      function name(testName) {
         var name;
         if (groupName == "Global") {
           name = _addSpaces(testName.substring(4));
@@ -123,46 +129,40 @@ function displayTestTable() {
         // The best solution is a better drilldown thing anyway because the wrapping is wrong here
         return "<div class='hover'>" + name + "</div>";
       },
-      function async(testName, options) {
-        return "<span id='asyncReturn" + testName + "'>0</span>/<span id='asyncSent" + testName + "'>0</span>";
+      function started(testName) {
+         return "<span id='asyncReturn" + testName + "'>0</span>/<span id='asyncSent" + testName + "'>0</span>";
       },
-      function action(testName, options) {
-        return "<input type='button' value='Run' onclick='runTest(\"" + testName + "\");'/>";
+      function count(testName) { return ""; },
+      function actions(testName) {
+        return "<input type='button' value='Run Test' onclick='runTest(\"" + testName + "\");'/>";
       },
-      function results(testName, options) { return ""; },
-      function scratchSpace(testName, options) { return "<div id='scratch" + testName + "'></div>"; }
+      function scratchSpace(testName) { return "<div id='scratch" + testName + "'></div>"; }
     ], {
       escapeHtml:false,
       cellCreator:function(options) {
-        var td = document.createElement("td");
-        if (options.cellNum == 4) {
-          td.setAttribute("id", options.rowData);
+        if (options.cellNum == 0) {
+          return document.createElement("th");
         }
+        var td = document.createElement("td");
+        if (options.cellNum == 3) td.setAttribute("id", options.rowData);
         return td;
       }
     });
   }
 
   dwr.util.addRows("testSummary", [ 1 ], [
-    function name() { return "All"; },
+    function number() { return ""; },
+    function name() { return "<strong>All</strong>"; },
     function started() { return ""; },
-    function outstanding() { return ""; },
-    function failed() { return ""; },
-    function passed() { return ""; },
     function count() { return ""; },
-    function actions() { return '<input type="button" value="Run All" onclick="runAllTests();"/>'; }
+    function actions() { return '<input type="button" value="Run All" onclick="runAllTests();"/>'; },
+    function scratchSpace() { return "<div id='scratchAll'></div>"; }
   ], {
     escapeHtml:false,
     cellCreator:function(options) {
-      if (options.cellNum == 0) {
-        return document.createElement("th");
-      }
-      var td = document.createElement("td");
-      if (options.cellNum == 1) td.setAttribute("id", "testsStarted");
-      if (options.cellNum == 2) td.setAttribute("id", "testsOutstanding");
-      if (options.cellNum == 3) td.setAttribute("id", "testsFailed");
-      if (options.cellNum == 4) td.setAttribute("id", "testsPassed");
-      if (options.cellNum == 5) td.setAttribute("id", "testCount");
+      var td = document.createElement("th");
+      if (options.cellNum == 2) td.setAttribute("id", "testsStarted");
+      if (options.cellNum == 3) td.setAttribute("id", "testCount");
       return td;
     }
   });
@@ -230,30 +230,23 @@ function updateTestResults(reportAnyway) {
     var passed = groupStatus[status.pass];
     var started = groupCount - groupStatus[status.notrun];
 
-    dwr.util.setValue("groupCount" + groupName, groupCount);
-    dwr.util.setValue("groupStarted" + groupName, started);
-    dwr.util.setValue("groupOutstanding" + groupName, outstanding);
-    dwr.util.setValue("groupFailed" + groupName, failed);
-    dwr.util.setValue("groupPassed" + groupName, passed);
+    dwr.util.setValue("groupCount" + groupName, "Pass:" + passed + " Fail:" + failed);
+    dwr.util.setValue("groupStarted" + groupName, started + "/" + (started - outstanding));
 
-    dwr.util.byId("groupOutstanding" + groupName).style.backgroundColor = "";
-    dwr.util.byId("groupOutstanding" + groupName).style.color = "";
-    dwr.util.byId("groupFailed" + groupName).style.backgroundColor = "";
-    dwr.util.byId("groupFailed" + groupName).style.color = "";
-    dwr.util.byId("groupPassed" + groupName).style.backgroundColor = "";
-    dwr.util.byId("groupPassed" + groupName).style.color = "";
+    dwr.util.byId("groupCount" + groupName).style.backgroundColor = "";
+    dwr.util.byId("groupCount" + groupName).style.color = "";
 
     if (failed > 0) {
-      dwr.util.byId("groupFailed" + groupName).style.backgroundColor = statusBackgrounds[status.fail];
-      dwr.util.byId("groupFailed" + groupName).style.color = statusColors[status.fail];
+      dwr.util.byId("groupCount" + groupName).style.backgroundColor = statusBackgrounds[status.fail];
+      dwr.util.byId("groupCount" + groupName).style.color = statusColors[status.fail];
     }
     if (outstanding > 0 && failed > 0) {
-      dwr.util.byId("groupOutstanding" + groupName).style.backgroundColor = statusBackgrounds[status.asynchronous];
-      dwr.util.byId("groupOutstanding" + groupName).style.color = statusColors[status.asynchronous];
+      dwr.util.byId("groupCount" + groupName).style.backgroundColor = statusBackgrounds[status.asynchronous];
+      dwr.util.byId("groupCount" + groupName).style.color = statusColors[status.asynchronous];
     }
     if (passed == groupCount) {
-      dwr.util.byId("groupPassed" + groupName).style.backgroundColor = statusBackgrounds[status.pass];
-      dwr.util.byId("groupPassed" + groupName).style.color = statusColors[status.pass];
+      dwr.util.byId("groupCount" + groupName).style.backgroundColor = statusBackgrounds[status.pass];
+      dwr.util.byId("groupCount" + groupName).style.color = statusColors[status.pass];
     }
   }
 
@@ -262,30 +255,20 @@ function updateTestResults(reportAnyway) {
   var passed = counts[status.pass];
   var started = testCount - counts[status.notrun];
 
-  dwr.util.setValue("testCount", testCount);
-  dwr.util.setValue("testsStarted", started);
-  dwr.util.setValue("testsOutstanding", outstanding);
-  dwr.util.setValue("testsFailed", failed);
-  dwr.util.setValue("testsPassed", passed);
-
-  dwr.util.byId("testsOutstanding").style.backgroundColor = "";
-  dwr.util.byId("testsOutstanding").style.color = "";
-  dwr.util.byId("testsFailed").style.backgroundColor = "";
-  dwr.util.byId("testsFailed").style.color = "";
-  dwr.util.byId("testsPassed").style.backgroundColor = "";
-  dwr.util.byId("testsPassed").style.color = "";
+  dwr.util.setValue("testCount", "Pass:" + passed + " Fail:" + failed);
+  dwr.util.setValue("testsStarted", started + "/" + (started - outstanding));
 
   if (failed > 0) {
-    dwr.util.byId("testsFailed").style.backgroundColor = statusBackgrounds[status.fail];
-    dwr.util.byId("testsFailed").style.color = statusColors[status.fail];
+    dwr.util.byId("testCount").style.backgroundColor = statusBackgrounds[status.fail];
+    dwr.util.byId("testCount").style.color = statusColors[status.fail];
   }
   if (outstanding > 0 && failed > 0) {
-    dwr.util.byId("testsOutstanding").style.backgroundColor = statusBackgrounds[status.asynchronous];
-    dwr.util.byId("testsOutstanding").style.color = statusColors[status.asynchronous];
+    dwr.util.byId("testCount").style.backgroundColor = statusBackgrounds[status.asynchronous];
+    dwr.util.byId("testCount").style.color = statusColors[status.asynchronous];
   }
   if (passed == testCount) {
-    dwr.util.byId("testsPassed").style.backgroundColor = statusBackgrounds[status.pass];
-    dwr.util.byId("testsPassed").style.color = statusColors[status.pass];
+    dwr.util.byId("testCount").style.backgroundColor = statusBackgrounds[status.pass];
+    dwr.util.byId("testCount").style.color = statusColors[status.pass];
   }
 
   if ((started == testCount && outstanding == 0 && dwr.util.getValue("report")) || reportAnyway) {
@@ -302,7 +285,7 @@ function updateTestResults(reportAnyway) {
       }
     }
     Recorder.postResults(testCount, passed, failed, failures, function() {
-      dwr.util.setValue("reportResult", "Posted report to server");
+      dwr.util.setValue("scratchAll", "Posted report to server");
     });
     clearTimeout(boredTimeout);
   }
@@ -776,15 +759,15 @@ function _appendMessage(test, message) {
 /**
  *
  */
-function _setStatus(test, status, override) {
+function _setStatus(test, newStatus, override) {
   if (typeof test == "string") {
     test = tests[test];
   }
-  if (test.status < status || override) {
-    test.status = status;
+  if (test.status < newStatus || override) {
+    test.status = newStatus;
   }
-  dwr.util.byId(test.name).style.backgroundColor = statusBackgrounds[status];
-  dwr.util.byId(test.name).style.color = statusColors[status];
+  dwr.util.byId(test.name).style.backgroundColor = statusBackgrounds[newStatus];
+  dwr.util.byId(test.name).style.color = statusColors[newStatus];
 }
 
 /**
@@ -807,7 +790,7 @@ function _isEqual(actual, expected, depth) {
 
   if (expected == null) {
     if (actual != null) {
-//      return "expected: null, actual non-null: " + dwr.util.toDescriptiveString(actual);
+      dwr.engine._debug("expected: null, actual non-null: " + dwr.util.toDescriptiveString(actual));
       return false;
     }
     return true;
@@ -815,7 +798,7 @@ function _isEqual(actual, expected, depth) {
 
   if (typeof(expected) == "number" && isNaN(expected)) {
     if (!(typeof(actual) == "number" && isNaN(actual))) {
-//      return "expected: NaN, actual non-NaN: " + dwr.util.toDescriptiveString(actual);
+      dwr.engine._debug("expected: NaN, actual non-NaN: " + dwr.util.toDescriptiveString(actual))
       return false;
     }
     return true;
@@ -823,7 +806,7 @@ function _isEqual(actual, expected, depth) {
 
   if (actual == null) {
     if (expected != null) {
-//      return "actual: null, expected non-null: " + dwr.util.toDescriptiveString(expected);
+      dwr.engine._debug("actual: null, expected non-null: " + dwr.util.toDescriptiveString(expected));
       return false;
     }
     return true; // we wont get here of course ...
@@ -831,7 +814,7 @@ function _isEqual(actual, expected, depth) {
 
   if (typeof expected == "object") {
     if (!(typeof actual == "object")) {
-//      return "expected object, actual not an object";
+      dwr.engine._debug("expected object, actual not an object");
       return false;
     }
 
@@ -840,7 +823,7 @@ function _isEqual(actual, expected, depth) {
       if (typeof actual[prop] != "function" || typeof expected[prop] != "function") {
         var nest = _isEqual(actual[prop], expected[prop], depth + 1);
         if (typeof nest != "boolean" || !nest) {
-//          return "element '" + prop + "' does not match: " + nest;
+          dwr.engine._debug("element '" + prop + "' does not match: " + nest);
           return false;
         }
       }
@@ -851,30 +834,30 @@ function _isEqual(actual, expected, depth) {
     var expectedLength = 0;
     for (prop in expected) expectedLength++;
     if (actualLength != expectedLength) {
-//      return "expected object size = " + expectedLength + ", actual object size = " + actualLength;
+      dwr.engine._debug("expected object size = " + expectedLength + ", actual object size = " + actualLength);
       return false;
     }
     return true;
   }
 
   if (actual != expected) {
-//    return "expected = " + expected + " (type=" + typeof expected + "), actual = " + actual + " (type=" + typeof actual + ")";
+    dwr.engine._debug("expected = " + expected + " (type=" + typeof expected + "), actual = " + actual + " (type=" + typeof actual + ")");
     return false;
   }
 
   if (expected instanceof Array) {
     if (!(actual instanceof Array)) {
-//      return "expected array, actual not an array";
+      dwr.engine._debug("expected array, actual not an array");
       return false;
     }
     if (actual.length != expected.length) {
-//      return "expected array length = " + expected.length + ", actual array length = " + actual.length;
+      dwr.engine._debug("expected array length = " + expected.length + ", actual array length = " + actual.length);
       return false;
     }
     for (var i = 0; i < actual.length; i++) {
       var inner = _isEqual(actual[i], expected[i], depth + 1);
       if (typeof inner != "boolean" || !inner) {
-//        return "element " + i + " does not match: " + inner;
+        dwr.engine._debug("element " + i + " does not match: " + inner);
         return false;
       }
     }
