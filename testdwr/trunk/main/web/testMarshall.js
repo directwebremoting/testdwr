@@ -571,12 +571,12 @@ window.testMarshallDomElementParam = function() {
  *
  */
 function runComparisonTests(compares) {
-  for (var i = 0; i < compares.length; i++) {
+  for (var i = 0; i < compares.length; i++) (function(i) {
     var compare = compares[i];
     Test[compare.code](compare.data, createOptions(function(data) {
-      assertEqual(data, compare.data);
+      verifyEqual(data, compare.data);
     }));
-  }
+  })(i)
 }
 
 /**

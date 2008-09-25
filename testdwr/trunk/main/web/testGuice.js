@@ -1,15 +1,6 @@
 
 createTestGroup("Guice");
 
-/**
- *
- */
-window.testGuiceGetPath = function() {
-  GuiceTest.getPath(createDelayed(function(data) {
-    verifyEqual("/guice", data);
-  }));
-};
-
 window.testGuiceByteParam = function() {
   runGuiceComparisonTests([
     { code:"byteParam", data:-128 },
@@ -121,7 +112,7 @@ window.testGuiceStringParam = function() {
  *
  */
 function runGuiceComparisonTests(compares) {
-  for (var i = 0; i < compares.length; i++) {
+  for (var i = 0; i < compares.length; i++) (function(i) {
     var compare = compares[i];
 
     GuiceTest[compare.code](compare.data, {
@@ -130,5 +121,5 @@ function runGuiceComparisonTests(compares) {
       }),
       exceptionHandler:createDelayedError()
     });
-  }
+  })(i)
 }
