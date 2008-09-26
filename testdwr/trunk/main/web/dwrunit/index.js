@@ -92,7 +92,7 @@ function displayTestTable() {
 
     dwr.util.addRows("testSummary", [ groupName ], [
       function number(groupName) {
-        return '<a class="headInline" href="#" id="groupDisplay' + groupName + '" onclick="_toggleDetail(\'' + groupName + '\');">Show</a>';
+        return '<a class="headInline" href="#" id="groupDisplay' + groupName + '" onclick="_toggleGroup(\'' + groupName + '\');">Show</a>';
       },
       function name(groupName) {
         return "<strong>" + groupName + "</strong>";
@@ -127,7 +127,8 @@ function displayTestTable() {
         // We did add  title='" + dwr.util.escapeHtml(tests[testName].func.toString()) + "'
         // But this confuses things because we're not currently escaping for attributes properly
         // The best solution is a better drilldown thing anyway because the wrapping is wrong here
-        return "<div class='hover'>" + name + "</div>";
+        return '<a href="#" id="testDisplay' + groupName + '" onclick="_toggleTest(\'' + testName + '\');">' + name + '</a>' +
+            '<pre style="display:none;" class="codeBlock" id="testDetail' + testName + '">' + dwr.util.escapeHtml(tests[testName].func.toString()) + '</pre>';
       },
       function started(testName) {
          return "<span id='asyncReturn" + testName + "'>0</span>/<span id='asyncSent" + testName + "'>0</span>";
@@ -146,8 +147,14 @@ function displayTestTable() {
         var td = document.createElement("td");
         if (options.cellNum == 3) td.setAttribute("id", options.rowData);
         return td;
+      },
+      rowCreator:function(options) {
+        var tr = document.createElement("tr");
+        tr.className = "groupDetail" + groupName;
+        return tr;
       }
     });
+    _toggleGroup(groupName);
   }
 
   dwr.util.addRows("testSummary", [ 1 ], [
@@ -177,15 +184,32 @@ function displayTestTable() {
 /**
  *
  */
-function _toggleDetail(groupName) {
-  var detail = dwr.util.byId("groupDetail" + groupName);
-  if (detail.style.display == "none") {
-    detail.style.display = "block";
+function _toggleGroup(groupName) {
+  var toToggle = _getElementsByClass("groupDetail" + groupName);
+  if (toToggle[0].style.display == "none") {
+    for (var i = 0; i < toToggle.length; i++) {
+      toToggle[i].style.display = "table-row";
+    }
     dwr.util.setValue("groupDisplay" + groupName, "Hide");
   }
   else {
-     detail.style.display = "none";
-     dwr.util.setValue("groupDisplay" + groupName, "Show");
+    for (var i = 0; i < toToggle.length; i++) {
+      toToggle[i].style.display = "none";
+    }
+    dwr.util.setValue("groupDisplay" + groupName, "Show");
+  }
+}
+
+/**
+ *
+ */
+function _toggleTest(testName) {
+  var toToggle = dwr.util.byId("testDetail" + testName);
+  if (toToggle.style.display == "none") {
+    toToggle.style.display = "block";
+  }
+  else {
+    toToggle.style.display = "none";
   }
 }
 
@@ -885,6 +909,20 @@ function _addEvent(obj, event, func) {
 function _removeEvent(obj, event, func) {
   if (obj.removeEventListener) obj.removeEventListener(event, func, false);
   else if (obj.detachEvent) obj.detachEvent('on' + event, func);
+}
+
+function _getElementsByClass(searchClass, node, tag) {
+    var reply = [];
+    node = node || document;
+    tag = tag || "*";
+    var sameTag = node.getElementsByTagName(tag);
+    var pattern = new RegExp("(^|\\\\s)"+searchClass+"(\\\\s|$)");
+    for (var i = 0; i < sameTag.length; i++) {
+        if (pattern.test(sameTag[i].className)) {
+            reply[reply.length] = sameTag[i];
+        }
+    }
+    return reply;
 }
 
 //*

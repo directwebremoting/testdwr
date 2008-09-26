@@ -60,3 +60,4 @@ pre { background:#f4f4f4; padding:10px; }
 .headInline { font-size:70%; font-weight:normal; }
 #settingsPanel { border:1px solid #BBB; padding:5px; -moz-border-radius:5px; background:#EEE; margin-bottom:10px; }
 .hover { cursor:help; }
+.codeBlock { max-width:400px; max-height:300px; overflow:auto; font-size:90%; }
