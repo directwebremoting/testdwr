@@ -186,6 +186,10 @@ function displayTestTable() {
  */
 function _toggleGroup(groupName) {
   var toToggle = _getElementsByClass("groupDetail" + groupName);
+  if (toToggle.length == 0) {
+    dwr.engine._debug("No tests in group: " + groupName);
+    return;
+  }
   if (toToggle[0].style.display == "none") {
     for (var i = 0; i < toToggle.length; i++) {
       toToggle[i].style.display = "table-row";
