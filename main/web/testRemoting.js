@@ -98,7 +98,7 @@ window.testRemotingSyncReturning = function() {
   var data1 = Test.slowStringParam("1", 100);
   verifyEqual(data1, "1");
   var data2 = Test.slowStringParam("SyncNesting-2", 100);
-  verifyEqual(data2, "2");
+  verifyEqual(data2, "SyncNesting-2");
   dwr.engine.setAsync(true);
 };
 

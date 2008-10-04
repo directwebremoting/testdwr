@@ -53,10 +53,10 @@ import org.directwebremoting.ServerContext;
 import org.directwebremoting.ServerContextFactory;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
+import org.directwebremoting.WidenScope;
 import org.directwebremoting.event.ScriptSessionBindingEvent;
 import org.directwebremoting.event.ScriptSessionBindingListener;
 import org.directwebremoting.extend.InboundContext;
-import org.directwebremoting.impl.StartupUtil;
 import org.directwebremoting.io.JavascriptFunction;
 import org.directwebremoting.ui.browser.Document;
 import org.directwebremoting.ui.browser.Window;
@@ -897,7 +897,7 @@ public class Test
                 verify1.equals("destroyedMid2 == destroyedBefore2", destroyedMid2.intValue(), destroyedBefore2);
 
                 // Find it and close it
-                Browser.withPage(serverContext, testPage, new Runnable()
+                Browser.withPage(testPage, new Runnable()
                 {
                     public void run()
                     {
@@ -936,7 +936,6 @@ public class Test
         final String attributeName = "attr:" + System.currentTimeMillis();
         final Verify verify = new Verify();
 
-        ServerContext serverContext = ServerContextFactory.get();
         WebContext webContext = WebContextFactory.get();
         ScriptSession scriptSession = webContext.getScriptSession();
         scriptSession.setAttribute(attributeName, true);
@@ -952,7 +951,8 @@ public class Test
         Browser.withPageFiltered(page, filter, new CheckSingle("withPageFiltered:Auto", verify));
         Browser.withAllSessionsFiltered(filter, new CheckSingle("withAllSessionsFiltered:Auto", verify));
         Browser.withCurrentPageFiltered(filter, new CheckSingle("withCurrentPageFiltered:Auto", verify));
-
+/*
+        ServerContext serverContext = ServerContextFactory.get();
         log.debug("** Testing Browser against local context: " + serverContext);
 
         Browser.withPage(serverContext, page, new FilterCheckSingle("withPage:Context", attributeName, verify));
@@ -979,7 +979,7 @@ public class Test
 
             Browser.withPageFiltered(otherContext, page, filter, new CheckNone("withPageFiltered:Other", verify));
         }
-
+*/
         return verify.getReport();
     }
 
@@ -1015,7 +1015,7 @@ public class Test
         public void run()
         {
             int found = 0;
-            Collection<ScriptSession> sessions = Browser.getTargetSessions();
+            Collection<ScriptSession> sessions = WidenScope.browserGetTargetSessions();
             for (ScriptSession session : sessions)
             {
                 Object check = session.getAttribute(attributeName);
@@ -1064,7 +1064,7 @@ public class Test
          */
         public void run()
         {
-            Collection<ScriptSession> sessions = Browser.getTargetSessions();
+            Collection<ScriptSession> sessions = WidenScope.browserGetTargetSessions();
             verify.equals(context, sessions.size(), 1);
         }
 
@@ -1087,7 +1087,7 @@ public class Test
         public void run()
         {
             int found = 0;
-            Collection<ScriptSession> sessions = Browser.getTargetSessions();
+            Collection<ScriptSession> sessions = WidenScope.browserGetTargetSessions();
             for (ScriptSession session : sessions)
             {
                 Object check = session.getAttribute(attributeName);
@@ -1117,7 +1117,7 @@ public class Test
          */
         public void run()
         {
-            Collection<ScriptSession> sessions = Browser.getTargetSessions();
+            Collection<ScriptSession> sessions = WidenScope.browserGetTargetSessions();
             verify.equals(context, sessions.size(), 0);
         }
 
