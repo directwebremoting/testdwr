@@ -3,15 +3,17 @@
 <beans
     xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-        http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-2.0.xsd">
+      	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+        http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd">
 
 	<!-- Exposed resources -->
  
  	<!-- Double dwr:configuration tag test -->
 	<dwr:configuration>
-		<dwr:convert type="bean" class="org.testdwr.springmvc.model.**" javascript="*" />
+		<dwr:convert type="bean" class="org.testdwr.springmvc.model.SpringMvcBean" javascript="*" />
 	</dwr:configuration>
 
 	<!--  Remoted Beans -->
@@ -26,6 +28,29 @@
 
 	<!-- This test handles proxy references to beans declared elsewhere (in a parent context) -->
 	<dwr:proxy-ref bean="proxyMe" javascript="Calculator" />
+
+	<!-- This test handles AOP proxies -->
+	<aop:aspectj-autoproxy proxy-target-class="false" />
+
+	<bean class="org.testdwr.springservlet.aop.AnAspect" />
+
+	<bean id="generator" class="org.testdwr.springmvc.SpringAspectedBean">
+		<dwr:remote />
+		<aop:scoped-proxy proxy-target-class="false" />
+	</bean>
+
+	<!-- This test handles scoped proxies -->
+	<bean id="giver" class="org.testdwr.springmvc.scoped.ScopedBean" scope="session">
+		<dwr:remote>
+			<dwr:include method="giveMe" />
+		</dwr:remote>
+		<aop:scoped-proxy proxy-target-class="false" />	
+	</bean>
+
+	<!-- This test handles annotated converters -->
+	<bean class="org.testdwr.springmvc.SpringAnnotatedConverter">
+		<dwr:remote javascript="AnnotatedConverter" />
+	</bean>
 
 	<!--  MVC Configuration -->
 	<dwr:controller />
