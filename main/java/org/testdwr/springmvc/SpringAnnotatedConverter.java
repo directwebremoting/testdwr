@@ -15,29 +15,18 @@
  */
 package org.testdwr.springmvc;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.directwebremoting.annotations.RemoteMethod;
-import org.directwebremoting.annotations.RemoteProxy;
+import org.testdwr.springmvc.model.SpringMvcAnnotatedBean;
 
 /**
- * Tests annotated beans.
+ * Tests annotated converters.
  *
  * @author Jose Noheda [jose.noheda@gmail.com]
- *
  */
-@RemoteProxy
-public class SpringMvcAnnotated
+public class SpringAnnotatedConverter
 {
 
-    private static Log logger =  LogFactory.getLog(SpringMvcAnnotated.class);
-
-    @RemoteMethod
-    public org.testdwr.springservlet.SpringServletBean echo(String something)
+    public SpringMvcAnnotatedBean name(final String something)
     {
-        final String response = "echoed by DWR Spring Mvc [" + something + "]";
-        if (logger.isInfoEnabled()) logger.info(response);
-        return new org.testdwr.springservlet.SpringServletBean() {{setName(response);}};
+        return new SpringMvcAnnotatedBean() {{setName(something);}};
     }
-
 }

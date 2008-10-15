@@ -5,6 +5,8 @@
 	<classpathentry kind="lib" path="main/lib/jetty-util-6.1.10.jar" sourcepath="/librarydwr/source/jetty-6.1.10-src.zip"/>
 	<classpathentry kind="lib" path="main/lib/servlet-api-2.4.jar" sourcepath="/librarydwr/source/jetty-6.1.10-src.zip"/>
 	<classpathentry kind="lib" path="main/web/WEB-INF/lib/junit-4.4.jar" sourcepath="/librarydwr/source/junit-4.4-src.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/aspectjrt-1.6.2.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/aspectjweaver-1.6.2.jar"/>
 	<classpathentry kind="lib" path="main/web/WEB-INF/lib/commons-logging-1.1.1.jar" sourcepath="/librarydwr/source/commons-logging-1.1.1-src.zip"/>
 	<classpathentry kind="lib" path="main/web/WEB-INF/lib/dwr.jar" sourcepath="/dwr"/>
 	<classpathentry kind="lib" path="main/web/WEB-INF/lib/guice-1.0.jar"/>
