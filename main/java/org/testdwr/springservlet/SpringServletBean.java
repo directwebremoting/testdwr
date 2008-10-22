@@ -15,12 +15,36 @@
  */
 package org.testdwr.springservlet;
 
+import java.util.Locale;
+
 /**
  * @author Joe Walker [joe at getahead dot ltd dot uk]
  */
 public class SpringServletBean
 {
+
     private String name;
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    private Locale locale;
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public Locale getLocale()
+    {
+        return locale;
+    }
+
+    public void setLocale(Locale locale)
+    {
+        this.locale = locale;
+    }
+
 }
+

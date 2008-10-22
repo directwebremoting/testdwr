@@ -1,9 +1,10 @@
 createTestGroup("SpringMvc");
 
 function testSpringMvcEcho() {
-	SpringMvcAnnotated.echo("hello world", {
+	SpringMvcAnnotated.echo("hello world", "  en_US  ", {
 		callback:createDelayed(function(data) {
 			assertEqual(data.name, "echoed by DWR Spring Mvc [hello world]");
+			assertEqual(data.locale, "en_US");
 		})
 	})
 }
