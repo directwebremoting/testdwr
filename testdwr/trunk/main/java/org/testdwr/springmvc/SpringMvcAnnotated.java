@@ -15,6 +15,8 @@
  */
 package org.testdwr.springmvc;
 
+import java.util.Locale;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.directwebremoting.annotations.RemoteMethod;
@@ -33,11 +35,14 @@ public class SpringMvcAnnotated
     private static Log logger =  LogFactory.getLog(SpringMvcAnnotated.class);
 
     @RemoteMethod
-    public org.testdwr.springservlet.SpringServletBean echo(String something)
+    public org.testdwr.springservlet.SpringServletBean echo(String something, final Locale locale)
     {
         final String response = "echoed by DWR Spring Mvc [" + something + "]";
-        if (logger.isInfoEnabled()) logger.info(response);
-        return new org.testdwr.springservlet.SpringServletBean() {{setName(response);}};
+        return new org.testdwr.springservlet.SpringServletBean()
+        {{
+            setName(response);
+            setLocale(locale);
+        }};
     }
 
 }
