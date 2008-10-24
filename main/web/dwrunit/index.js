@@ -91,16 +91,16 @@ function displayTestTable() {
     testNames.sort();
 
     dwr.util.addRows("testSummary", [ groupName ], [
-      function number(groupName) {
+      function(groupName) {
         return '<a class="headInline" href="#" id="groupDisplay' + groupName + '" onclick="_toggleGroup(\'' + groupName + '\');">Show</a>';
       },
-      function name(groupName) {
+      function(groupName) {
         return "<strong>" + groupName + "</strong>";
       },
-      function started(groupName) { return ""; },
-      function count(groupName) { return ""; },
-      function actions(groupName) { return '<input type="button" value="Run Group" onclick="runTestGroup(\'' + groupName + '\')"/>'; },
-      function scratchSpace(groupName) { return "<div id='scratch" + groupName + "'></div>"; }
+      function(groupName) { return ""; },
+      function(groupName) { return ""; },
+      function(groupName) { return '<input type="button" value="Run Group" onclick="runTestGroup(\'' + groupName + '\')"/>'; },
+      function(groupName) { return "<div id='scratch" + groupName + "'></div>"; }
     ], {
       escapeHtml:false,
       cellCreator:function(options) {
@@ -115,8 +115,8 @@ function displayTestTable() {
     });
 
     dwr.util.addRows("testSummary", testNames, [
-      function number(testName) { return "" + (++testNum); },
-      function name(testName) {
+      function(testName) { return "" + (++testNum); },
+      function(testName) {
         var name;
         if (groupName == "Global") {
           name = _addSpaces(testName.substring(4));
@@ -130,14 +130,14 @@ function displayTestTable() {
         return '<a href="#" id="testDisplay' + groupName + '" onclick="_toggleTest(\'' + testName + '\');">' + name + '</a>' +
             '<pre style="display:none;" class="codeBlock" id="testDetail' + testName + '">' + dwr.util.escapeHtml(tests[testName].func.toString()) + '</pre>';
       },
-      function started(testName) {
+      function(testName) {
          return "<span id='asyncReturn" + testName + "'>0</span>/<span id='asyncSent" + testName + "'>0</span>";
       },
-      function count(testName) { return ""; },
-      function actions(testName) {
+      function(testName) { return ""; },
+      function(testName) {
         return "<input type='button' value='Run Test' onclick='runTest(\"" + testName + "\");'/>";
       },
-      function scratchSpace(testName) { return "<div id='scratch" + testName + "'></div>"; }
+      function(testName) { return "<div id='scratch" + testName + "'></div>"; }
     ], {
       escapeHtml:false,
       cellCreator:function(options) {
@@ -158,12 +158,12 @@ function displayTestTable() {
   }
 
   dwr.util.addRows("testSummary", [ 1 ], [
-    function number() { return ""; },
-    function name() { return "<strong>All</strong>"; },
-    function started() { return ""; },
-    function count() { return ""; },
-    function actions() { return '<input type="button" value="Run All" onclick="runAllTests();"/>'; },
-    function scratchSpace() { return "<div id='scratchAll'></div>"; }
+    function() { return ""; },
+    function() { return "<strong>All</strong>"; },
+    function() { return ""; },
+    function() { return ""; },
+    function() { return '<input type="button" value="Run All" onclick="runAllTests();"/>'; },
+    function() { return "<div id='scratchAll'></div>"; }
   ], {
     escapeHtml:false,
     cellCreator:function(options) {
