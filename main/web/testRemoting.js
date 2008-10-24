@@ -21,20 +21,21 @@ window.testRemotingVarious = function() {
  *
  */
 window.testRemotingScopeAndArgs = function() {
-  var args = [ 1, "two" ];
-  var scope = {
-    callback:createDelayed(function(data, passedArgs) {
-      verifyEqual("data", data);
-      verifyEqual(this, scope);
-      verifyEqual(passedArgs, args);
-    })
-  };
+  var someArgs = [ 1, "two" ];
+  var someObj = { };
+  var someParam = "data";
 
-  Test.stringParam("data", {
-    callback:scope.callback,
+  someObj.someFunc = createDelayed(function(returnData, passedArgs) {
+    verifyEqual(returnData, someParam, "return data wrong");
+    verifyEqual(this, someObj, "scope wrong");
+    verifyEqual(passedArgs, someArgs, "args wrong");
+  });
+
+  Test.stringParam(someParam, {
+    callback:someObj.someFunc,
     errorHandler:createDelayedError(),
-    scope:scope,
-    args:args
+    scope:someObj,
+    arg:someArgs
   });
 };
 
@@ -43,12 +44,12 @@ window.testRemotingScopeAndArgs = function() {
  */
 window.testRemotingAsyncNesting = function() {
   var count = 0;
-  Test.slowStringParam("1", 100, createDelayed(function(data1) {
+  Test.slowStringParam("1", 1000, createDelayed(function(data1) {
     verifyEqual(data1, 1);
     count++;
     verifyEqual(count, 2);
 
-    Test.slowStringParam("2", 200, createDelayed(function(data2) {
+    Test.slowStringParam("2", 2000, createDelayed(function(data2) {
       verifyEqual(data2, 2);
       count++;
       verifyEqual(count, 4);
@@ -58,80 +59,6 @@ window.testRemotingAsyncNesting = function() {
     verifyEqual(count, 3);
   }));
 
-  count++;
-  verifyEqual(count, 1);
-};
-
-/**
- *
- */
-window.testRemotingSyncNesting = function() {
-  dwr.engine.setAsync(false);
-  var count = 0;
-
-  Test.slowStringParam("1", 100, createDelayed(function(data1) {
-    verifyEqual(data1, "1");
-    count++;
-    verifyEqual(count, 1);
-
-    Test.slowStringParam("2", 200, createDelayed(function(data2) {
-      verifyEqual(data2, "2");
-      count++;
-      verifyEqual(count, 2);
-    }));
-
-    count++;
-    verifyEqual(count, 3);
-  }));
-
-  count++;
-  verifyEqual(count, 4);
-
-  dwr.engine.setAsync(true);
-};
-
-/**
- *
- */
-window.testRemotingSyncReturning = function() {
-  dwr.engine.setAsync(false);
-  var data1 = Test.slowStringParam("1", 100);
-  verifyEqual(data1, "1");
-  var data2 = Test.slowStringParam("SyncNesting-2", 100);
-  verifyEqual(data2, "SyncNesting-2");
-  dwr.engine.setAsync(true);
-};
-
-/**
- *
- */
-window.testRemotingSyncCallMetaData = function() {
-  var count = 0;
-  Test.slowStringParam("1", 100, {
-    async:false,
-    callback:createDelayed(function(data) {
-      verifyEqual(data, "1");
-      count++;
-      verifyEqual(count, 1);
-    })
-  });
-  count++;
-  verifyEqual(count, 2);
-};
-
-/**
- *
- */
-window.testRemotingAsyncCallMetaData = function() {
-  var count = 0;
-  Test.slowStringParam("1", 100, {
-    async:true,
-    callback:function(data) {
-      verifyEqual(data, "1");
-      count++;
-      verifyEqual(count, 2);
-    }
-  });
   count++;
   verifyEqual(count, 1);
 };

@@ -412,15 +412,15 @@ function runAllTests() {
 function createOptions(func, message) {
   return {
       callback:createDelayed(func),
-      exceptionHandler:createDelayedError(message || func.toString()),
-      errorHandler:createDelayedError(message || func.toString())
+      exceptionHandler:createDelayedError(message),
+      errorHandler:createDelayedError(message)
   };
 }
 
 /**
  *
  */
-function createDelayed(func, scope) {
+function createDelayed(func) {
   _setStatus(currentTest, status.asynchronous, true);
   var delayedTest = currentTest;
   if (!delayedTest.outstanding) {
@@ -435,10 +435,9 @@ function createDelayed(func, scope) {
   return function() {
     var isSync = (currentTest != null);
     currentTest = delayedTest;
-    var obj = scope || window;
     if (typeof func == "function") {
       try {
-        func.apply(obj, arguments);
+        func.apply(this, arguments);
       }
       catch (ex) {
         _setStatus(currentTest, status.fail);
@@ -465,21 +464,23 @@ function createDelayed(func, scope) {
 /**
  *
  */
-function createDelayedError(func, scope) {
+function createDelayedError(func) {
   var delayedTest = currentTest;
   return function() {
     currentTest = delayedTest;
     _setStatus(currentTest, status.fail);
-    var obj = scope || window;
-    if (typeof func == "function") {
-      _record(currentTest.name, "Executing delayed error handler: " + dwr.util.toDescriptiveString(arguments));
-      func.apply(obj, arguments);
+    if (func == null) {
+      _record(currentTest.name, "Executing delayed error handler: " + dwr.util.toDescriptiveString(Array().slice.call(arguments), 3));
+    }
+    else if (typeof func == "function") {
+      _record(currentTest.name, "Executing delayed error handler: " + dwr.util.toDescriptiveString(Array().slice.call(arguments), 3));
+      func.apply(createDelayed, arguments);
     }
     else if (typeof func == "string") {
       _record(currentTest.name, "Executing delayed error handler: " + func);
     }
     else {
-      _record(currentTest.name, "Executing delayed error handler: " + dwr.util.toDescriptiveString(arguments));
+      _record(currentTest.name, "Executing delayed error handler: " + dwr.util.toDescriptiveString(Array().slice.call(arguments), 3));
     }
     currentTest = null;
     updateTestResults(false);
@@ -768,7 +769,7 @@ function _record() {
   else {
     for (var i = 0; i < data.length; i++) {
       if (i != 0) message += ", ";
-      message += data[i];
+      message += dwr.util.toDescriptiveString(data[i], 3);
     }
   }
   message += ")";
