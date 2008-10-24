@@ -663,7 +663,7 @@ function verifyNotUndefined(value) {
  *
  */
 function assertNaN(value) {
-  if (value !== NaN) {
+  if (!isNaN(value)) {
     _recordThrow("assertNaN", arguments);
   }
 }
@@ -672,7 +672,7 @@ function assertNaN(value) {
  *
  */
 function verifyNaN(value) {
-  if (value !== NaN) {
+  if (!isNaN(value)) {
     _recordTrace("verifyNaN", arguments);
   }
 }
@@ -681,7 +681,7 @@ function verifyNaN(value) {
  *
  */
 function assertNotNaN(value) {
-  if (value === NaN) {
+  if (isNaN(value)) {
     _recordThrow("assertNotNaN", arguments);
   }
 }
@@ -690,7 +690,7 @@ function assertNotNaN(value) {
  *
  */
 function verifyNotNaN(value) {
-  if (value === NaN) {
+  if (isNaN(value)) {
     _recordTrace("verifyNotNaN", arguments);
   }
 }
