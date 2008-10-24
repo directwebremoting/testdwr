@@ -1,10 +1,13 @@
 
 createTestGroup("Marshall");
 
-window.testMarshallComplex = function() {
+window.testMarshallComplexNull = function() {
   Test.testComplex(createOptions(function (data) {
     verifyNull(data);
   }));
+};
+
+window.testMarshallComplex = function() {
   Test.testComplex([], createOptions(function (data) {
     verifyEqual(data, []);
   }));
@@ -20,24 +23,33 @@ window.testMarshallComplex = function() {
   Test.testComplex([[{}], [{}]], createOptions(function (data) {
     verifyEqual(data, [[{}], [{}]]);
   }));
-  Test.testComplex([[{}, {}], [{}, {}]], createOptions(function (data) {
-    verifyEqual(data, [[{}, {}], [{}, {}]]);
-  }));
   Test.testComplex([[{"a":nested}]], createOptions(function (data) {
     verifyEqual(data, [[{"a":nested}]]);
+  }));
+};
+
+window.testMarshallComplexDeep = function() {
+  Test.testComplex([[{}, {}], [{}, {}]], createOptions(function (data) {
+    verifyEqual(data, [[{}, {}], [{}, {}]]);
   }));
   Test.testComplex([[{}, {"a":nested}], [{"b":nested}, {"a":nested, "c":nested}]], createOptions(function (data) {
     verifyEqual(data, [[{}, {"a":nested}], [{"b":nested}, {"a":nested, "c":nested}]]);
   }));
 };
 
-window.testMarshallStringVarArgs = function() {
+window.testMarshallStringVarArgsEmpty = function() {
   Test.stringVarArgs(createOptions(function (data) {
     verifyEqual(data, [ ]);
   }));
+};
+
+window.testMarshallStringVarArgsSingle = function() {
   Test.stringVarArgs("1", createOptions(function (data) {
     verifyEqual(data, [ "1" ]);
   }));
+};
+
+window.testMarshallStringVarArgsMultiple = function() {
   Test.stringVarArgs("1", "2", createOptions(function (data) {
     verifyEqual(data, [ "1", "2" ]);
   }));
@@ -61,14 +73,7 @@ window.testMarshallBeanVarArgs = function() {
     verifyEqual(data, [ nested, nested, nested ]);
   }));
   dwr.engine.endBatch({
-    errorHandler:createDelayedError()
-  });
-
-  Test.testBeanVarArgs(nested, nested, nested, {
-    callback:createOptions(function (data) {
-      verifyEqual(data, [ nested, nested, nested ]);
-    }),
-    exceptionHandler:createDelayedError()
+   errorHandler:createDelayedError()
   });
 };
 
@@ -313,14 +318,6 @@ window.testMarshallCharArrayParam = function() {
   ]);
 };
 
-window.testMarshallByteArrayParam = function() {
-  runComparisonTests([
-    { code:"byteArrayParam", data:[ ] },
-    { code:"byteArrayParam", data:[ -128, -128, -128, -128, -127 ] },
-    { code:"byteArrayParam", data:[ -128, -1, 0, 1, 127 ] }
-  ]);
-};
-
 window.testMarshallShortArrayParam = function() {
   runComparisonTests([
     { code:"shortArrayParam", data:[ ] },
@@ -555,18 +552,6 @@ window.testMarshallStringStringTreeMapParam = function() {
   ]);
 };
 
-window.testMarshallDomElementParam = function() {
-  dwr.util.setValue(currentTest.scratch, '<p id="test">This is a <span style="color:#F00;">test node</span> to check on <strong>DOM</strong> <span class="small">manipulation</span>.</p>', { escapeHtml:false });
-  var testNode = dwr.util.byId("test");
-
-  runComparisonTests([
-    { code:"dom4jElementParam", data:testNode },
-    { code:"xomElementParam", data:testNode },
-    { code:"jdomElementParam", data:testNode },
-    { code:"domElementParam", data:testNode }
-  ]);
-};
-
 /**
  *
  */
@@ -578,6 +563,27 @@ function runComparisonTests(compares) {
     }));
   })(i)
 }
+
+window.testMarshallDomElementParam = function() {
+  var testHtml = '<p id="test">This is a <em>test node</em> to check on <strong>DOM</strong> <span class="small">manipulation</span>.</p>';
+  dwr.util.setValue(currentTest.scratch, testHtml, { escapeHtml:false });
+  var testNode = dwr.util.byId("test");
+  var nodeCompare = function(data) {
+    var output;
+    if (window.XMLSerializer) output = new XMLSerializer().serializeToString(data);
+    else if (data.toXml) output = data.toXml;
+    else output = data.innerHTML;
+    // We do lower case because xml->html might not preserve tag case or spaces
+    output = output.toLowerCase().replace(/ /g, "");
+    compare = testHtml.toLowerCase().replace(/ /g, "");
+    verifyEqual(output, compare);
+  };
+
+  Test.dom4jElementParam(testNode, createOptions(nodeCompare));
+  Test.xomElementParam(testNode, createOptions(nodeCompare));
+  Test.jdomElementParam(testNode, createOptions(nodeCompare));
+  Test.domElementParam(testNode, createOptions(nodeCompare));
+};
 
 /**
  *

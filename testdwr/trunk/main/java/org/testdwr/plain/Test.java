@@ -477,7 +477,7 @@ public class Test
         return test;
     }
 
-    public List<Set<Map<String, TestBean>>> testComplex(List<Set<Map<String, TestBean>>> test)
+    public List<List<Map<String, TestBean>>> testComplex(List<List<Map<String, TestBean>>> test)
     {
         return test;
     }
