@@ -7,11 +7,11 @@ createTestGroup("DwrUtil");
  */
 window.testDwrUtilByIdAvoidNames = function() {
   useHtml(
-	'<form name="byIdAvoidNamesForm">' +
-	'  <input name="byIdAvoidNames">' +
-	'  <input name="byIdAvoidNames2">' +
-	'</form>' +
-	'<span id="byIdAvoidNames"></span>'
+    '<form name="byIdAvoidNamesForm">' +
+    '  <input name="byIdAvoidNames">' +
+    '  <input name="byIdAvoidNames2">' +
+    '</form>' +
+    '<span id="byIdAvoidNames"></span>'
   );
   
   var elem = dwr.util.byId('byIdAvoidNames');
@@ -27,9 +27,9 @@ window.testDwrUtilByIdAvoidNames = function() {
  */
 window.testDwrUtilByIdDontGetTrickedByFormIdElement = function() {
   useHtml(
-	'<form id="byIdDontGetTrickedByFormIdElement">' +
-	'  <input name="id" value="blabla">' +
-	'</form>'
+    '<form id="byIdDontGetTrickedByFormIdElement">' +
+    '  <input name="id" value="blabla">' +
+    '</form>'
   );
   
   var elem = dwr.util.byId('byIdDontGetTrickedByFormIdElement');
@@ -301,5 +301,35 @@ window.testDwrUtilAddRowsBasic = function() {
   assertTrue(innerHtml.match(/td/));
   assertTrue(innerHtml.match(/innerHTML Test/));
   assertTrue(innerHtml.match(/DOM Test/));
+};
+
+/**
+ * 
+ */
+window.testDwrUtilIsArrayLike = function() {
+  function testargs() {
+    return dwr.util._isArrayLike(arguments);
+  }
+  assertTrue(dwr.util._isArrayLike([1, 2]));
+  assertTrue(dwr.util._isArrayLike(document.getElementsByTagName("*")));
+  assertTrue(testargs("a", "b"));
+  assertFalse(dwr.util._isArrayLike({"0":"a", "1":"b", length:2}));
+};
+
+/**
+ * 
+ */
+window.testDwrUtilToDescriptiveStringWithArrayLikeObjects = function() {
+  function printargs() {
+    return dwr.util.toDescriptiveString(arguments);
+  }
+  function hasSeveralArrayElementsInString(str) {
+    return str.charAt(0) == "[" 
+      && str.indexOf(",") >= 0;
+  }
+  assertTrue(hasSeveralArrayElementsInString(dwr.util.toDescriptiveString([1, 2])));
+  assertTrue(hasSeveralArrayElementsInString(dwr.util.toDescriptiveString(document.getElementsByTagName("*"))));
+  assertTrue(hasSeveralArrayElementsInString(printargs("a", "b")));
+  assertFalse(hasSeveralArrayElementsInString(dwr.util.toDescriptiveString({"0":"a", "1":"b", length:2})));
 };
 
