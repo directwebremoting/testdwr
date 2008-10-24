@@ -192,7 +192,7 @@ function _toggleGroup(groupName) {
   }
   if (toToggle[0].style.display == "none") {
     for (var i = 0; i < toToggle.length; i++) {
-      toToggle[i].style.display = "table-row";
+      toToggle[i].style.display = "";
     }
     dwr.util.setValue("groupDisplay" + groupName, "Hide");
   }
