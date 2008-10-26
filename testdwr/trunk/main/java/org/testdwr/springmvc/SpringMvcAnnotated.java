@@ -15,10 +15,9 @@
  */
 package org.testdwr.springmvc;
 
+import java.util.Currency;
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
 
@@ -32,16 +31,18 @@ import org.directwebremoting.annotations.RemoteProxy;
 public class SpringMvcAnnotated
 {
 
-    private static Log logger =  LogFactory.getLog(SpringMvcAnnotated.class);
-
     @RemoteMethod
-    public org.testdwr.springservlet.SpringServletBean echo(String something, final Locale locale)
+    public org.testdwr.springservlet.SpringServletBean echo(String something, final Locale locale, final Currency currency)
     {
         final String response = "echoed by DWR Spring Mvc [" + something + "]";
         return new org.testdwr.springservlet.SpringServletBean()
         {{
             setName(response);
             setLocale(locale);
+            if ((currency != null) && (Currency.getInstance("USD").equals(currency)))
+            {
+                setCurrency(Currency.getInstance("EUR"));
+            }
         }};
     }
 

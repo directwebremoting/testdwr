@@ -15,6 +15,7 @@
  */
 package org.testdwr.springservlet;
 
+import java.util.Currency;
 import java.util.Locale;
 
 /**
@@ -25,6 +26,7 @@ public class SpringServletBean
 
     private String name;
     private Locale locale;
+    private Currency currency;
 
     public String getName()
     {
@@ -44,6 +46,16 @@ public class SpringServletBean
     public void setLocale(Locale locale)
     {
         this.locale = locale;
+    }
+
+    public Currency getCurrency()
+    {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency)
+    {
+        this.currency = currency;
     }
 
 }

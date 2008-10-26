@@ -35,6 +35,7 @@ public class SpringLazyBean
 
     public SpringMvcBean name(final String something)
     {
-        return new SpringMvcBean() {{setName(something);}};
+        return new SpringMvcBean() {{ setName(something); }}; 
     }
+
 }
