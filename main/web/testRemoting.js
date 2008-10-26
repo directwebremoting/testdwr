@@ -76,7 +76,8 @@ window.testRemotingParameters = function() {
     parameters:{
       'param1':'value1',
       'param2':'value2'
-    }
+    },
+    errorHandler:createDelayedError()
   });
 };
 
@@ -93,7 +94,8 @@ window.testRemotingHeaders = function() {
     headers:{
       'param1':'value1',
       'param2':'value2'
-    }
+    },
+    errorHandler:createDelayedError()
   });
 };
 
