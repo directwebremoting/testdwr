@@ -66,6 +66,10 @@
       <param-name>org.directwebremoting.event.ScriptSessionListener</param-name>
       <param-value>org.testdwr.event.Test2ScriptSessionListener, org.testdwr.event.TestScriptSessionListener</param-value>
     </init-param>
+    <init-param>
+      <param-name>allowScriptTagRemoting</param-name>
+      <param-value>true</param-value>
+    </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
 

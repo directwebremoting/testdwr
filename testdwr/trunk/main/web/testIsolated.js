@@ -74,3 +74,19 @@ window.testIsolatedAsyncCallMetaData = function() {
   verifyEqual(count, 1, "after should be first with async");
 };
 
+/**
+ *
+ */
+window.testIsolatedNonLocalhost = function() {
+  var path = Test._path;
+  var hostPart = window.location.href.split('/')[2];
+  assertEqual(hostPart.indexOf('localhost'), 0, "automatic script-tag testing needs http://localhost...");
+  hostPart = hostPart.replace(/localhost/, '127.0.0.1');
+  Test._path = "http://" + hostPart + path;
+
+  Test.stringParam("param", createOptions(function(param){
+    verifyEqual(param, "param");
+  }));
+
+  Test._path = path;
+};

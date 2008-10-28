@@ -7,7 +7,7 @@ var boredTimeout = null;
 
 var currentTest = null;
 
-var status = { notrun:0, executing:1, asynchronous:2, pass:3, fail:4 };
+var stati = { notrun:0, executing:1, asynchronous:2, pass:3, fail:4 };
 var statusBackgrounds = [ "#EEE", "#888", "#FFA", "#8F8", "#F00" ];
 var statusColors = [ "#000", "#FFF", "#000", "#000", "#FFF" ];
 var statusNames = [ "Skipped", "Executing", "Waiting", "Pass", "Fail" ];
@@ -51,7 +51,7 @@ function addTest(testName, func) {
   tests[testName] = {
     func: func,
     name: testName,
-    status: status.notrun,
+    status: stati.notrun,
     group: groupName,
     messages: []
   };
@@ -253,10 +253,10 @@ function updateTestResults(reportAnyway) {
     var groupCount = groups[groupName].length;
     var groupStatus = groupCounts[groupName];
 
-    var outstanding = groupStatus[status.asynchronous] + groupStatus[status.executing];
-    var failed = groupStatus[status.fail];
-    var passed = groupStatus[status.pass];
-    var started = groupCount - groupStatus[status.notrun];
+    var outstanding = groupStatus[stati.asynchronous] + groupStatus[stati.executing];
+    var failed = groupStatus[stati.fail];
+    var passed = groupStatus[stati.pass];
+    var started = groupCount - groupStatus[stati.notrun];
 
     dwr.util.setValue("groupCount" + groupName, "Pass:" + passed + " Fail:" + failed);
     dwr.util.setValue("groupStarted" + groupName, started + "/" + (started - outstanding));
@@ -265,45 +265,45 @@ function updateTestResults(reportAnyway) {
     dwr.util.byId("groupCount" + groupName).style.color = "";
 
     if (failed > 0) {
-      dwr.util.byId("groupCount" + groupName).style.backgroundColor = statusBackgrounds[status.fail];
-      dwr.util.byId("groupCount" + groupName).style.color = statusColors[status.fail];
+      dwr.util.byId("groupCount" + groupName).style.backgroundColor = statusBackgrounds[stati.fail];
+      dwr.util.byId("groupCount" + groupName).style.color = statusColors[stati.fail];
     }
     if (outstanding > 0 && failed > 0) {
-      dwr.util.byId("groupCount" + groupName).style.backgroundColor = statusBackgrounds[status.asynchronous];
-      dwr.util.byId("groupCount" + groupName).style.color = statusColors[status.asynchronous];
+      dwr.util.byId("groupCount" + groupName).style.backgroundColor = statusBackgrounds[stati.asynchronous];
+      dwr.util.byId("groupCount" + groupName).style.color = statusColors[stati.asynchronous];
     }
     if (passed == groupCount) {
-      dwr.util.byId("groupCount" + groupName).style.backgroundColor = statusBackgrounds[status.pass];
-      dwr.util.byId("groupCount" + groupName).style.color = statusColors[status.pass];
+      dwr.util.byId("groupCount" + groupName).style.backgroundColor = statusBackgrounds[stati.pass];
+      dwr.util.byId("groupCount" + groupName).style.color = statusColors[stati.pass];
     }
   }
 
-  var outstanding = counts[status.asynchronous] + counts[status.executing];
-  var failed = counts[status.fail];
-  var passed = counts[status.pass];
-  var started = testCount - counts[status.notrun];
+  var outstanding = counts[stati.asynchronous] + counts[stati.executing];
+  var failed = counts[stati.fail];
+  var passed = counts[stati.pass];
+  var started = testCount - counts[stati.notrun];
 
   dwr.util.setValue("testCount", "Pass:" + passed + " Fail:" + failed);
   dwr.util.setValue("testsStarted", started + "/" + (started - outstanding));
 
   if (failed > 0) {
-    dwr.util.byId("testCount").style.backgroundColor = statusBackgrounds[status.fail];
-    dwr.util.byId("testCount").style.color = statusColors[status.fail];
+    dwr.util.byId("testCount").style.backgroundColor = statusBackgrounds[stati.fail];
+    dwr.util.byId("testCount").style.color = statusColors[stati.fail];
   }
   if (outstanding > 0 && failed > 0) {
-    dwr.util.byId("testCount").style.backgroundColor = statusBackgrounds[status.asynchronous];
-    dwr.util.byId("testCount").style.color = statusColors[status.asynchronous];
+    dwr.util.byId("testCount").style.backgroundColor = statusBackgrounds[stati.asynchronous];
+    dwr.util.byId("testCount").style.color = statusColors[stati.asynchronous];
   }
   if (passed == testCount) {
-    dwr.util.byId("testCount").style.backgroundColor = statusBackgrounds[status.pass];
-    dwr.util.byId("testCount").style.color = statusColors[status.pass];
+    dwr.util.byId("testCount").style.backgroundColor = statusBackgrounds[stati.pass];
+    dwr.util.byId("testCount").style.color = statusColors[stati.pass];
   }
 
   if ((started == testCount && outstanding == 0 && dwr.util.getValue("report")) || reportAnyway) {
     var failures = [];
     for (var testName in tests) {
       test = tests[testName];
-      if (test.status != status.pass) {
+      if (test.status != stati.pass) {
         failures.push({
           name: test.name,
           status: test.status,
@@ -328,7 +328,7 @@ function runTest(testName) {
     currentTest = tests[testName];
   }
 
-  _setStatus(currentTest, status.executing, true);
+  _setStatus(currentTest, stati.executing, true);
   currentTest.messages = [];
   dwr.util.setValue(currentTest.name, "");
 
@@ -337,14 +337,14 @@ function runTest(testName) {
     currentTest.func.apply(scope);
   }
   catch (ex) {
-    _setStatus(currentTest, status.fail);
+    _setStatus(currentTest, stati.fail);
     if (ex.message && ex.message.length > 0) {
       _record(currentTest, ex.message);
     }
     window.console && console.trace();
   }
-  if (_getStatus(currentTest) == status.executing) {
-    _setStatus(currentTest, status.pass, true);
+  if (_getStatus(currentTest) == stati.executing) {
+    _setStatus(currentTest, stati.pass, true);
   }
 
   if (!subTest) {
@@ -421,7 +421,7 @@ function createOptions(func, message) {
  *
  */
 function createDelayed(func) {
-  _setStatus(currentTest, status.asynchronous, true);
+  _setStatus(currentTest, stati.asynchronous, true);
   var delayedTest = currentTest;
   if (!delayedTest.outstanding) {
     delayedTest.outstanding = 1;
@@ -440,7 +440,7 @@ function createDelayed(func) {
         func.apply(this, arguments);
       }
       catch (ex) {
-        _setStatus(currentTest, status.fail);
+        _setStatus(currentTest, stati.fail);
         if (ex.message && ex.message.length > 0) {
           _record(currentTest, ex.message);
         }
@@ -448,8 +448,8 @@ function createDelayed(func) {
       }
     }
     delayedTest.outstanding--;
-    if (delayedTest.outstanding == 0 && _getStatus(delayedTest) == status.asynchronous) {
-      _setStatus(currentTest, status.pass, true);
+    if (delayedTest.outstanding == 0 && _getStatus(delayedTest) == stati.asynchronous) {
+      _setStatus(currentTest, stati.pass, true);
     }
     var returned = dwr.util.getValue("asyncReturn" + currentTest.name) - 0;
     dwr.util.setValue("asyncReturn" + currentTest.name, returned + 1);
@@ -468,7 +468,7 @@ function createDelayedError(func) {
   var delayedTest = currentTest;
   return function() {
     currentTest = delayedTest;
-    _setStatus(currentTest, status.fail);
+    _setStatus(currentTest, stati.fail);
     if (func == null) {
       _record(currentTest.name, "Executing delayed error handler: " + dwr.util.toDescriptiveString(Array().slice.call(arguments), 3));
     }
@@ -760,7 +760,7 @@ function success(message) {
  */
 function _record() {
   window.console && console.error(arguments);
-  _setStatus(currentTest, status.fail);
+  _setStatus(currentTest, stati.fail);
   var message = arguments[0] + "(";
   var data = arguments[1];
   if (typeof data == "string") {

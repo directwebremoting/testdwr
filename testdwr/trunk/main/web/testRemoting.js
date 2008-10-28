@@ -87,13 +87,13 @@ window.testRemotingParameters = function() {
 window.testRemotingHeaders = function() {
   Test.listHeaders({
     callback:createDelayed(function(data) {
-      verifyEqual(data.param1, "value1");
-      verifyEqual(data.param2, "value2");
+      verifyEqual(data.Param1, "value1");
+      verifyEqual(data.Param2, "value2");
       verifyUndefined(data.param3);
     }),
     headers:{
-      'param1':'value1',
-      'param2':'value2'
+      'Param1':'value1',
+      'Param2':'value2'
     },
     errorHandler:createDelayedError()
   });
