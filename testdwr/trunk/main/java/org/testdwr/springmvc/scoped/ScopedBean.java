@@ -15,19 +15,17 @@
  */
 package org.testdwr.springmvc.scoped;
 
+import java.io.Serializable;
 
 /**
  * Tests not singleton beans
  *
  * @author Jose Noheda [jose.noheda@gmail.com]
- *
  */
-public class ScopedBean implements Giver
+public class ScopedBean implements Giver, Serializable
 {
-
     public String giveMe()
     {
         return "some data";
     }
-
 }
