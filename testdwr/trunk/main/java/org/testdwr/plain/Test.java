@@ -69,6 +69,7 @@ import org.junit.runner.notification.RunListener;
 import org.testdwr.convert.AbstractBase;
 import org.testdwr.convert.ConcreteBBase;
 import org.testdwr.convert.ConcreteCBase;
+import org.testdwr.convert.ConcreteIFace;
 import org.testdwr.convert.IFace;
 import org.testdwr.convert.MyFancyException;
 import org.testdwr.convert.MyFancyExceptionInPackage;
@@ -746,6 +747,14 @@ public class Test
             return "null";
         }
         return lightObj.getClass().getName();
+    }
+
+    public ConcreteIFace virtualProperty()
+    {
+        return new ConcreteIFace() {{
+            setI(10);
+            setFieldAbstract(5.0);
+        }};
     }
 
     public void throwMapped() throws MyFancyException

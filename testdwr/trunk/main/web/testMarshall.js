@@ -777,3 +777,13 @@ window.testMarshallAreIdentical = function() {
     verifyFalse(reply, "isIdentical:false");
   }));
 };
+
+function testMarshallVirtualProperties() {
+	Test.virtualProperty({
+		callback: createDelayed(function(data) {
+			assertEqual(data.i, 10)
+			assertEqual(data.fieldAbstract, 5.0)
+			assertEqual(data.fieldVirtual, "virtual")
+		})
+	})
+}
