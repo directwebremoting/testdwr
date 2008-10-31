@@ -1,6 +1,6 @@
 package org.testdwr.convert;
 
-public class ConcreteIFace implements IFace
+public class ConcreteIFace extends AbstractIFace
 {
     private int _i = 0;
 
@@ -13,4 +13,6 @@ public class ConcreteIFace implements IFace
     {
         _i = i;
     }
+
 }
+
