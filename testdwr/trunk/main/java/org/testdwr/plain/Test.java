@@ -749,7 +749,7 @@ public class Test
         return lightObj.getClass().getName();
     }
 
-    public ConcreteIFace virtualProperty()
+    public ConcreteIFace readOnlyProperty()
     {
         return new ConcreteIFace() {{
             setI(10);
