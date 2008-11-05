@@ -778,12 +778,12 @@ window.testMarshallAreIdentical = function() {
   }));
 };
 
-function testMarshallVirtualProperties() {
-	Test.virtualProperty({
+function testMarshallReadOnlyProperties() {
+	Test.readOnlyProperty({
 		callback: createDelayed(function(data) {
 			assertEqual(data.i, 10)
 			assertEqual(data.fieldAbstract, 5.0)
-			assertEqual(data.fieldVirtual, "virtual")
+			assertEqual(data.fieldReadOnly, "readOnly")
 		})
 	})
 }
