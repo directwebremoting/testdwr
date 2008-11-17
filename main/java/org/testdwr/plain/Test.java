@@ -57,6 +57,7 @@ import org.directwebremoting.WidenScope;
 import org.directwebremoting.event.ScriptSessionBindingEvent;
 import org.directwebremoting.event.ScriptSessionBindingListener;
 import org.directwebremoting.extend.InboundContext;
+import org.directwebremoting.io.FileTransfer;
 import org.directwebremoting.io.JavascriptFunction;
 import org.directwebremoting.ui.browser.Document;
 import org.directwebremoting.ui.browser.Window;
@@ -481,6 +482,12 @@ public class Test
     public List<List<Map<String, TestBean>>> testComplex(List<List<Map<String, TestBean>>> test)
     {
         return test;
+    }
+
+    public FileTransfer binary(String text)
+    {
+        String html = "<html><body><p>" + text + "</p></body></html>";
+        return new FileTransfer(null, "text/html", html.getBytes());
     }
 
     public TestBean inheritanceTest(int type)

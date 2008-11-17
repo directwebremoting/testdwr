@@ -778,12 +778,13 @@ window.testMarshallAreIdentical = function() {
   }));
 };
 
-function testMarshallReadOnlyProperties() {
-	Test.readOnlyProperty({
-		callback: createDelayed(function(data) {
-			assertEqual(data.i, 10)
-			assertEqual(data.fieldAbstract, 5.0)
-			assertEqual(data.fieldReadOnly, "readOnly")
-		})
-	})
+/**
+ * 
+ */
+window.testMarshallReadOnlyProperties = function () {
+    Test.readOnlyProperty(createOptions(function(data) {
+        assertEqual(data.i, 10)
+        assertEqual(data.fieldAbstract, 5.0)
+        assertEqual(data.fieldReadOnly, "readOnly")
+    }));
 }

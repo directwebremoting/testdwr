@@ -13,6 +13,4 @@ public class ConcreteIFace extends AbstractIFace
     {
         _i = i;
     }
-
 }
-

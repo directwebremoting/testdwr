@@ -85,16 +85,21 @@ window.testRemotingParameters = function() {
  *
  */
 window.testRemotingHeaders = function() {
+  var addedHeaders = {
+    'Param1':'value1',
+    'Param2':'value2'
+  };
+
   Test.listHeaders({
     callback:createDelayed(function(data) {
-      verifyEqual(data.Param1, "value1");
-      verifyEqual(data.Param2, "value2");
+      var param1 = data.Param1 || data.param1;
+      var param2 = data.Param2 || data.param2;
+      verifyEqual(param1, addedHeaders.Param1);
+      verifyEqual(param2, addedHeaders.Param2);
       verifyUndefined(data.param3);
+      verifyUndefined(data.Param3);
     }),
-    headers:{
-      'Param1':'value1',
-      'Param2':'value2'
-    },
+    headers:addedHeaders,
     errorHandler:createDelayedError()
   });
 };
