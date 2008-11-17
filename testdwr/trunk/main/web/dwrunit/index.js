@@ -935,19 +935,3 @@ _addEvent(window, 'load', function() {
   init();
 });
 // */
-
-/*
-Each test must conform to the following:
-- Its name must begin 'test'
-- If the test is asynchronous, it should use createDelayed(). For example:
-  window.setTimeout(createDelayed(function(args) {...}), 1000);
-  An error handler (that should not be called) can be created with createDelayedError()
-- xUnit assert...() functions are available to halt execution
-- verify...() functions are also available that do not halt execution
-- If you wish to record a failure use fail()
-- When a function ends it will be assumed that it failed if an assert or verify
-  failed or if fail was called. If testDelayed was called then the final
-  assessment will only be made when testCompleted is called. The test
-  will be considered a failure until this happens.
-  Otherwise the test passes ;-)
-*/
