@@ -168,6 +168,31 @@ window.testDwrUtilAddOptionsMap2 = function() {
 /**
  * 
  */
+window.testDwrUtilAddOptionsInOtherWindow = function() {
+  var pwin = window.open("about:blank");
+  if (!pwin) throw new Error("Popup window needed for test was blocked.")
+  function test() {
+    try {
+      var pdoc = pwin.document;
+      pdoc.body.innerHTML = '<select id="sel"></select>';
+      var sel = pdoc.getElementById("sel");
+
+      dwr.util.addOptions(sel, arrayFive);
+
+      assertEqual("One", dwr.util.getValue(sel));
+      assertEqual("One", dwr.util.getText(sel));
+      assertTrue(sel.innerHTML.match(/option/i));
+    }
+    finally {
+      pwin.close();
+    }
+  }
+  setTimeout(createDelayed(test), 1000);
+};
+
+/**
+ * 
+ */
 window.testDwrUtilRemoveItems = function() {
   useHtml('<ul id="removeItems">' +
     '<li>One</li> <li>Two</li> <li>Three</li> <li>Four</li> <li>Five</li>' +
