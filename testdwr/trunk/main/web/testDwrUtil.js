@@ -65,7 +65,7 @@ window.testDwrUtilAddOptionsBasic = function() {
 
   assertEqual("One", dwr.util.getValue('addOptionsBasic'));
   assertEqual("One", dwr.util.getText('addOptionsBasic'));
-  assertTrue(dwr.util.byId('addOptionsBasic').innerHTML.match(/option/));
+  assertTrue(dwr.util.byId('addOptionsBasic').innerHTML.match(/option/i));
 };
 
 /**
@@ -84,7 +84,7 @@ window.testDwrUtilRemoveAllOptions = function() {
   var value = dwr.util.getValue('removeAllOptions');
   // TODO: shouldn't this be better defined?
   assertTrue(value == null || value.length == 0);
-  assertFalse(dwr.util.byId('removeAllOptions').innerHTML.match(/option/));
+  assertFalse(dwr.util.byId('removeAllOptions').innerHTML.match(/option/i));
 };
 
 /**
@@ -97,7 +97,7 @@ window.testDwrUtilAddOptionsObject1 = function() {
 
   assertEqual("One", dwr.util.getValue('addOptionsObject1'));
   assertEqual("One", dwr.util.getText('addOptionsObject1'));
-  assertTrue(dwr.util.byId('addOptionsObject1').innerHTML.match(/option/));
+  assertTrue(dwr.util.byId('addOptionsObject1').innerHTML.match(/option/i));
 };
 
 /**
@@ -110,7 +110,7 @@ window.testDwrUtilAddOptionsObject2 = function() {
 
   assertEqual("One", dwr.util.getValue('addOptionsObject2'));
   assertEqual("1", dwr.util.getText('addOptionsObject2'));
-  assertTrue(dwr.util.byId('addOptionsObject2').innerHTML.match(/option/));
+  assertTrue(dwr.util.byId('addOptionsObject2').innerHTML.match(/option/i));
 };
 
 /**
@@ -123,7 +123,7 @@ window.testDwrUtilAddOptionsObject3 = function() {
 
   assertEqual("1", dwr.util.getValue('addOptionsObject3'));
   assertEqual("1", dwr.util.getText('addOptionsObject3'));
-  assertTrue(dwr.util.byId('addOptionsObject3').innerHTML.match(/option/));
+  assertTrue(dwr.util.byId('addOptionsObject3').innerHTML.match(/option/i));
 };
 
 /**
@@ -136,7 +136,7 @@ window.testDwrUtilAddOptionsObject4 = function() {
 
   assertEqual("1", dwr.util.getValue('addOptionsObject4'));
   assertEqual("One", dwr.util.getText('addOptionsObject4'));
-  assertTrue(dwr.util.byId('addOptionsObject4').innerHTML.match(/option/));
+  assertTrue(dwr.util.byId('addOptionsObject4').innerHTML.match(/option/i));
 };
 
 /**
@@ -149,7 +149,7 @@ window.testDwrUtilAddOptionsMap1 = function() {
 
   assertEqual("one", dwr.util.getValue('addOptionsMap1'));
   assertEqual("1", dwr.util.getText('addOptionsMap1'));
-  assertTrue(dwr.util.byId('addOptionsMap1').innerHTML.match(/option/));
+  assertTrue(dwr.util.byId('addOptionsMap1').innerHTML.match(/option/i));
 };
 
 /**
@@ -162,7 +162,7 @@ window.testDwrUtilAddOptionsMap2 = function() {
 
   assertEqual("1", dwr.util.getValue('addOptionsMap2'));
   assertEqual("one", dwr.util.getText('addOptionsMap2'));
-  assertTrue(dwr.util.byId('addOptionsMap2').innerHTML.match(/option/));
+  assertTrue(dwr.util.byId('addOptionsMap2').innerHTML.match(/option/i));
 };
 
 /**
@@ -178,7 +178,7 @@ window.testDwrUtilRemoveItems = function() {
   var value = dwr.util.getValue('removeItems');
   // TODO: shouldn't this be better defined?
   assertTrue(value == null || value.length == 0);
-  assertFalse(dwr.util.byId('removeItems').innerHTML.match(/option/));
+  assertFalse(dwr.util.byId('removeItems').innerHTML.match(/option/i));
 };
 
 /**
@@ -190,7 +190,7 @@ window.testDwrUtilAddItemsBasic = function() {
   dwr.util.addOptions('addItemsBasic', arrayFive);
 
   var innerHtml = dwr.util.byId('addItemsBasic').innerHTML;
-  assertTrue(innerHtml.match(/li/));
+  assertTrue(innerHtml.match(/li/i));
   assertTrue(innerHtml.match(/One/));
   assertFalse(innerHtml.match(/1/));
 };
@@ -204,7 +204,7 @@ window.testDwrUtilAddItemsObject1 = function() {
   dwr.util.addOptions('addItemsObject1', arrayObject, "name");
 
   var innerHtml = dwr.util.byId('addItemsObject1').innerHTML;
-  assertTrue(innerHtml.match(/li/));
+  assertTrue(innerHtml.match(/li/i));
   assertTrue(innerHtml.match(/One/));
   assertFalse(innerHtml.match(/1/));
 };
@@ -218,7 +218,7 @@ window.testDwrUtilAddItemsObject2 = function() {
   dwr.util.addOptions('addItemsObject2', arrayObject, "name", "value");
 
   var innerHtml = dwr.util.byId('addItemsObject2').innerHTML;
-  assertTrue(innerHtml.match(/li/));
+  assertTrue(innerHtml.match(/li/i));
   assertTrue(innerHtml.match(/One/));
   assertFalse(innerHtml.match(/1/));
 };
@@ -232,7 +232,7 @@ window.testDwrUtilAddItemsObject3 = function() {
   dwr.util.addOptions('addItemsObject3', arrayObject, "value");
 
   var innerHtml = dwr.util.byId('addItemsObject3').innerHTML;
-  assertTrue(innerHtml.match(/li/));
+  assertTrue(innerHtml.match(/li/i));
   assertFalse(innerHtml.match(/One/));
   assertTrue(innerHtml.match(/1/));
 };
@@ -246,7 +246,7 @@ window.testDwrUtilAddItemsObject4 = function() {
   dwr.util.addOptions('addItemsObject4', arrayObject, "value", "name");
 
   var innerHtml = dwr.util.byId('addItemsObject4').innerHTML;
-  assertTrue(innerHtml.match(/li/));
+  assertTrue(innerHtml.match(/li/i));
   assertFalse(innerHtml.match(/One/));
   assertTrue(innerHtml.match(/1/));
 };
@@ -298,7 +298,7 @@ window.testDwrUtilAddRowsBasic = function() {
   var innerHtml = dwr.util.byId('addRowsBasic').innerHTML;
   assertTrue(innerHtml.match(/One/));
   assertTrue(innerHtml.match(/ONE/));
-  assertTrue(innerHtml.match(/td/));
+  assertTrue(innerHtml.match(/td/i));
   assertTrue(innerHtml.match(/innerHTML Test/));
   assertTrue(innerHtml.match(/DOM Test/));
 };
