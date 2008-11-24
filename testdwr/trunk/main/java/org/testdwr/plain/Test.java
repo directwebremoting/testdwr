@@ -54,9 +54,11 @@ import org.directwebremoting.ServerContextFactory;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.WidenScope;
+import org.directwebremoting.dwrunit.Verify;
 import org.directwebremoting.event.ScriptSessionBindingEvent;
 import org.directwebremoting.event.ScriptSessionBindingListener;
 import org.directwebremoting.extend.InboundContext;
+import org.directwebremoting.impl.StartupUtil;
 import org.directwebremoting.io.FileTransfer;
 import org.directwebremoting.io.JavascriptFunction;
 import org.directwebremoting.ui.browser.Document;
@@ -97,7 +99,7 @@ public class Test
     public void throwNPE()
     {
         // This is exported by dwr.xml
-        throw new NullPointerException("NullPointerException");
+        throw new NullPointerException("No message for NPE");
     }
 
     public void throwNPE(String message)
@@ -109,13 +111,25 @@ public class Test
     public void throwIAE()
     {
         // This is NOT exported by dwr.xml
-        throw new IllegalArgumentException("IllegalArgumentException");
+        throw new IllegalArgumentException("No message for IAE");
+    }
+
+    public void throwIAE(String message)
+    {
+        // This is NOT exported by dwr.xml
+        throw new IllegalArgumentException(message);
     }
 
     public void throwSPE() throws SAXParseException
     {
         // This is exported by dwr.xml as a result of it being a SAXException
-        throw new SAXParseException("SAXParseException", "publicId", "systemId", 42, 24, new NullPointerException("NullPointerException"));
+        throw new SAXParseException("No message for SPE", "publicId", "systemId", 42, 24, new NullPointerException("No message for NPE"));
+    }
+
+    public void throwSPE(String messageSpe, String messageNpe) throws SAXParseException
+    {
+        // This is exported by dwr.xml as a result of it being a SAXException
+        throw new SAXParseException(messageSpe, "publicId", "systemId", 42, 24, new NullPointerException(messageNpe));
     }
 
     public int waitFor(int wait)
@@ -947,58 +961,6 @@ public class Test
         return verify.getReport();
     }
 
-    public List<String> checkImHere()
-    {
-        final String attributeName = "attr:" + System.currentTimeMillis();
-        final Verify verify = new Verify();
-
-        WebContext webContext = WebContextFactory.get();
-        ScriptSession scriptSession = webContext.getScriptSession();
-        scriptSession.setAttribute(attributeName, true);
-
-        ScriptSessionFilter filter = new TestScriptSessionFilter(attributeName);
-        String page = webContext.getCurrentPage();
-
-        Browser.withPage(page, new FilterCheckSingle("withPage:Auto", attributeName, verify));
-        Browser.withAllSessions(new FilterCheckSingle("withAllSessions:Auto", attributeName, verify));
-        Browser.withCurrentPage(new FilterCheckSingle("withCurrentPage:Auto", attributeName, verify));
-        Browser.withSession(scriptSession.getId(), new FilterCheckSingle("withSession:Auto", attributeName, verify));
-
-        Browser.withPageFiltered(page, filter, new CheckSingle("withPageFiltered:Auto", verify));
-        Browser.withAllSessionsFiltered(filter, new CheckSingle("withAllSessionsFiltered:Auto", verify));
-        Browser.withCurrentPageFiltered(filter, new CheckSingle("withCurrentPageFiltered:Auto", verify));
-/*
-        ServerContext serverContext = ServerContextFactory.get();
-        log.debug("** Testing Browser against local context: " + serverContext);
-
-        Browser.withPage(serverContext, page, new FilterCheckSingle("withPage:Context", attributeName, verify));
-        Browser.withAllSessions(serverContext, new FilterCheckSingle("withAllSessions:Context", attributeName, verify));
-        Browser.withSession(serverContext, scriptSession.getId(), new FilterCheckSingle("withSession:Context", attributeName, verify));
-
-        Browser.withPageFiltered(serverContext, page, filter, new CheckSingle("withPageFiltered:Context", verify));
-        Browser.withAllSessionsFiltered(serverContext, filter, new CheckSingle("withAllSessionsFiltered:Context", verify));
-
-        Collection<ServerContext> contexts = StartupUtil.getAllServerContexts();
-        for (ServerContext otherContext : contexts)
-        {
-            if (otherContext.getServletConfig().equals(serverContext.getServletConfig()))
-            {
-                log.debug("** Skipping current config: " + otherContext);
-                continue;
-            }
-
-            log.debug("** Testing Browser against other context: " + otherContext);
-
-            Browser.withPage(otherContext, page, new FilterCheckNone("withPage:Other", attributeName, verify));
-            Browser.withAllSessions(otherContext, new FilterCheckNone("withAllSessions:Other", attributeName, verify));
-            Browser.withSession(otherContext, scriptSession.getId(), new FilterCheckNone("withSession:Other", attributeName, verify));
-
-            Browser.withPageFiltered(otherContext, page, filter, new CheckNone("withPageFiltered:Other", verify));
-        }
-*/
-        return verify.getReport();
-    }
-
     public List<String> variousChecks()
     {
         Verify verify = new Verify();
@@ -1016,36 +978,56 @@ public class Test
         return verify.getReport();
     }
 
-    protected class FilterCheckSingle implements Runnable
+    public List<String> checkImHere()
     {
-        protected FilterCheckSingle(String context, String attributeName, Verify verify)
-        {
-            this.context = context;
-            this.attributeName = attributeName;
-            this.verify = verify;
-        }
+        WebContext webContext = WebContextFactory.get();
+        ScriptSession scriptSession = webContext.getScriptSession();
 
-        /* (non-Javadoc)
-         * @see java.lang.Runnable#run()
-         */
-        public void run()
+        final String attributeName = "attr:" + scriptSession.getId().substring(0, 4) + ":" + scriptSession.getPage();
+        final Verify verify = new Verify();
+
+        scriptSession.setAttribute(attributeName, true);
+
+        ScriptSessionFilter filter = new TestScriptSessionFilter(attributeName);
+        String page = webContext.getCurrentPage();
+
+        Browser.withPage(page, new CheckCount(1, attributeName, "withPage", verify));
+        Browser.withAllSessions(new CheckCount(1, attributeName, "withAllSessions", verify));
+        Browser.withCurrentPage(new CheckCount(1, attributeName, "withCurrentPage", verify));
+        Browser.withSession(scriptSession.getId(), new CheckCount(1, attributeName, "withSession", verify));
+
+        Browser.withPageFiltered(page, filter, new CheckCount(1, "withPageFiltered", verify));
+        Browser.withAllSessionsFiltered(filter, new CheckCount(1, "withAllSessionsFiltered", verify));
+        Browser.withCurrentPageFiltered(filter, new CheckCount(1, "withCurrentPageFiltered", verify));
+
+        ServerContext serverContext = ServerContextFactory.get();
+        log.debug("** Testing Browser against local context: " + serverContext);
+
+        Browser.withPage(serverContext, page, new CheckCount(1, attributeName, "withPage+Context", verify));
+        Browser.withAllSessions(serverContext, new CheckCount(1, attributeName, "withAllSessions+Context", verify));
+        Browser.withSession(serverContext, scriptSession.getId(), new CheckCount(1, attributeName, "withSession+Context", verify));
+
+        Browser.withPageFiltered(serverContext, page, filter, new CheckCount(1, "withPageFiltered+Context", verify));
+        Browser.withAllSessionsFiltered(serverContext, filter, new CheckCount(1, "withAllSessionsFiltered+Context", verify));
+
+        Collection<ServerContext> contexts = StartupUtil.getAllServerContexts();
+        for (ServerContext otherContext : contexts)
         {
-            int found = 0;
-            Collection<ScriptSession> sessions = WidenScope.browserGetTargetSessions();
-            for (ScriptSession session : sessions)
+            if (otherContext.getServletConfig().equals(serverContext.getServletConfig()))
             {
-                Object check = session.getAttribute(attributeName);
-                if (check != null && check.equals(Boolean.TRUE))
-                {
-                    found++;
-                }
+                log.debug("** Skipping current config: " + otherContext);
+                continue;
             }
-            verify.equals(context, found, 1);
-        }
 
-        private String context;
-        private String attributeName;
-        private Verify verify;
+            log.debug("** Testing Browser against other context: " + otherContext);
+
+            Browser.withPage(otherContext, page, new CheckCount(0, attributeName, "withPage+Other", verify));
+            Browser.withAllSessions(otherContext, new CheckCount(0, attributeName, "withAllSessions+Other", verify));
+            Browser.withSession(otherContext, scriptSession.getId(), new CheckCount(0, attributeName, "withSession+Other", verify));
+
+            Browser.withPageFiltered(otherContext, page, filter, new CheckCount(0, "withPageFiltered+Other", verify));
+        }
+        return verify.getReport();
     }
 
     protected class TestScriptSessionFilter implements ScriptSessionFilter
@@ -1067,33 +1049,30 @@ public class Test
         private String attributeName;
     }
 
-    protected class CheckSingle implements Runnable
+    /**
+     * A checker that ensures there are a given number of matching sessions
+     */
+    protected class CheckCount implements Runnable
     {
-        protected CheckSingle(String context, Verify verify)
-        {
-            this.context = context;
-            this.verify = verify;
-        }
-
-        /* (non-Javadoc)
-         * @see java.lang.Runnable#run()
+        /**
+         * Ctor if we wish to filter by attributeName
          */
-        public void run()
+        protected CheckCount(int expected, String attributeName, String debugMsg, Verify verify)
         {
-            Collection<ScriptSession> sessions = WidenScope.browserGetTargetSessions();
-            verify.equals(context, sessions.size(), 1);
-        }
-
-        private String context;
-        private Verify verify;
-    }
-
-    protected class FilterCheckNone implements Runnable
-    {
-        protected FilterCheckNone(String context, String attributeName, Verify verify)
-        {
-            this.context = context;
             this.attributeName = attributeName;
+            this.expected = expected;
+            this.debugMsg = debugMsg;
+            this.verify = verify;
+        }
+
+        /**
+         * Ctor if we do not wish to filter by attributeName
+         */
+        protected CheckCount(int expected, String debugMsg, Verify verify)
+        {
+            this.attributeName = null;
+            this.expected = expected;
+            this.debugMsg = debugMsg;
             this.verify = verify;
         }
 
@@ -1102,43 +1081,30 @@ public class Test
          */
         public void run()
         {
-            int found = 0;
             Collection<ScriptSession> sessions = WidenScope.browserGetTargetSessions();
-            for (ScriptSession session : sessions)
+            int found = 0;
+            if (attributeName == null)
             {
-                Object check = session.getAttribute(attributeName);
-                if (check != null && check.equals(Boolean.TRUE))
+                found = sessions.size();
+            }
+            else
+            {
+                for (ScriptSession session : sessions)
                 {
-                    found++;
+                    Object check = session.getAttribute(attributeName);
+                    if (check != null && check.equals(Boolean.TRUE))
+                    {
+                        found++;
+                    }
                 }
             }
-            verify.equals(context, found, 0);
+            verify.equals(debugMsg, expected, found);
         }
 
-        private String context;
-        private String attributeName;
-        private Verify verify;
-    }
-
-    protected class CheckNone implements Runnable
-    {
-        protected CheckNone(String context, Verify verify)
-        {
-            this.context = context;
-            this.verify = verify;
-        }
-
-        /* (non-Javadoc)
-         * @see java.lang.Runnable#run()
-         */
-        public void run()
-        {
-            Collection<ScriptSession> sessions = WidenScope.browserGetTargetSessions();
-            verify.equals(context, sessions.size(), 0);
-        }
-
-        private String context;
-        private Verify verify;
+        private final String attributeName;
+        private final int expected;
+        private final String debugMsg;
+        private final Verify verify;
     }
 
     /**
