@@ -9,11 +9,15 @@
       	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
         http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd">
 
-	<!-- Exposed resources -->
- 
+	<!-- Bean Converters -->
+ 	<bean id="prefixConverter" class="org.testdwr.springmvc.conversion.PrefixedConverter">
+ 		<property name="prefix" value="Hi " />
+ 	</bean>
+
  	<!-- Double dwr:configuration tag test -->
 	<dwr:configuration>
 		<dwr:convert type="bean" class="org.testdwr.springmvc.model.SpringMvcBean" javascript="*" />
+		<dwr:convert class="org.testdwr.springmvc.conversion.*" ref="prefixConverter" />
 	</dwr:configuration>
 
 	<!--  Remoted Beans -->
@@ -50,6 +54,11 @@
 	<!-- This test handles annotated converters -->
 	<bean class="org.testdwr.springmvc.SpringAnnotatedConverter">
 		<dwr:remote javascript="AnnotatedConverter" />
+	</bean>
+
+	<!-- This test handles annotated converters -->
+	<bean class="org.testdwr.springmvc.conversion.SpringCustomConverterBean">
+		<dwr:remote javascript="SpringBeanConverter" />
 	</bean>
 
 	<!--  MVC Configuration -->

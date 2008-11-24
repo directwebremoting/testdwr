@@ -55,6 +55,15 @@ function testSpringMvcAnnotatedConverter() {
 		callback: createDelayed(function(data) {
 			assertEqual(data.name, "Peter")
 			assertTrue(data instanceof S_MVC_AB)
+			assertTrue(data.valid)
+		})
+	})
+}
+
+function testSpringMvcBeanConverter() {	
+	SpringBeanConverter.simple({
+		callback: createDelayed(function(data) {
+			assertEqual(data, "Hi Peter")
 		})
 	})
 }
