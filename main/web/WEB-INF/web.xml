@@ -58,10 +58,12 @@
       <param-name>allowGetForSafariButMakeForgeryEasier</param-name>
       <param-value>true</param-value>
     </init-param>
+    <!--
     <init-param>
       <param-name>org.directwebremoting.Container</param-name>
       <param-value>org.testdwr.plain.TestDefaultContainer</param-value>
     </init-param>
+    -->
     <init-param>
       <param-name>org.directwebremoting.event.ScriptSessionListener</param-name>
       <param-value>org.testdwr.event.Test2ScriptSessionListener, org.testdwr.event.TestScriptSessionListener</param-value>
