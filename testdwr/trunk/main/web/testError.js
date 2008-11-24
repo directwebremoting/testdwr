@@ -10,9 +10,9 @@ window.testErrorTransportTypes = function() {
     verifyNotNull(message);
     verifyNotNull(ex);
     verifyNotNull(ex.message);
-    verifyEqual(typeof ex.message, "string");
+    verifyEqual("string", typeof ex.message);
     verifyEqual(ex.message, message);
-    verifyEqual(ex.javaClassName, "java.lang.NullPointerException");
+    verifyEqual("java.lang.NullPointerException", ex.javaClassName);
   };
 
   var callData = {
@@ -100,9 +100,9 @@ window.testError404Handling = function() {
       verifyNotNull(message);
       verifyNotNull(ex);
       verifyNotNull(ex.message);
-      verifyEqual(typeof ex.message, "string");
+      verifyEqual("string", typeof ex.message);
       verifyEqual(ex.message, message);
-      verifyEqual(ex.name, "dwr.engine.http.404");
+      verifyEqual("dwr.engine.http.404", ex.name);
     })
   });
   Test._path = oldPath;
@@ -113,35 +113,36 @@ window.testError404Handling = function() {
  *
  */
 window.testErrorExceptionDetail = function() {
-  Test.throwNPE({
+  Test.throwNPE("NPE-Message", {
     callback:createDelayedError(),
     exceptionHandler:createDelayed(function(message, ex) {
-      verifyEqual(message, "NullPointerException");
+      verifyEqual("NPE-Message", message);
       verifyNotNull(ex);
-      verifyEqual(ex.message, "NullPointerException");
-      verifyEqual(ex.javaClassName, "java.lang.NullPointerException");
+      verifyEqual(ex.message, message);
+      verifyEqual("java.lang.NullPointerException", ex.javaClassName);
     })
   });
 
-  Test.throwIAE({
+  Test.throwIAE("IAE-Message", {
     callback:createDelayedError(),
     exceptionHandler:createDelayed(function(message, ex) {
-      verifyEqual(message, "Error");
+      verifyEqual("Error", message);
       verifyNotNull(ex);
-      verifyEqual(ex.message, "Error");
-      verifyEqual(ex.javaClassName, "java.lang.Throwable");
+      verifyEqual(ex.message, message);
+      verifyEqual("java.lang.Throwable", ex.javaClassName);
     })
   });
 
-  Test.throwSPE({
+  Test.throwSPE("SPE-Message", "NPE-Message", {
     callback:createDelayedError(),
     exceptionHandler:createDelayed(function(message, ex) {
-      verifyEqual(message, "SAXParseException");
+      verifyEqual("SPE-Message", message);
       verifyNotNull(ex);
-      verifyEqual(ex.message, "SAXParseException");
-      verifyEqual(ex.javaClassName, "org.xml.sax.SAXParseException");
-      verifyEqual(ex.lineNumber, 42);
-      verifyEqual(ex.exception.javaClassName, "java.lang.NullPointerException");
+      verifyEqual(ex.message, message);
+      verifyEqual("org.xml.sax.SAXParseException", ex.javaClassName);
+      verifyEqual(42, ex.lineNumber);
+      verifyEqual("java.lang.NullPointerException", ex.exception.javaClassName);
+      verifyEqual("NPE-Message", ex.exception.message);
     })
   });
 };
