@@ -699,8 +699,8 @@ function verifyNotNaN(value) {
 /**
  *
  */
-function assertEqual(value1, value2) {
-  if (!_isEqual(value1, value2)) {
+function assertEqual(expected, actual) {
+  if (!_isEqual(expected, actual)) {
     _recordThrow("assertEqual", arguments);
   }
 }
@@ -708,8 +708,8 @@ function assertEqual(value1, value2) {
 /**
  *
  */
-function verifyEqual(value1, value2) {
-  if (!_isEqual(value1, value2)) {
+function verifyEqual(expected, actual) {
+  if (!_isEqual(expected, actual)) {
     _recordTrace("verifyEqual", arguments);
   }
 }
@@ -717,8 +717,8 @@ function verifyEqual(value1, value2) {
 /**
  *
  */
-function assertNotEqual(value1, value2) {
-  if (_isEqual(value1, value2)) {
+function assertNotEqual(expected, actual) {
+  if (_isEqual(expected, actual)) {
     _recordThrow("assertNotEqual", arguments);
   }
 }
@@ -726,8 +726,8 @@ function assertNotEqual(value1, value2) {
 /**
  *
  */
-function verifyNotEqual(value1, value2) {
-  if (!_isEqual(value1, value2)) {
+function verifyNotEqual(expected, actual) {
+  if (!_isEqual(expected, actual)) {
     _recordTrace("verifyNotEqual", arguments);
   }
 }
@@ -812,7 +812,7 @@ function _getStatus(test) {
 /**
  *
  */
-function _isEqual(actual, expected, depth) {
+function _isEqual(expected, actual, depth) {
   if (!depth) depth = 0;
   // Rather than failing we assume that it works!
   if (depth > 10) return true;
