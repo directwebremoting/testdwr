@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.testdwr.plain;
+package org.directwebremoting.dwrunit;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
