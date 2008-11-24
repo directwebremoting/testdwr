@@ -13,38 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.testdwr.springmvc.model;
-
-import org.directwebremoting.annotations.DataTransferObject;
-import org.directwebremoting.annotations.RemoteProperty;
+package org.testdwr.springmvc.conversion;
 
 /**
- * Test for @DataTransferObject
- * 
- * @author Jose Noheda [jose.noheda@gmail.com]
+ * A data holder
  *
+ * @author Jose Noheda [jose.noheda@gmail.com]
  */
-@DataTransferObject(javascript = "S_MVC_AB")
-public class SpringMvcAnnotatedBean
+public class SimpleBean
 {
 
-    private String name;
+    private String data;
 
-    @RemoteProperty
-    public String getName()
+    public SimpleBean(String data)
     {
-        return name;
+        this.data = data;
     }
 
-    public void setName(String name)
+    public String getData()
     {
-        this.name = name;
+        return data;
     }
 
-    @RemoteProperty
-    public boolean isValid()
+    public void setData(String data)
     {
-        return true;
+        this.data = data;
     }
 
 }

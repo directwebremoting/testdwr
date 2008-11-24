@@ -13,38 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.testdwr.springmvc.model;
+package org.testdwr.springmvc.conversion;
 
-import org.directwebremoting.annotations.DataTransferObject;
-import org.directwebremoting.annotations.RemoteProperty;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.testdwr.springmvc.SpringLazyBean;
 
 /**
- * Test for @DataTransferObject
- * 
+ * Tests referenced beans.
+ *
  * @author Jose Noheda [jose.noheda@gmail.com]
  *
  */
-@DataTransferObject(javascript = "S_MVC_AB")
-public class SpringMvcAnnotatedBean
+public class SpringCustomConverterBean
 {
 
-    private String name;
+    private static Log logger =  LogFactory.getLog(SpringLazyBean.class);
 
-    @RemoteProperty
-    public String getName()
+    public SimpleBean simple()
     {
-        return name;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    @RemoteProperty
-    public boolean isValid()
-    {
-        return true;
+        logger.info("Called simple");
+        return new SimpleBean("Peter");
     }
 
 }
