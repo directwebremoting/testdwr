@@ -723,25 +723,6 @@ window.testMarshallPackagedEx = function() {
 /**
  *
  */
-window.testMarshallEnforceTypesOnMappedArguments = function() {
-  var obj = new pkg1.OnePackage();
-
-  // Note that we are sending an argument with the wrong type to this method!
-  // Either a TwoPackages object or an untyped object should be marshalled and 
-  // run for this method, but not a mapped object of the wrong class.
-  Test.package2(obj, {
-    callback:createDelayedError(),
-    exceptionHandler:createDelayed(function(message, ex) {
-      verifyEqual(message, ex.message);
-      // What's thrown is a org.directwebremoting.ConversionException, but that
-      // isn't mapped so the type we see is just the basic java.lang.Throwable
-      verifyEqual(ex.javaClassName, "java.lang.Throwable");
-    })});
-};
-
-/**
- *
- */
 window.testMarshallLightClassMapping = function() {
   // As this is a test for the light class-mapping scheme we don't want the
   // generated mapped JavaScript class for our objects. We remove any trace
