@@ -134,7 +134,7 @@ public class JettyLauncherBase
                 {
                     findFiles(extension, pathname, found);
                 }
-                else if (pathname.getName().endsWith(extension))
+                else if (!pathname.getName().startsWith(".") && pathname.getName().endsWith(extension))
                 {
                     found.add(pathname);
                 }
