@@ -130,13 +130,16 @@ public class JettyLauncherBase
         {
             public boolean accept(File pathname)
             {
-                if (pathname.isDirectory())
+                if (!pathname.getName().startsWith("."))
                 {
-                    findFiles(extension, pathname, found);
-                }
-                else if (!pathname.getName().startsWith(".") && pathname.getName().endsWith(extension))
-                {
-                    found.add(pathname);
+                    if (pathname.isDirectory())
+                    {
+                        findFiles(extension, pathname, found);
+                    }
+                    else if (pathname.getName().endsWith(extension))
+                    {
+                        found.add(pathname);
+                    }
                 }
                 return false;
             }
