@@ -58,6 +58,10 @@
       <param-name>allowGetForSafariButMakeForgeryEasier</param-name>
       <param-value>true</param-value>
     </init-param>
+    <init-param>
+      <param-name>DwrServletSetting</param-name>
+      <param-value>DwrServletValue</param-value>
+    </init-param>
     <!--
     <init-param>
       <param-name>org.directwebremoting.Container</param-name>
@@ -89,6 +93,10 @@
       <param-name>debug</param-name>
       <param-value>true</param-value>
     </init-param>
+    <init-param>
+      <param-name>DwrSpringServletSetting</param-name>
+      <param-value>DwrSpringServletValue</param-value>
+    </init-param>
     <load-on-startup>2</load-on-startup>
   </servlet>
 
@@ -103,6 +111,10 @@
   <servlet>
     <servlet-name>guice</servlet-name>
     <servlet-class>org.directwebremoting.guice.DwrGuiceServlet</servlet-class>
+    <init-param>
+      <param-name>DwrGuiceServletSetting</param-name>
+      <param-value>DwrGuiceServletValue</param-value>
+    </init-param>
     <load-on-startup>4</load-on-startup>
   </servlet>
 

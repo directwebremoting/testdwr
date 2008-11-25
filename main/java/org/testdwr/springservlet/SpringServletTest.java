@@ -17,8 +17,14 @@ package org.testdwr.springservlet;
 
 import java.util.List;
 
+import org.directwebremoting.Container;
+import org.directwebremoting.ServerContext;
+import org.directwebremoting.ServerContextFactory;
 import org.directwebremoting.WebContextFactory;
+import org.directwebremoting.dwrunit.Verify;
 import org.directwebremoting.extend.InboundContext;
+import org.directwebremoting.spring.SpringContainer;
+import org.directwebremoting.util.VersionUtil;
 
 /**
  * Methods to help unit test DWR that are configured by the SpringServlet.
@@ -26,6 +32,21 @@ import org.directwebremoting.extend.InboundContext;
  */
 public class SpringServletTest
 {
+    @SuppressWarnings("deprecation")
+    public Verify checkContext()
+    {
+        ServerContext serverContext = ServerContextFactory.get();
+        Container container = serverContext.getContainer();
+        Verify verify = new Verify();
+
+        verify.equals("ContextPath", "/guice", serverContext.getContextPath());
+        verify.equals("Version", serverContext.getVersion(), VersionUtil.getVersion());
+        verify.equals("Container.class", container.getClass(), SpringContainer.class);
+        verify.equals("Container.getBean", container.getBean("DwrSpringServletSetting"), "DwrSpringServletValue");
+
+        return verify;
+    }
+
     public String getPath()
     {
         return WebContextFactory.get().getContextPath();

@@ -46,6 +46,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.directwebremoting.Browser;
+import org.directwebremoting.Container;
 import org.directwebremoting.ScriptSession;
 import org.directwebremoting.ScriptSessionFilter;
 import org.directwebremoting.ScriptSessions;
@@ -58,12 +59,14 @@ import org.directwebremoting.dwrunit.Verify;
 import org.directwebremoting.event.ScriptSessionBindingEvent;
 import org.directwebremoting.event.ScriptSessionBindingListener;
 import org.directwebremoting.extend.InboundContext;
+import org.directwebremoting.impl.DefaultContainer;
 import org.directwebremoting.impl.StartupUtil;
 import org.directwebremoting.io.FileTransfer;
 import org.directwebremoting.io.JavascriptFunction;
 import org.directwebremoting.ui.browser.Document;
 import org.directwebremoting.ui.browser.Window;
 import org.directwebremoting.util.ClasspathScanner;
+import org.directwebremoting.util.VersionUtil;
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -91,6 +94,21 @@ import org.xml.sax.SAXParseException;
 @SuppressWarnings({"UnnecessaryFullyQualifiedName"})
 public class Test
 {
+    @SuppressWarnings("deprecation")
+    public Verify checkContext()
+    {
+        ServerContext serverContext = ServerContextFactory.get();
+        Container container = serverContext.getContainer();
+        Verify verify = new Verify();
+
+        verify.equals("ContextPath", "/dwr", serverContext.getContextPath());
+        verify.equals("Version", serverContext.getVersion(), VersionUtil.getVersion());
+        verify.equals("Container.class", container.getClass(), DefaultContainer.class);
+        verify.equals("Container.getBean", container.getBean("DwrServletSetting"), "DwrServletValue");
+
+        return verify;
+    }
+
     public String getPath()
     {
         return WebContextFactory.get().getContextPath();

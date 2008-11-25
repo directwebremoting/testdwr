@@ -123,3 +123,7 @@ function runSpringServletComparisonTests(compares) {
     });
   })(i)
 }
+
+window.testSpringCheckContext = function() {
+  SpringServletTest.checkContext(createReplyIsErrorCallback());
+};

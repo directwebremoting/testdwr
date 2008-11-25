@@ -17,17 +17,38 @@ package org.testdwr.annotate;
 
 import java.util.List;
 
+import org.directwebremoting.Container;
+import org.directwebremoting.ServerContext;
+import org.directwebremoting.ServerContextFactory;
 import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.annotations.RemoteProxy;
+import org.directwebremoting.dwrunit.Verify;
 import org.directwebremoting.extend.InboundContext;
+import org.directwebremoting.spring.SpringContainer;
+import org.directwebremoting.util.VersionUtil;
 
 /**
- * Methods to help unit test DWR that are configured by Guice.
+ * Methods to help unit test DWR that are configured by Annotations.
  * @author Joe Walker [joe at getahead dot ltd dot uk]
  */
 @RemoteProxy
 public class AnnotateTest
 {
+    @SuppressWarnings("deprecation")
+    public Verify checkContext()
+    {
+        ServerContext serverContext = ServerContextFactory.get();
+        Container container = serverContext.getContainer();
+        Verify verify = new Verify();
+
+        verify.equals("ContextPath", "/dwr", serverContext.getContextPath());
+        verify.equals("Version", serverContext.getVersion(), VersionUtil.getVersion());
+        verify.equals("Container.class", container.getClass(), SpringContainer.class);
+        verify.equals("Container.getBean", container.getBean("DwrServletSetting"), "DwrServletValue");
+
+        return verify;
+    }
+
     public String getPath()
     {
         return WebContextFactory.get().getContextPath();

@@ -123,3 +123,7 @@ function runAnnotateComparisonTests(compares) {
     });
   })(i)
 }
+
+window.testAnnotateCheckContext = function() {
+  AnnotateTest.checkContext(createReplyIsErrorCallback());
+};
