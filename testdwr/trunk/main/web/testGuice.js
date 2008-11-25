@@ -123,3 +123,7 @@ function runGuiceComparisonTests(compares) {
     });
   })(i)
 }
+
+window.testGuiceCheckContext = function() {
+  GuiceTest.checkContext(createReplyIsErrorCallback());
+};

@@ -22,3 +22,10 @@ window.testScriptSessionBindingListener = function() {
 window.testImHere = function() {
   Test.checkImHere(createReplyIsErrorCallback());
 };
+
+/**
+ *
+ */
+window.testCheckContext = function() {
+  Test.checkContext(createReplyIsErrorCallback());
+};
