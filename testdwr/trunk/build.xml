@@ -18,15 +18,10 @@
   </target>
 
   <!-- ===================================================================== -->
-  <target name="update-dwr" depends="prepare" description="Build DWR, assuming it is next door">
+  <target name="compile" depends="prepare" description="">
     <ant dir="${dwr.home}" target="test" inheritall="false" inheritrefs="false"/>
     <copy file="${dwr.home}/target/ant/dwr.jar" todir="${basedir}/main/web/WEB-INF/lib"/>
     <copy file="${dwr.home}/target/ant/junitdwr.jar" todir="${basedir}/main/web/WEB-INF/lib"/>
-  </target>
-
-  <!--=======================================================================-->
-  <target name="package" depends="prepare" description="Create packaged outputs: testdwr.war">
-    <!-- Rezip the demo war file if it's contents have changed -->
     <mkdir dir="${basedir}/main/web/WEB-INF/classes"/>
     <javac debug="on" destdir="${basedir}/main/web/WEB-INF/classes" srcdir="${basedir}/main/java" includes="**/*.java" excludes="**/package-info.java">
       <classpath>
@@ -34,6 +29,18 @@
         <fileset dir="${basedir}/main/web/WEB-INF/lib" includes="**/*.jar"/>
       </classpath>
     </javac>
+    <mkdir dir="${target}/launch"/>
+    <javac debug="on" destdir="${target}/launch" srcdir="${basedir}/main/launch" includes="**/*.java" excludes="**/package-info.java">
+      <classpath>
+        <fileset dir="${basedir}/main/lib" includes="**/*.jar"/>
+        <fileset dir="${basedir}/main/web/WEB-INF/lib" includes="**/*.jar"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <!--=======================================================================-->
+  <target name="package" depends="compile" description="Create packaged outputs: testdwr.war">
+    <!-- Rezip the demo war file if it's contents have changed -->
     <mkdir dir="${target}"/>
     <if-not-uptodate destfile="${target}/testdwr.war" sourcedir="${basedir}/main/web">
       <action>
@@ -44,7 +51,7 @@
 
   <!-- ===================================================================== -->
   <target name="clean" depends="prepare" description="Set the state of the filesystem back to that of a clean checkout">
-    <delete dir="${servers}"/>
+    <delete dir="${target}"/>
   </target>
 
   <!--=======================================================================-->
@@ -56,7 +63,9 @@
     <sequential>
       <if>
         <or>
-          <not><available file="@{destfile}"/></not>
+          <not>
+            <available file="@{destfile}"/>
+          </not>
           <not>
             <uptodate targetfile="@{destfile}">
               <srcfiles dir="@{sourcedir}" includes="**/*"/>
@@ -65,9 +74,23 @@
         </or>
         <then>
           <action/>
-        </then>      
+        </then>
       </if>
     </sequential>
   </macrodef>
+
+  <!-- ===================================================================== -->
+  <target name="start-jetty" depends="compile" description="Start test-dwr in the embedded Jetty">
+    <java classname="org.testdwr.launch.JettyTestLauncher">
+      <classpath>
+        <pathelement location="${basedir}/main/lib/jetty-6.1.10.jar"/>
+        <pathelement location="${basedir}/main/lib/jetty-util-6.1.10.jar"/>
+        <pathelement location="${basedir}/main/lib/servlet-api-2.4.jar"/>
+        <pathelement location="${basedir}/main/lib/jsp-2.1.jar"/>
+        <pathelement location="${basedir}/main/lib/jsp-api-2.1.jar"/>
+        <pathelement location="${target}/launch"/>
+      </classpath>
+    </java>
+  </target>
 
 </project>
