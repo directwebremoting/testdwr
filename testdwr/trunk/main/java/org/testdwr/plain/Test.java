@@ -60,6 +60,7 @@ import org.directwebremoting.event.ScriptSessionBindingEvent;
 import org.directwebremoting.event.ScriptSessionBindingListener;
 import org.directwebremoting.extend.InboundContext;
 import org.directwebremoting.impl.DefaultContainer;
+import org.directwebremoting.impl.ImplWidenScope;
 import org.directwebremoting.impl.StartupUtil;
 import org.directwebremoting.io.FileTransfer;
 import org.directwebremoting.io.JavascriptFunction;
@@ -107,6 +108,11 @@ public class Test
         verify.equals("Container.getBean", container.getBean("DwrServletSetting"), "DwrServletValue");
 
         return verify;
+    }
+
+    public void debug()
+    {
+        ImplWidenScope.defaultScriptSessionManagerDebug();
     }
 
     public String getPath()
