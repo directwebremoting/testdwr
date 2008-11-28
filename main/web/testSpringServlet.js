@@ -124,6 +124,6 @@ function runSpringServletComparisonTests(compares) {
   })(i)
 }
 
-window.testSpringCheckContext = function() {
+window.testSpringServletCheckContext = function() {
   SpringServletTest.checkContext(createReplyIsErrorCallback());
 };
