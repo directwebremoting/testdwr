@@ -33,18 +33,18 @@ import org.directwebremoting.util.VersionUtil;
 public class SpringServletTest
 {
     @SuppressWarnings("deprecation")
-    public Verify checkContext()
+    public List<String> checkContext()
     {
         ServerContext serverContext = ServerContextFactory.get();
         Container container = serverContext.getContainer();
         Verify verify = new Verify();
 
-        verify.equals("ContextPath", "/guice", serverContext.getContextPath());
-        verify.equals("Version", serverContext.getVersion(), VersionUtil.getVersion());
-        verify.equals("Container.class", container.getClass(), SpringContainer.class);
-        verify.equals("Container.getBean", container.getBean("DwrSpringServletSetting"), "DwrSpringServletValue");
+        verify.equals("ContextPath", "/test-dwr", serverContext.getContextPath());
+        verify.equals("Version", VersionUtil.getVersion(), serverContext.getVersion());
+        verify.equals("Container.class", SpringContainer.class.getName(), container.getClass().getName());
+        verify.equals("Container.getBean", "DwrSpringServlet", container.getBean("ContainerType"));
 
-        return verify;
+        return verify.getReport();
     }
 
     public String getPath()

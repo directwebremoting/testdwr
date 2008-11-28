@@ -61,7 +61,6 @@ import org.directwebremoting.event.ScriptSessionBindingListener;
 import org.directwebremoting.extend.InboundContext;
 import org.directwebremoting.impl.DefaultContainer;
 import org.directwebremoting.impl.ImplWidenScope;
-import org.directwebremoting.impl.StartupUtil;
 import org.directwebremoting.io.FileTransfer;
 import org.directwebremoting.io.JavascriptFunction;
 import org.directwebremoting.ui.browser.Document;
@@ -96,18 +95,18 @@ import org.xml.sax.SAXParseException;
 public class Test
 {
     @SuppressWarnings("deprecation")
-    public Verify checkContext()
+    public List<String> checkContext()
     {
         ServerContext serverContext = ServerContextFactory.get();
         Container container = serverContext.getContainer();
         Verify verify = new Verify();
 
-        verify.equals("ContextPath", "/dwr", serverContext.getContextPath());
-        verify.equals("Version", serverContext.getVersion(), VersionUtil.getVersion());
-        verify.equals("Container.class", container.getClass(), DefaultContainer.class);
-        verify.equals("Container.getBean", container.getBean("DwrServletSetting"), "DwrServletValue");
+        verify.equals("ContextPath", "/test-dwr", serverContext.getContextPath());
+        verify.equals("Version", VersionUtil.getVersion(), serverContext.getVersion());
+        verify.equals("Container.class", DefaultContainer.class.getName(), container.getClass().getName());
+        verify.equals("Container.getBean", "DwrServlet", container.getBean("ContainerType"));
 
-        return verify;
+        return verify.getReport();
     }
 
     public void debug()
@@ -1007,33 +1006,35 @@ public class Test
         WebContext webContext = WebContextFactory.get();
         ScriptSession scriptSession = webContext.getScriptSession();
 
-        final String attributeName = "attr:" + scriptSession.getId().substring(0, 4) + ":" + scriptSession.getPage();
-        final Verify verify = new Verify();
+        String attributeName = "attr:" + scriptSession.getId().substring(0, 4) + ":" + scriptSession.getPage();
+        Verify verify = new Verify();
 
         scriptSession.setAttribute(attributeName, true);
 
         ScriptSessionFilter filter = new TestScriptSessionFilter(attributeName);
         String page = webContext.getCurrentPage();
+debug();
+        Browser.withPage(page, new CheckCount(1, attributeName, false, "withPage", verify));
+        Browser.withAllSessions(new CheckCount(1, attributeName, false, "withAllSessions", verify));
+        Browser.withCurrentPage(new CheckCount(1, attributeName, false, "withCurrentPage", verify));
+        Browser.withSession(scriptSession.getId(), new CheckCount(1, attributeName, false, "withSession", verify));
 
-        Browser.withPage(page, new CheckCount(1, attributeName, "withPage", verify));
-        Browser.withAllSessions(new CheckCount(1, attributeName, "withAllSessions", verify));
-        Browser.withCurrentPage(new CheckCount(1, attributeName, "withCurrentPage", verify));
-        Browser.withSession(scriptSession.getId(), new CheckCount(1, attributeName, "withSession", verify));
-
-        Browser.withPageFiltered(page, filter, new CheckCount(1, "withPageFiltered", verify));
-        Browser.withAllSessionsFiltered(filter, new CheckCount(1, "withAllSessionsFiltered", verify));
-        Browser.withCurrentPageFiltered(filter, new CheckCount(1, "withCurrentPageFiltered", verify));
+        Browser.withPageFiltered(page, filter, new CheckCount(1, attributeName, true, "withPageFiltered", verify));
+        Browser.withAllSessionsFiltered(filter, new CheckCount(1, attributeName, true, "withAllSessionsFiltered", verify));
+        Browser.withCurrentPageFiltered(filter, new CheckCount(1, attributeName, true, "withCurrentPageFiltered", verify));
 
         ServerContext serverContext = ServerContextFactory.get();
         log.debug("** Testing Browser against local context: " + serverContext);
 
-        Browser.withPage(serverContext, page, new CheckCount(1, attributeName, "withPage+Context", verify));
-        Browser.withAllSessions(serverContext, new CheckCount(1, attributeName, "withAllSessions+Context", verify));
-        Browser.withSession(serverContext, scriptSession.getId(), new CheckCount(1, attributeName, "withSession+Context", verify));
+        Browser.withPage(serverContext, page, new CheckCount(1, attributeName, false, "withPage+Context", verify));
+        Browser.withAllSessions(serverContext, new CheckCount(1, attributeName, false, "withAllSessions+Context", verify));
+        Browser.withSession(serverContext, scriptSession.getId(), new CheckCount(1, attributeName, false, "withSession+Context", verify));
 
-        Browser.withPageFiltered(serverContext, page, filter, new CheckCount(1, "withPageFiltered+Context", verify));
-        Browser.withAllSessionsFiltered(serverContext, filter, new CheckCount(1, "withAllSessionsFiltered+Context", verify));
+        Browser.withPageFiltered(serverContext, page, filter, new CheckCount(1, attributeName, true, "withPageFiltered+Context", verify));
+        Browser.withAllSessionsFiltered(serverContext, filter, new CheckCount(1, attributeName, true, "withAllSessionsFiltered+Context", verify));
 
+        /*
+        // Using a single page talking to multiple DWR servlets is not supported
         Collection<ServerContext> contexts = StartupUtil.getAllServerContexts();
         for (ServerContext otherContext : contexts)
         {
@@ -1045,12 +1046,13 @@ public class Test
 
             log.debug("** Testing Browser against other context: " + otherContext);
 
-            Browser.withPage(otherContext, page, new CheckCount(0, attributeName, "withPage+Other", verify));
-            Browser.withAllSessions(otherContext, new CheckCount(0, attributeName, "withAllSessions+Other", verify));
-            Browser.withSession(otherContext, scriptSession.getId(), new CheckCount(0, attributeName, "withSession+Other", verify));
+            Browser.withPage(otherContext, page, new CheckCount(0, attributeName, false, "withPage+Other", verify));
+            Browser.withAllSessions(otherContext, new CheckCount(0, attributeName, false, "withAllSessions+Other", verify));
+            Browser.withSession(otherContext, scriptSession.getId(), new CheckCount(0, attributeName, false, "withSession+Other", verify));
 
-            Browser.withPageFiltered(otherContext, page, filter, new CheckCount(0, "withPageFiltered+Other", verify));
+            Browser.withPageFiltered(otherContext, page, filter, new CheckCount(0, attributeName, true, "withPageFiltered+Other", verify));
         }
+        */
         return verify.getReport();
     }
 
@@ -1081,21 +1083,11 @@ public class Test
         /**
          * Ctor if we wish to filter by attributeName
          */
-        protected CheckCount(int expected, String attributeName, String debugMsg, Verify verify)
+        protected CheckCount(int expected, String attributeName, boolean filtered, String debugMsg, Verify verify)
         {
+            this.expected = expected;
             this.attributeName = attributeName;
-            this.expected = expected;
-            this.debugMsg = debugMsg;
-            this.verify = verify;
-        }
-
-        /**
-         * Ctor if we do not wish to filter by attributeName
-         */
-        protected CheckCount(int expected, String debugMsg, Verify verify)
-        {
-            this.attributeName = null;
-            this.expected = expected;
+            this.filtered = filtered;
             this.debugMsg = debugMsg;
             this.verify = verify;
         }
@@ -1106,27 +1098,33 @@ public class Test
         public void run()
         {
             Collection<ScriptSession> sessions = WidenScope.browserGetTargetSessions();
-            int found = 0;
-            if (attributeName == null)
+            if (filtered)
             {
-                found = sessions.size();
+                verify.equals(debugMsg + "+WrongCount", expected, sessions.size());
+
+                for (ScriptSession session : sessions)
+                {
+                    verify.isNotNull(debugMsg + "+NoAttr+" + session, session.getAttribute(attributeName));
+                }
             }
             else
             {
+                int found = 0;
                 for (ScriptSession session : sessions)
                 {
                     Object check = session.getAttribute(attributeName);
-                    if (check != null && check.equals(Boolean.TRUE))
+                    if (check != null)
                     {
                         found++;
                     }
                 }
+                verify.equals(debugMsg, expected, found);
             }
-            verify.equals(debugMsg, expected, found);
         }
 
-        private final String attributeName;
         private final int expected;
+        private final String attributeName;
+        private final boolean filtered;
         private final String debugMsg;
         private final Verify verify;
     }

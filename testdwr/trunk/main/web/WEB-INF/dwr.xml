@@ -5,8 +5,8 @@
 
   <allow>
 
-    <filter class="org.directwebremoting.filter.AuditLogAjaxFilter"/>
     <!--
+    <filter class="org.directwebremoting.filter.AuditLogAjaxFilter"/>
     -->
 
     <filter class="org.testdwr.plain.Test1Filter"/>
@@ -43,6 +43,7 @@
     <convert match="java.lang.NullPointerException" converter="exception"/>
     <convert match="org.xml.sax.SAXParseException" converter="exception"/>
     <convert match="java.lang.StackTraceElement" converter="bean"/>
+    <convert match="org.directwebremoting.dwrunit.Verify" converter="bean"/>
 
     <!-- recording results -->
     <create creator="new" javascript="Recorder" scope="application">

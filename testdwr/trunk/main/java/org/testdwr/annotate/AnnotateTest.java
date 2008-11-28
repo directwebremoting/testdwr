@@ -24,7 +24,7 @@ import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.directwebremoting.dwrunit.Verify;
 import org.directwebremoting.extend.InboundContext;
-import org.directwebremoting.spring.SpringContainer;
+import org.directwebremoting.impl.DefaultContainer;
 import org.directwebremoting.util.VersionUtil;
 
 /**
@@ -35,18 +35,18 @@ import org.directwebremoting.util.VersionUtil;
 public class AnnotateTest
 {
     @SuppressWarnings("deprecation")
-    public Verify checkContext()
+    public List<String> checkContext()
     {
         ServerContext serverContext = ServerContextFactory.get();
         Container container = serverContext.getContainer();
         Verify verify = new Verify();
 
-        verify.equals("ContextPath", "/dwr", serverContext.getContextPath());
-        verify.equals("Version", serverContext.getVersion(), VersionUtil.getVersion());
-        verify.equals("Container.class", container.getClass(), SpringContainer.class);
-        verify.equals("Container.getBean", container.getBean("DwrServletSetting"), "DwrServletValue");
+        verify.equals("ContextPath", "/test-dwr", serverContext.getContextPath());
+        verify.equals("Version", VersionUtil.getVersion(), serverContext.getVersion());
+        verify.equals("Container.class", DefaultContainer.class.getName(), container.getClass().getName());
+        verify.equals("Container.getBean", "DwrServlet", container.getBean("ContainerType"));
 
-        return verify;
+        return verify.getReport();
     }
 
     public String getPath()
