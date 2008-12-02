@@ -10,6 +10,7 @@
 	<!-- Exposed resources -->
 	<dwr:configuration>
 		<dwr:convert type="bean" class="org.testdwr.springservlet.SpringServletBean" javascript="ServletBean"/>
+        <dwr:convert type="bean" class="org.directwebremoting.dwrunit.Verify"/>
 	</dwr:configuration>
 
 	<bean name="springServletTest" class="org.testdwr.springservlet.SpringServletTest">

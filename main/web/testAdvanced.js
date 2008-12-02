@@ -52,18 +52,18 @@ window.testServerChecks = function() {
  * be the last test in a run because it delays reports
  */
 window.testScriptSessionListener = function() {
-  var progress1 = createDelayed(function(results) {
-    if (results == null || results.length == 0) {
+  var progress1 = createDelayed(function(data) {
+    if (data.report.length == 0) {
       return;
     }
-    fail(results.join("<br/>"));
+    fail(data.report.join("<br/>"));
   });
-  var progress2 = createDelayed(function(results) {
-    if (results == null || results.length == 0) {
+  var progress2 = createDelayed(function(data) {
+    if (data.report.length == 0) {
       return;
     }
-    fail(results.join("<br/>"));
+    fail(data.report.join("<br/>"));
   });
-  Test.checkScriptSessionListener(progress1, progress2, createReplyIsErrorCallback());
+  Test.checkScriptSessionListener(progress1, progress2, createVerifyCallback());
 };
 

@@ -14,7 +14,7 @@ window.testRemotingGetPath = function() {
  *
  */
 window.testRemotingVarious = function() {
-  Test.variousChecks(createReplyIsErrorCallback());
+  Test.variousChecks(createVerifyCallback());
 };
 
 /**

@@ -35,7 +35,7 @@ import org.directwebremoting.util.VersionUtil;
 public class AnnotateTest
 {
     @SuppressWarnings("deprecation")
-    public List<String> checkContext()
+    public Verify checkContext()
     {
         ServerContext serverContext = ServerContextFactory.get();
         Container container = serverContext.getContainer();
@@ -46,7 +46,7 @@ public class AnnotateTest
         verify.equals("Container.class", DefaultContainer.class.getName(), container.getClass().getName());
         verify.equals("Container.getBean", "DwrServlet", container.getBean("ContainerType"));
 
-        return verify.getReport();
+        return verify;
     }
 
     public String getPath()
