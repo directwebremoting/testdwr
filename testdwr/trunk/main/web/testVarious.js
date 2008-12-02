@@ -13,19 +13,19 @@ window.testAreIdentical = function() {
  *
  */
 window.testScriptSessionBindingListener = function() {
-  Test.checkScriptSessionBindingListener(createReplyIsErrorCallback());
+  Test.checkScriptSessionBindingListener(createVerifyCallback());
 };
 
 /**
  *
  */
 window.testImHere = function() {
-  Test.checkImHere(createReplyIsErrorCallback());
+  Test.checkImHere(createVerifyCallback());
 };
 
 /**
  *
  */
 window.testCheckContext = function() {
-  Test.checkContext(createReplyIsErrorCallback());
+  Test.checkContext(createVerifyCallback());
 };

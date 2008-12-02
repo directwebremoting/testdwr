@@ -74,6 +74,6 @@ a way to associate delayed passes/failures with the test that caused pass/fail.
     Remote.getData(createOptions(function(data) {
       assertTrue(data, "expected");
     }));
-- createReplyIsErrorCallback() should be used alongside functions with a return
+- createVerifyCallback() should be used alongside functions with a return
     type of org.directwebremoting.dwrunit.Verify. This enables the server to
     perform a number of checks, and to pass the results back to the browser UI

@@ -54,7 +54,6 @@ import org.directwebremoting.ServerContext;
 import org.directwebremoting.ServerContextFactory;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
-import org.directwebremoting.WidenScope;
 import org.directwebremoting.dwrunit.Verify;
 import org.directwebremoting.event.ScriptSessionBindingEvent;
 import org.directwebremoting.event.ScriptSessionBindingListener;
@@ -95,7 +94,7 @@ import org.xml.sax.SAXParseException;
 public class Test
 {
     @SuppressWarnings("deprecation")
-    public List<String> checkContext()
+    public Verify checkContext()
     {
         ServerContext serverContext = ServerContextFactory.get();
         Container container = serverContext.getContainer();
@@ -106,7 +105,7 @@ public class Test
         verify.equals("Container.class", DefaultContainer.class.getName(), container.getClass().getName());
         verify.equals("Container.getBean", "DwrServlet", container.getBean("ContainerType"));
 
-        return verify.getReport();
+        return verify;
     }
 
     public void debug()
@@ -863,7 +862,7 @@ public class Test
         Document.setCookie(name, value);
     }
 
-    public List<String> checkScriptSessionBindingListener()
+    public Verify checkScriptSessionBindingListener()
     {
         final AtomicInteger bound = new AtomicInteger();
         final AtomicInteger unbound = new AtomicInteger();
@@ -904,10 +903,10 @@ public class Test
         verify.equals("After set, bound", bound.get(), 1);
         verify.equals("After set, unbound", unbound.get(), 1);
 
-        return verify.getReport();
+        return verify;
     }
     
-    public List<String> checkScriptSessionListener(final JavascriptFunction progress1, final JavascriptFunction progress2)
+    public Verify checkScriptSessionListener(final JavascriptFunction progress1, final JavascriptFunction progress2)
     {
         final ServerContext serverContext = ServerContextFactory.get();
         final String testPage = serverContext.getContextPath() + "/checkSession.html";
@@ -957,7 +956,7 @@ public class Test
                         Window.close();
                     }
                 });
-                progress1.executeAndClose(verify1.getReport());
+                progress1.executeAndClose(verify1);
             }
         }, 1, TimeUnit.SECONDS);
 
@@ -977,14 +976,14 @@ public class Test
                 verify2.isTrue("destroyedAfter > destroyedMid", destroyedAfter > destroyedMid.intValue());
                 verify2.isTrue("destroyedAfter2 > destroyedMid2", destroyedAfter2 > destroyedMid2.intValue());
 
-                progress2.executeAndClose(verify2.getReport());
+                progress2.executeAndClose(verify2);
             }
         }, 2, TimeUnit.SECONDS);
 
-        return verify.getReport();
+        return verify;
     }
 
-    public List<String> variousChecks()
+    public Verify variousChecks()
     {
         Verify verify = new Verify();
 
@@ -998,10 +997,10 @@ public class Test
             verify.fail("Missing Test2Filter (should be local to Test in dwr.xml)");
         }
 
-        return verify.getReport();
+        return verify;
     }
 
-    public List<String> checkImHere()
+    public Verify checkImHere()
     {
         WebContext webContext = WebContextFactory.get();
         ScriptSession scriptSession = webContext.getScriptSession();
@@ -1013,7 +1012,7 @@ public class Test
 
         ScriptSessionFilter filter = new TestScriptSessionFilter(attributeName);
         String page = webContext.getCurrentPage();
-debug();
+
         Browser.withPage(page, new CheckCount(1, attributeName, false, "withPage", verify));
         Browser.withAllSessions(new CheckCount(1, attributeName, false, "withAllSessions", verify));
         Browser.withCurrentPage(new CheckCount(1, attributeName, false, "withCurrentPage", verify));
@@ -1053,7 +1052,7 @@ debug();
             Browser.withPageFiltered(otherContext, page, filter, new CheckCount(0, attributeName, true, "withPageFiltered+Other", verify));
         }
         */
-        return verify.getReport();
+        return verify;
     }
 
     protected class TestScriptSessionFilter implements ScriptSessionFilter
@@ -1097,7 +1096,7 @@ debug();
          */
         public void run()
         {
-            Collection<ScriptSession> sessions = WidenScope.browserGetTargetSessions();
+            Collection<ScriptSession> sessions = Browser.getTargetSessions();
             if (filtered)
             {
                 verify.equals(debugMsg + "+WrongCount", expected, sessions.size());
@@ -1132,7 +1131,7 @@ debug();
     /**
      * JUnit test runner!
      */
-    public List<String> runAllJUnitTests(final JavascriptFunction noteProgressInScratch)
+    public Verify runAllJUnitTests(final JavascriptFunction noteProgressInScratch)
     {
         ClasspathScanner scanner = new ClasspathScanner("org.directwebremoting", true);
         Set<String> classNames = scanner.getClasses();
@@ -1187,7 +1186,7 @@ debug();
                         "Message: " + failure.getMessage());
         }
 
-        return verify.getReport();
+        return verify;
     }
 
     /**

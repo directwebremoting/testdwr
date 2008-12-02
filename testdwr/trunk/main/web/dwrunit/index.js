@@ -490,13 +490,13 @@ function createDelayedError(func) {
 /**
  *
  */
-function createReplyIsErrorCallback() {
+function createVerifyCallback() {
   return {
     callback:createDelayed(function(data) {
-      if (data == null || data.length == 0) {
+      if (data.report.length == 0) {
         return;
       }
-      fail(data.join("<br/>"));
+      fail(data.report.join("<br/>"));
     }),
     exceptionHandler:createDelayedError()
   };
