@@ -67,6 +67,10 @@
       <param-name>org.directwebremoting.Container</param-name>
       <param-value>org.testdwr.plain.TestDefaultContainer</param-value>
     </init-param>
+    <init-param>
+      <param-name>org.directwebremoting.extend.ScriptSessionManager</param-name>
+      <param-value>org.directwebremoting.impl.TransientScriptSessionManager</param-value>
+    </init-param>
     -->
     <init-param>
       <param-name>org.directwebremoting.event.ScriptSessionListener</param-name>
