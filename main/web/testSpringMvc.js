@@ -72,7 +72,6 @@ function testSpringMvcGenericProxy() {
 	bean = new S_MVC_AB
 	GenericProxy.convert(1, [bean], {
 		callback: createDelayed(function(data) {
-			alert(data)
 			assertEqual(data.length, 1)
 		})
 	})
