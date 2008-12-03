@@ -61,6 +61,9 @@
 		<dwr:remote javascript="SpringBeanConverter" />
 	</bean>
 
+	<!--  This tests handles Spring proxies with generic method signatures -->
+	<aop:aspectj-autoproxy proxy-target-class="false" />
+
 	<!--  MVC Configuration -->
 	<dwr:controller />
 
