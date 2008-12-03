@@ -449,6 +449,51 @@ public class Test
         return test;
     }
 
+    public TestBeanWithList testBeanWithListParam(TestBeanWithList test)
+    {
+        if (test.getList().size() > 1)
+        {
+            for (Iterator<TestBean> it = test.getList().iterator(); it.hasNext();)
+            {
+                TestBean ele = it.next();
+                TestBean ignore = ele;
+                ele = ignore;
+            }
+        }
+
+        return test;
+    }
+
+    public List<TestObject> testObjectListParam(List<TestObject> test)
+    {
+        if (test.size() > 1)
+        {
+            for (Iterator<TestObject> it = test.iterator(); it.hasNext();)
+            {
+                TestObject ele = it.next();
+                TestObject ignore = ele;
+                ele = ignore;
+            }
+        }
+
+        return test;
+    }
+
+    public TestObjectWithList testObjectWithListParam(TestObjectWithList test)
+    {
+        if (test.list.size() > 1)
+        {
+            for (Iterator<TestObject> it = test.list.iterator(); it.hasNext();)
+            {
+                TestObject ele = it.next();
+                TestObject ignore = ele;
+                ele = ignore;
+            }
+        }
+
+        return test;
+    }
+
     @SuppressWarnings("unchecked")
     public List<?> untypedTestBeanListParam(List<?> test)
     {

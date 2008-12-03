@@ -18,6 +18,9 @@
     </create>
 
     <convert match="org.testdwr.plain.TestBean" converter="bean"/>
+    <convert match="org.testdwr.plain.TestBeanWithList" converter="bean"/>
+    <convert match="org.testdwr.plain.TestObject" converter="object"/>
+    <convert match="org.testdwr.plain.TestObjectWithList" converter="object"/>
     <convert match="org.testdwr.plain.FinalBean" converter="bean">
       <param name="constructor" value="int integer, String string, org.testdwr.plain.TestBean testBean"/>
     </convert>
