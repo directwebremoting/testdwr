@@ -370,6 +370,8 @@ window.testMarshallXDArrayParam = function() {
 // Used in a few tests
 var nested = { integer:0, string:'0123456789' };
 nested.testBean = nested;
+var nestedObj = { integer:0, string:'0123456789' };
+nestedObj.testObj = nestedObj;
 
 var obja = new ObjA();
 var objb = new ObjB();
@@ -406,6 +408,33 @@ window.testMarshallTestBeanListParam = function() {
     { code:"testBeanListParam", data:[ nested ] },
     { code:"testBeanListParam", data:[ nested, nested ] },
     { code:"testBeanListParam", data:[ nested, nested, nested ] }
+  ]);
+};
+
+window.testMarshallTestBeanWithListParam = function() {
+  runComparisonTests([
+    { code:"testBeanWithListParam", data:{ integer:1, string:'0987654321', testBean:nested, list:[] } },
+    { code:"testBeanWithListParam", data:{ integer:1, string:'0987654321', testBean:nested, list:[nested] } },
+    { code:"testBeanWithListParam", data:{ integer:1, string:'0987654321', testBean:nested, list:[nested, nested] } },
+    { code:"testBeanWithListParam", data:{ integer:1, string:'0987654321', testBean:nested, list:[nested, nested, nested] } }
+  ]);
+};
+
+window.testMarshallTestObjectListParam = function() {
+  runComparisonTests([
+    { code:"testObjectListParam", data:[ ] },
+    { code:"testObjectListParam", data:[ nestedObj ] },
+    { code:"testObjectListParam", data:[ nestedObj, nestedObj ] },
+    { code:"testObjectListParam", data:[ nestedObj, nestedObj, nestedObj ] }
+  ]);
+};
+
+window.testMarshallTestObjectWithListParam = function() {
+  runComparisonTests([
+    { code:"testObjectWithListParam", data:{ integer:1, string:'0987654321', testObj:nestedObj, list:[] } },
+    { code:"testObjectWithListParam", data:{ integer:1, string:'0987654321', testObj:nestedObj, list:[nestedObj] } },
+    { code:"testObjectWithListParam", data:{ integer:1, string:'0987654321', testObj:nestedObj, list:[nestedObj, nestedObj] } },
+    { code:"testObjectWithListParam", data:{ integer:1, string:'0987654321', testObj:nestedObj, list:[nestedObj, nestedObj, nestedObj] } }
   ]);
 };
 
