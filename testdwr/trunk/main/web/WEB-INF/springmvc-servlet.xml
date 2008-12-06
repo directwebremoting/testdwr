@@ -37,6 +37,7 @@
 	<aop:aspectj-autoproxy proxy-target-class="false" />
 
 	<bean class="org.testdwr.springservlet.aop.AnAspect" />
+	<bean class="org.testdwr.springservlet.aop.OtherAspect" />
 
 	<bean id="generator" class="org.testdwr.springmvc.SpringAspectedBean">
 		<dwr:remote />
