@@ -70,9 +70,10 @@ function testSpringMvcBeanConverter() {
 
 function testSpringMvcGenericProxy() {
 	bean = new S_MVC_AB
+	bean.name = "Mary"
 	GenericProxy.convert(1, [bean], {
 		callback: createDelayed(function(data) {
-			assertEqual(data.length, 1)
+			assertEqual(data[0].name, "Mary")
 		})
 	})
 }

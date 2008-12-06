@@ -8,7 +8,7 @@ import org.directwebremoting.annotations.RemoteMethod;
 import org.directwebremoting.annotations.RemoteProxy;
 import org.testdwr.springmvc.SpringLazyBean;
 import org.testdwr.springmvc.model.SpringMvcAnnotatedBean;
-import org.testdwr.springservlet.aop.Aspected;
+import org.testdwr.springservlet.aop.OtherAspected;
 
 @RemoteProxy(name = "GenericProxy")
 public class GenericProxyImpl implements GenericProxy
@@ -16,7 +16,7 @@ public class GenericProxyImpl implements GenericProxy
 
     private static Log logger =  LogFactory.getLog(SpringLazyBean.class);
 
-    @Aspected
+    @OtherAspected
     @RemoteMethod
     public List<SpringMvcAnnotatedBean> convert(int aux, List<SpringMvcAnnotatedBean> beans)
     {
