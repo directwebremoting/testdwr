@@ -411,6 +411,9 @@ window.testMarshallTestBeanListParam = function() {
   ]);
 };
 
+/*
+ * Failing test added by Mike to demonstrate bug
+ */
 window.testMarshallTestBeanWithListParam = function() {
   runComparisonTests([
     { code:"testBeanWithListParam", data:{ integer:1, string:'0987654321', testBean:nested, list:[] } },
