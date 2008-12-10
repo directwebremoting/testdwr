@@ -47,8 +47,8 @@
       </param-value>
     </init-param>
     <init-param>
-      <param-name>activeReverseAjaxEnabled</param-name>
-      <param-value>true</param-value>
+      <param-name>interactivity</param-name>
+      <param-value>activeReverseAjax</param-value>
     </init-param>
     <init-param>
       <param-name>allowImpossibleTests</param-name>
@@ -66,10 +66,6 @@
     <init-param>
       <param-name>org.directwebremoting.Container</param-name>
       <param-value>org.testdwr.plain.TestDefaultContainer</param-value>
-    </init-param>
-    <init-param>
-      <param-name>org.directwebremoting.extend.ScriptSessionManager</param-name>
-      <param-value>org.directwebremoting.impl.TransientScriptSessionManager</param-value>
     </init-param>
     -->
     <init-param>
