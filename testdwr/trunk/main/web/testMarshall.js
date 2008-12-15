@@ -413,6 +413,9 @@ window.testMarshallTestBeanListParam = function() {
 
 /*
  * Failing test added by Mike to demonstrate bug
+ * "I think it requires that type info is inspected on the data members directly,
+ * and not on the parameters to getters or setters, as getters and setters are
+ * not used for objects."
  */
 window.testMarshallTestBeanWithListParam = function() {
   runComparisonTests([
