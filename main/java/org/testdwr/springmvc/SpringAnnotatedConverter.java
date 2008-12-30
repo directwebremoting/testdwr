@@ -27,6 +27,11 @@ public class SpringAnnotatedConverter
 
     public SpringMvcAnnotatedBean name(final String something)
     {
-        return new SpringMvcAnnotatedBean() {{setName(something);}};
+        return new SpringMvcAnnotatedBean() {
+            {
+                setName(something);
+                setOther("Aloha");
+            }
+        };
     }
 }
