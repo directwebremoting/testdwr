@@ -31,6 +31,9 @@ public class SpringMvcAnnotatedBean
     private String name;
 
     @RemoteProperty
+    private String other;
+
+    @RemoteProperty
     public String getName()
     {
         return name;
@@ -45,6 +48,16 @@ public class SpringMvcAnnotatedBean
     public boolean isValid()
     {
         return true;
+    }
+
+    public String getOther()
+    {
+        return other;
+    }
+
+    public void setOther(String other)
+    {
+        this.other = other;
     }
 
 }

@@ -56,6 +56,7 @@ function testSpringMvcAnnotatedConverter() {
 			assertEqual(data.name, "Peter")
 			assertTrue(data instanceof S_MVC_AB)
 			assertTrue(data.valid)
+			assertEqual(data.other, "Aloha")
 		})
 	})
 }
