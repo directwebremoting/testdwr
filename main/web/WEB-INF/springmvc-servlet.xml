@@ -27,6 +27,11 @@
 	<!-- This test handles the new annotation configuration -->
 	<dwr:annotation-scan base-package="org.testdwr.springmvc" />
 
+	<!-- This test handles global filters -->
+	<dwr:global-filter class="org.testdwr.springmvc.filters.GlobalLoggingFilter">
+		<dwr:param name="test" value="1" />
+	</dwr:global-filter>
+
 	<!-- This test handles lazy init beans and the new default naming -->
 	<bean id="lazy" class="org.testdwr.springmvc.SpringLazyBean" lazy-init="true">
 		<dwr:remote />
@@ -68,7 +73,7 @@
 	<aop:aspectj-autoproxy proxy-target-class="false" />
 
 	<!--  MVC Configuration -->
-	<dwr:controller />
+	<dwr:controller debug="true" />
 
 	<!--  This tests DWR mappings with interceptors -->
 	<util:list id="ajaxInterceptors">
