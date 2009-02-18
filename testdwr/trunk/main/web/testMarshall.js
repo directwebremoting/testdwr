@@ -803,4 +803,10 @@ window.testMarshallReadOnlyProperties = function () {
         assertEqual(data.fieldAbstract, 5.0)
         assertEqual(data.fieldReadOnly, "readOnly")
     }));
-}
+};
+
+window.testMarshallGenericsImplementation = function() {
+	ConcreteGenericService.execute({}, createOptions(function(data) {
+	    assertEqual(data, 1);
+	}));
+};
