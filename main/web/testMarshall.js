@@ -806,7 +806,7 @@ window.testMarshallReadOnlyProperties = function () {
 };
 
 window.testMarshallGenericsImplementation = function() {
-	ConcreteGenericService.execute({}, createOptions(function(data) {
+	ConcreteGenericService.execute(0, 0, {}, {}, createOptions(function(data) {
 	    assertEqual(data, 1);
 	}));
 };
