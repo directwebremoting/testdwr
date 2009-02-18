@@ -17,6 +17,10 @@
       <filter class="org.testdwr.plain.Test2Filter"/>
     </create>
 
+	<create creator="new" javascript="ConcreteGenericService" scope="application">
+		<param name="class" value="org.testdwr.convert.generics.ConcreteService"/>
+    </create>
+
     <convert match="org.testdwr.plain.TestBean" converter="bean"/>
     <convert match="org.testdwr.plain.TestBeanWithList" converter="bean"/>
     <convert match="org.testdwr.plain.TestObject" converter="object"/>
@@ -37,6 +41,9 @@
 
     <convert match="org.testdwr.convert.OnePackage" converter="object" javascript="pkg1.OnePackage"/>
     <convert match="org.testdwr.convert.TwoPackages" converter="object" javascript="pkg1.pkg2.TwoPackages"/>
+
+	<convert match="org.testdwr.convert.generics.Command" converter="bean"/>
+	<convert match="org.testdwr.convert.generics.ConcreteCommand" converter="bean"/>
 
     <convert match="org.testdwr.convert.MyFancyException" converter="exception" javascript="MyFancyException"/>
     <convert match="org.testdwr.convert.MyFancyExceptionInPackage" converter="exception" javascript="pkg1.MyFancyExceptionInPackage"/>
