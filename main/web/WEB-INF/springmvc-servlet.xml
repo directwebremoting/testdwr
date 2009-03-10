@@ -18,6 +18,11 @@
 
  	<!-- Double dwr:configuration tag test -->
 	<dwr:configuration>
+		<!-- This test handles global filters -->
+		<dwr:filter class="org.testdwr.springmvc.filters.GlobalLoggingFilter">
+			<dwr:param name="test" value="1" />
+		</dwr:filter>
+		<!-- This test handles classpath scanning -->
 		<dwr:convert type="bean" class="org.testdwr.springmvc.model.SpringMvcBean" javascript="*" />
 		<dwr:convert class="org.testdwr.springmvc.conversion.*" ref="prefixConverter" />
 	</dwr:configuration>
@@ -26,11 +31,6 @@
 
 	<!-- This test handles the new annotation configuration -->
 	<dwr:annotation-scan base-package="org.testdwr.springmvc" />
-
-	<!-- This test handles global filters -->
-	<dwr:global-filter class="org.testdwr.springmvc.filters.GlobalLoggingFilter">
-		<dwr:param name="test" value="1" />
-	</dwr:global-filter>
 
 	<!-- This test handles lazy init beans and the new default naming -->
 	<bean id="lazy" class="org.testdwr.springmvc.SpringLazyBean" lazy-init="true">
