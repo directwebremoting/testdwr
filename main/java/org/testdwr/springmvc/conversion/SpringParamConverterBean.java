@@ -15,24 +15,20 @@
  */
 package org.testdwr.springmvc.conversion;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.testdwr.springmvc.model.OtherSpringMvcBean;
 
 /**
- * Tests referenced beans.
+ * Sample remoted method to test conversion with parameters.
  *
  * @author Jose Noheda [jose.noheda@gmail.com]
  *
  */
-public class SpringCustomConverterBean
+public class SpringParamConverterBean
 {
 
-    private static Log logger =  LogFactory.getLog(SpringCustomConverterBean.class);
-
-    public SimpleBean simple()
+    public OtherSpringMvcBean check()
     {
-        logger.info("Called simple");
-        return new SimpleBean("Peter");
+        return new OtherSpringMvcBean("5");
     }
 
 }
