@@ -18,10 +18,17 @@
 
  	<!-- Double dwr:configuration tag test -->
 	<dwr:configuration>
+		<dwr:init>
+			<dwr:converter id="parameterized" class="org.testdwr.springmvc.conversion.ParamereterizedConverter" />
+		</dwr:init>
 		<!-- This test handles global filters -->
 		<dwr:filter class="org.testdwr.springmvc.filters.GlobalLoggingFilter">
 			<dwr:param name="test" value="1" />
 		</dwr:filter>
+		<!-- This test handles params in converters -->
+		<dwr:convert type="parameterized" class="org.testdwr.springmvc.model.OtherSpringMvcBean">
+			<dwr:param name="prefix" value="The number is " />
+		</dwr:convert>
 		<!-- This test handles classpath scanning -->
 		<dwr:convert type="bean" class="org.testdwr.springmvc.model.SpringMvcBean" javascript="*" />
 		<dwr:convert class="org.testdwr.springmvc.conversion.*" ref="prefixConverter" />
@@ -32,7 +39,7 @@
 	<!-- This test handles the new annotation configuration -->
 	<dwr:annotation-scan base-package="org.testdwr.springmvc" />
 
-	<!-- This test handles lazy init beans and the new default naming -->
+	<!-- This test handles lazy init beans and the new default naming conventions -->
 	<bean id="lazy" class="org.testdwr.springmvc.SpringLazyBean" lazy-init="true">
 		<dwr:remote />
 	</bean>
@@ -67,6 +74,10 @@
 	<!-- This test handles annotated converters -->
 	<bean class="org.testdwr.springmvc.conversion.SpringCustomConverterBean">
 		<dwr:remote javascript="SpringBeanConverter" />
+	</bean>
+
+	<bean class="org.testdwr.springmvc.conversion.SpringParamConverterBean">
+		<dwr:remote javascript="OtherSpringBeanConverter" />
 	</bean>
 
 	<!--  This tests handles Spring proxies with generic method signatures -->

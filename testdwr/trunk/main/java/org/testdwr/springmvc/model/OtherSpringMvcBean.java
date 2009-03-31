@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 DWR
+ * Copyright 2005 Joe Walker
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.testdwr.springmvc.conversion;
+package org.testdwr.springmvc.model;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-/**
- * Tests referenced beans.
- *
- * @author Jose Noheda [jose.noheda@gmail.com]
- *
- */
-public class SpringCustomConverterBean
+public class OtherSpringMvcBean
 {
 
-    private static Log logger =  LogFactory.getLog(SpringCustomConverterBean.class);
+    private String name;
 
-    public SimpleBean simple()
+    public OtherSpringMvcBean(String name)
     {
-        logger.info("Called simple");
-        return new SimpleBean("Peter");
+        this.name = name;
+    }
+
+    public String getName()
+    {
+        return name;
     }
 
 }

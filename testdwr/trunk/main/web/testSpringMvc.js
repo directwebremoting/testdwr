@@ -69,6 +69,14 @@ function testSpringMvcBeanConverter() {
 	})
 }
 
+function testSpringMvcParameterizedConverter() {	
+	OtherSpringBeanConverter.check({
+		callback: createDelayed(function(data) {
+			assertEqual(data, "The number is 5")
+		})
+	})
+}
+
 function testSpringMvcGenericProxy() {
 	bean = new S_MVC_AB
 	bean.name = "Mary"
