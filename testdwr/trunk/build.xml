@@ -42,9 +42,9 @@
   <target name="package" depends="compile" description="Create packaged outputs: testdwr.war">
     <!-- Rezip the demo war file if it's contents have changed -->
     <mkdir dir="${target}"/>
-    <if-not-uptodate destfile="${target}/testdwr.war" sourcedir="${basedir}/main/web">
+    <if-not-uptodate destfile="${target}/test-dwr.war" sourcedir="${basedir}/main/web">
       <action>
-        <zip destfile="${target}/testdwr.war" basedir="${basedir}/main/web"/>
+        <zip destfile="${target}/test-dwr.war" basedir="${basedir}/main/web"/>
       </action>
     </if-not-uptodate>
   </target>
