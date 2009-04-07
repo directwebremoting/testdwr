@@ -24,7 +24,7 @@ window.testMemoryLeaks = function(count) {
  */
 window.testErrorRedirect = function(){
   var oldPath = Test._path;
-  Test._path = "/test-dwr/custom/307";
+  Test._path = "/testdwr/custom/307";
   Test.doNothing({
     callback:createDelayedError(),
     exceptionHandler:createDelayedError(),

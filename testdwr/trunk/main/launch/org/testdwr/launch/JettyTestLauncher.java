@@ -26,7 +26,7 @@ public class JettyTestLauncher
      */
     public static void main(String[] args) throws Exception
     {
-        JettyLauncherBase launcher = new JettyLauncherBase("main/web", "/test-dwr", 8080);
+        JettyLauncherBase launcher = new JettyLauncherBase("main/web", "/testdwr", 8080);
         launcher.start();
     }
 }
