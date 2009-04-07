@@ -6,7 +6,7 @@ createTestGroup("Remoting");
  */
 window.testRemotingGetPath = function() {
   Test.getPath(createDelayed(function(data) {
-    verifyEqual("/test-dwr", data);
+    verifyEqual("/testdwr", data);
   }));
 };
 
