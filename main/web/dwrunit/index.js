@@ -341,7 +341,7 @@ function runTest(testName) {
     if (ex.message && ex.message.length > 0) {
       _record(currentTest, ex.message);
     }
-    window.console && console.trace();
+    if (window.console && console.trace) console.trace();
   }
   if (_getStatus(currentTest) == stati.executing) {
     _setStatus(currentTest, stati.pass, true);
@@ -444,7 +444,7 @@ function createDelayed(func) {
         if (ex.message && ex.message.length > 0) {
           _record(currentTest, ex.message);
         }
-        window.console && console.trace();
+        if (window.console && console.trace) console.trace();
       }
     }
     delayedTest.outstanding--;
@@ -737,7 +737,7 @@ function verifyNotEqual(expected, actual) {
  */
 function _recordTrace() {
   _record.apply(this, arguments);
-  window.console && console.trace();
+  if (window.console && console.trace) console.trace();
 }
 
 /**
