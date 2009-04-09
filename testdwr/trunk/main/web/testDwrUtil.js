@@ -38,6 +38,28 @@ window.testDwrUtilByIdDontGetTrickedByFormIdElement = function() {
 }
 
 /**
+ * This is a really tricky test that is used to see if we workaround a bug in 
+ * IE7 correctly. The IE7 bug concerns attributes (including ID) on cloned 
+ * elements.
+ */
+window.testDwrUtilByIdShouldntTriggerIe7AttributesCloneBug = function() {
+  useHtml(
+    '<form name="byIdShouldntTriggerIe7AttributesCloneBug"></form>' +
+    '<form name="byIdShouldntTriggerIe7AttributesCloneBug_2"></form>' +
+    '<div id="byIdShouldntTriggerIe7AttributesCloneBug">blabla</div>'
+  );
+  
+  var elem = dwr.util.byId('byIdShouldntTriggerIe7AttributesCloneBug');
+  assertNotNull(elem);
+  assertEqual(elem.tagName.toLowerCase(), "div");
+  var clone = dwr.util.cloneNode(elem, {idSuffix:"_2"});
+  var findclone = dwr.util.byId("byIdShouldntTriggerIe7AttributesCloneBug_2");
+  assertNotNull(findclone);
+  assertEqual(findclone.getAttribute("id"), "byIdShouldntTriggerIe7AttributesCloneBug_2")
+  assertEqual(findclone.getAttributeNode("id").value, "byIdShouldntTriggerIe7AttributesCloneBug_2")
+}
+
+/**
  *
  */
 window.testDwrUtilXss = function() {
