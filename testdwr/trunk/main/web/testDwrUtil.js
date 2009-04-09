@@ -327,6 +327,39 @@ window.testDwrUtilCloneNode1 = function() {
 /**
  * 
  */
+window.testDwrUtilCloneNodeSetValues = function() {
+  useHtml(
+    '<table>' +
+    '  <tr id="cloneNodeSetValues_row_" style="display:none;">' +
+    '    <td id="cloneNodeSetValues_name_"></td>' +
+    '    <td id="cloneNodeSetValues_age_"></td>' +
+    '  </tr>' +
+    '</table>'
+  );
+
+  var persons = [
+    {name:"baby", age:1},
+    {name:"java dev", age:35},
+    {name:"senior", age:65}
+  ];
+
+  for(var i=0; i<persons.length; i++) {
+    dwr.util.cloneNode("cloneNodeSetValues_row_", {idSuffix:i});
+    assertNotNull(dwr.util.byId("cloneNodeSetValues_row_" + i));
+    dwr.util.byId("cloneNodeSetValues_row_" + i).style.display = "";
+    assertNotNull(dwr.util.byId("cloneNodeSetValues_name_" + i));
+    assertNotNull(dwr.util.byId("cloneNodeSetValues_age_" + i));
+    var p = persons[i];
+    dwr.util.setValue("cloneNodeSetValues_name_"+i, p.name);
+    assertEqual(dwr.util.getValue("cloneNodeSetValues_name_"+i), p.name);
+    dwr.util.setValue("cloneNodeSetValues_age_"+i, p.age);
+    assertEqual(dwr.util.getValue("cloneNodeSetValues_age_"+i), p.age);
+  }
+};
+
+/**
+ * 
+ */
 window.testDwrUtilAddRowsBasic = function() {
   useHtml('<table border="1" id="addRowsBasic"></table>');
 
