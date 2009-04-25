@@ -20,6 +20,22 @@
 	<create creator="new" javascript="ConcreteGenericService" scope="application">
 		<param name="class" value="org.testdwr.convert.generics.ConcreteService"/>
     </create>
+    
+    <create creator="new" javascript="CreatorMethodExclusions" scope="application">
+		<param name="class" value="org.testdwr.security.CreatorMethodExclusions"/>
+		<exclude method="excluded"/>	
+		<exclude method="excluded2"/>	
+    </create>
+    
+    <create creator="new" javascript="CreatorMethodInclusions" scope="application">
+		<param name="class" value="org.testdwr.security.CreatorMethodInclusions"/>
+		<include method="included"/>	
+		<include method="included2"/>	
+    </create>
+    
+    <create creator="new" javascript="CreatorMethodAccess" scope="application">
+		<param name="class" value="org.testdwr.security.CreatorMethodAccess"/>
+    </create>
 
     <convert match="org.testdwr.plain.TestBean" converter="bean"/>
     <convert match="org.testdwr.plain.TestBeanWithList" converter="bean"/>
