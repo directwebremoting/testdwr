@@ -73,6 +73,18 @@ window.testRemotingParameters = function() {
       verifyEqual(data.param2, "value2");
       verifyUndefined(data.param3);
     }),
+    requestAttributes:{
+      'param1':'value1',
+      'param2':'value2'
+    },
+    errorHandler:createDelayedError()
+  });
+  Test.listParameters({
+    callback:createDelayed(function(data) {
+      verifyEqual(data.param1, "value1");
+      verifyEqual(data.param2, "value2");
+      verifyUndefined(data.param3);
+    }),
     parameters:{
       'param1':'value1',
       'param2':'value2'

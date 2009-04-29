@@ -728,7 +728,6 @@ public class Test
 
             reply.put(name, value.toString());
         }
-
         return reply;
     }
 
