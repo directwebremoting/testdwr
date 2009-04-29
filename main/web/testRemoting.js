@@ -66,7 +66,7 @@ window.testRemotingAsyncNesting = function() {
 /**
  *
  */
-window.testRemotingParameters = function() {
+window.testRemotingRequestAttributes = function() {
   Test.listParameters({
     callback:createDelayed(function(data) {
       verifyEqual(data.param1, "value1");
