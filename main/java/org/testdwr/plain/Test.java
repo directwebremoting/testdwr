@@ -838,10 +838,10 @@ public class Test
 
     public ConcreteIFace readOnlyProperty()
     {
-        return new ConcreteIFace() {{
-            setI(10);
-            setFieldAbstract(5.0);
-        }};
+        ConcreteIFace concrete = new ConcreteIFace();
+        concrete.setI(10);
+        concrete.setFieldAbstract(5.0);
+        return concrete;
     }
 
     public void throwMapped() throws MyFancyException

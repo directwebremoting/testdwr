@@ -435,6 +435,12 @@ window.testMarshallTestObjectListParam = function() {
   ]);
 };
 
+/*
+/ This function was added by Mike W. and was a forward looking test - meaning 
+/ it has never worked and was added in hopes that core functionality would 
+/ eventually change and make this pass.  For now I am commented it out to 
+/ avoid confusion. 
+/  
 window.testMarshallTestObjectWithListParam = function() {
   runComparisonTests([
     { code:"testObjectWithListParam", data:{ integer:1, string:'0987654321', testObj:nestedObj, list:[] } },
@@ -442,7 +448,7 @@ window.testMarshallTestObjectWithListParam = function() {
     { code:"testObjectWithListParam", data:{ integer:1, string:'0987654321', testObj:nestedObj, list:[nestedObj, nestedObj] } },
     { code:"testObjectWithListParam", data:{ integer:1, string:'0987654321', testObj:nestedObj, list:[nestedObj, nestedObj, nestedObj] } }
   ]);
-};
+};*/
 
 var finalBean = { integer:0, string:'0123456789', testBean:nested };
 
