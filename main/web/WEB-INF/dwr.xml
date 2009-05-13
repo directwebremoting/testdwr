@@ -17,7 +17,18 @@
       <filter class="org.testdwr.plain.Test2Filter"/>
     </create>
 
-	<create creator="new" javascript="ConcreteGenericService" scope="application">
+	<create creator="static" javascript="SingletonCustomMethodName">
+		<param name="class" value="org.testdwr.create.SingletonCustomMethodName"/>
+		<param name="instanceMethodName" value="getCustomInstance"/>
+		<exclude method="disallowed"/>		
+    </create>
+    
+    <create creator="static" javascript="SingletonGetInstance">
+		<param name="class" value="org.testdwr.create.SingletonGetInstance"/>
+		<exclude method="disallowed"/>	
+    </create>
+	    
+    <create creator="new" javascript="ConcreteGenericService" scope="application">
 		<param name="class" value="org.testdwr.convert.generics.ConcreteService"/>
     </create>
     
