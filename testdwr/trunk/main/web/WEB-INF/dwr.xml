@@ -13,7 +13,7 @@
 
     <!-- Exception Logging -->
     <create creator="new" javascript="ExceptionLogging">
-      <param name="class" value="org.directwebremoting.exceptionLogging.ExceptionLogging"/>
+      <param name="class" value="org.testdwr.exceptionLogging.ExceptionLogging"/>
     </create>
 
 	<create creator="static" javascript="SingletonCustomMethodName">
