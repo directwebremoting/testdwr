@@ -11,11 +11,6 @@
 
     <filter class="org.testdwr.plain.Test1Filter"/>
 
-    <!-- Exception Logging -->
-    <create creator="new" javascript="ExceptionLogging">
-      <param name="class" value="org.testdwr.exceptionLogging.ExceptionLogging"/>
-    </create>
-
 	<create creator="static" javascript="SingletonCustomMethodName">
 		<param name="class" value="org.testdwr.create.SingletonCustomMethodName"/>
 		<param name="instanceMethodName" value="getCustomInstance"/>
