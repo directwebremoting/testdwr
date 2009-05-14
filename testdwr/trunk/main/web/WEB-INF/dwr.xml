@@ -11,10 +11,9 @@
 
     <filter class="org.testdwr.plain.Test1Filter"/>
 
-    <!-- test -->
-    <create creator="new" javascript="Test" scope="application">
-      <param name="class" value="org.testdwr.plain.Test"/>
-      <filter class="org.testdwr.plain.Test2Filter"/>
+    <!-- Exception Logging -->
+    <create creator="new" javascript="ExceptionLogging">
+      <param name="class" value="org.directwebremoting.exceptionLogging.ExceptionLogging"/>
     </create>
 
 	<create creator="static" javascript="SingletonCustomMethodName">
@@ -22,6 +21,11 @@
 		<param name="instanceMethodName" value="getCustomInstance"/>
 		<exclude method="disallowed"/>		
     </create>
+    
+    <create creator="new" javascript="Test" scope="application">
+      <param name="class" value="org.testdwr.plain.Test"/>
+      <filter class="org.testdwr.plain.Test2Filter"/>
+    </create>    
     
     <create creator="static" javascript="SingletonGetInstance">
 		<param name="class" value="org.testdwr.create.SingletonGetInstance"/>
