@@ -82,6 +82,8 @@ import org.testdwr.convert.MyUnmappedException;
 import org.testdwr.convert.ObjectWithLightClassMapping;
 import org.testdwr.convert.OnePackage;
 import org.testdwr.convert.TwoPackages;
+import org.testdwr.convert.wildcards.flat.WildcardObjectContainer;
+import org.testdwr.convert.wildcards.recursive.WildcardRecursiveObjectContainer;
 import org.testdwr.event.Test2ScriptSessionListener;
 import org.testdwr.event.TestScriptSessionListener;
 import org.xml.sax.SAXParseException;
@@ -880,6 +882,20 @@ public class Test
         throw new MyFancyExceptionInPackage("fancy");
     }
 
+    // --- Converter wildcard checks
+    
+    public WildcardObjectContainer flatWildcardObjects(WildcardObjectContainer in)
+    {
+        return in;
+    }
+    
+    public WildcardRecursiveObjectContainer recursiveWildcardObjects(WildcardRecursiveObjectContainer in)
+    {
+        return in;
+    }
+
+    // --- End converter wildcard checks
+    
     public String serverChecks()
     {
         ScriptSession scriptSession = WebContextFactory.get().getScriptSession();

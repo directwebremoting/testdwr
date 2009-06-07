@@ -11,10 +11,10 @@
 
     <filter class="org.testdwr.plain.Test1Filter"/>
 
-	<create creator="static" javascript="SingletonCustomMethodName">
-		<param name="class" value="org.testdwr.create.SingletonCustomMethodName"/>
-		<param name="instanceMethodName" value="getCustomInstance"/>
-		<exclude method="disallowed"/>		
+    <create creator="static" javascript="SingletonCustomMethodName">
+      <param name="class" value="org.testdwr.create.SingletonCustomMethodName"/>
+      <param name="instanceMethodName" value="getCustomInstance"/>
+      <exclude method="disallowed"/>
     </create>
     
     <create creator="new" javascript="Test" scope="application">
@@ -23,28 +23,28 @@
     </create>    
     
     <create creator="static" javascript="SingletonGetInstance">
-		<param name="class" value="org.testdwr.create.SingletonGetInstance"/>
-		<exclude method="disallowed"/>	
+      <param name="class" value="org.testdwr.create.SingletonGetInstance"/>
+      <exclude method="disallowed"/>
     </create>
-	    
+    
     <create creator="new" javascript="ConcreteGenericService" scope="application">
-		<param name="class" value="org.testdwr.convert.generics.ConcreteService"/>
+      <param name="class" value="org.testdwr.convert.generics.ConcreteService"/>
     </create>
     
     <create creator="new" javascript="CreatorMethodExclusions" scope="application">
-		<param name="class" value="org.testdwr.security.CreatorMethodExclusions"/>
-		<exclude method="excluded"/>	
-		<exclude method="excluded2"/>	
+      <param name="class" value="org.testdwr.security.CreatorMethodExclusions"/>
+      <exclude method="excluded"/>
+      <exclude method="excluded2"/>
     </create>
     
     <create creator="new" javascript="CreatorMethodInclusions" scope="application">
-		<param name="class" value="org.testdwr.security.CreatorMethodInclusions"/>
-		<include method="included"/>	
-		<include method="included2"/>	
+      <param name="class" value="org.testdwr.security.CreatorMethodInclusions"/>
+      <include method="included"/>    
+      <include method="included2"/>
     </create>
     
     <create creator="new" javascript="CreatorMethodAccess" scope="application">
-		<param name="class" value="org.testdwr.security.CreatorMethodAccess"/>
+      <param name="class" value="org.testdwr.security.CreatorMethodAccess"/>
     </create>
 
     <convert match="org.testdwr.plain.TestBean" converter="bean"/>
@@ -59,17 +59,34 @@
       <param name="force" value="true"/>
     </convert>
 
+    <!-- Class mapping -->
     <convert match="org.testdwr.convert.AbstractBase" converter="object" javascript="AbstractBase"/>
     <convert match="org.testdwr.convert.ConcreteBBase" converter="object" javascript="ConcreteBBase"/>
     <convert match="org.testdwr.convert.ConcreteCBase" converter="object" javascript="ConcreteCBase"/>
     <convert match="org.testdwr.convert.IFace" converter="bean" javascript="IFace"/>
     <convert match="org.testdwr.convert.ConcreteIFace" converter="bean" javascript="ConcreteIFace"/>
 
+    <!-- JavaScript package names -->
     <convert match="org.testdwr.convert.OnePackage" converter="object" javascript="pkg1.OnePackage"/>
     <convert match="org.testdwr.convert.TwoPackages" converter="object" javascript="pkg1.pkg2.TwoPackages"/>
+    
+    <!-- Wildcard matching -->
+    <convert match="org.testdwr.convert.wildcards.flat.WildcardObjectContainer" converter="object"/>
+    <convert match="org.testdwr.convert.wildcards.flat.noname.*" converter="object"/>
+    <convert match="org.testdwr.convert.wildcards.flat.explicitname.*" converter="object" javascript="ExplicitWildcardObject"/>
+    <convert match="org.testdwr.convert.wildcards.flat.samename.*" converter="object" javascript="*"/>
+    <convert match="org.testdwr.convert.wildcards.flat.extendedname.*" converter="object" javascript="Prefix*Suffix"/>
+    <convert match="org.testdwr.convert.wildcards.flat.samepackage.*" converter="object" javascript="**"/>
+    <convert match="org.testdwr.convert.wildcards.flat.otherpackage.*" converter="object" javascript="otherpackage.*"/>
+    <convert match="org.testdwr.convert.wildcards.recursive.WildcardRecursiveObjectContainer" converter="object"/>
+    <convert match="org.testdwr.convert.wildcards.recursive.noname.**" converter="object"/>
+    <convert match="org.testdwr.convert.wildcards.recursive.samename.**" converter="object" javascript="*"/>
+    <convert match="org.testdwr.convert.wildcards.recursive.extendedname.**" converter="object" javascript="Prefix*Suffix"/>
+    <convert match="org.testdwr.convert.wildcards.recursive.samepackage.**" converter="object" javascript="**"/>
+    <convert match="org.testdwr.convert.wildcards.recursive.otherpackage.**" converter="object" javascript="otherpackage.*"/>
 
-	<convert match="org.testdwr.convert.generics.Command" converter="bean"/>
-	<convert match="org.testdwr.convert.generics.ConcreteCommand" converter="bean"/>
+    <convert match="org.testdwr.convert.generics.Command" converter="bean"/>
+    <convert match="org.testdwr.convert.generics.ConcreteCommand" converter="bean"/>
 
     <convert match="org.testdwr.convert.MyFancyException" converter="exception" javascript="MyFancyException"/>
     <convert match="org.testdwr.convert.MyFancyExceptionInPackage" converter="exception" javascript="pkg1.MyFancyExceptionInPackage"/>

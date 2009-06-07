@@ -761,6 +761,62 @@ window.testMarshallPackagedEx = function() {
   });
 };
 
+// --- Converter wildcard checks
+
+/**
+ * 
+ */
+window.testMarshallConverterWildcards = function() {
+  Test.flatWildcardObjects(
+    {
+      noname:       {i:1},
+      samename:     WildcardObject.createFromMap({i:2}),
+      extendedname: PrefixWildcardObjectSuffix.createFromMap({i:3}),
+      samepackage:  org.testdwr.convert.wildcards.flat.samepackage.WildcardObject.createFromMap({i:4}),
+      otherpackage: otherpackage.WildcardObject.createFromMap({i:5})
+    },
+    createOptions(function(reply) {
+      verifyEqual(reply.noname.i, 1);
+      verifyEqual(reply.samename.i, 2);
+      verifyTrue(reply.samename instanceof WildcardObject);
+      verifyEqual(reply.extendedname.i, 3);
+      verifyTrue(reply.extendedname instanceof PrefixWildcardObjectSuffix);
+      verifyEqual(reply.samepackage.i, 4);
+      verifyTrue(reply.samepackage instanceof org.testdwr.convert.wildcards.flat.samepackage.WildcardObject);
+      verifyEqual(reply.otherpackage.i, 5);
+      verifyTrue(reply.otherpackage instanceof otherpackage.WildcardObject);
+    })
+  );
+};
+
+/**
+ * 
+ */
+window.testMarshallConverterWildcardsRecursive = function() {
+  Test.recursiveWildcardObjects(
+    {
+      noname:       {i:1},
+      samename:     WildcardSubObject.createFromMap({i:2}),
+      extendedname: PrefixWildcardSubObjectSuffix.createFromMap({i:3}),
+      samepackage:  org.testdwr.convert.wildcards.recursive.samepackage.subpkg.WildcardSubObject.createFromMap({i:4}),
+      otherpackage: otherpackage.WildcardSubObject.createFromMap({i:5})
+    },
+    createOptions(function(reply) {
+      verifyEqual(reply.noname.i, 1);
+      verifyEqual(reply.samename.i, 2);
+      verifyTrue(reply.samename instanceof WildcardSubObject);
+      verifyEqual(reply.extendedname.i, 3);
+      verifyTrue(reply.extendedname instanceof PrefixWildcardSubObjectSuffix);
+      verifyEqual(reply.samepackage.i, 4);
+      verifyTrue(reply.samepackage instanceof org.testdwr.convert.wildcards.recursive.samepackage.subpkg.WildcardSubObject);
+      verifyEqual(reply.otherpackage.i, 5);
+      verifyTrue(reply.otherpackage instanceof otherpackage.WildcardSubObject);
+    })
+  );
+};
+
+// --- End converter wildcard checks
+
 /**
  *
  */
@@ -812,7 +868,7 @@ window.testMarshallReadOnlyProperties = function () {
 };
 
 window.testMarshallGenericsImplementation = function() {
-	ConcreteGenericService.execute(0, 0, {}, {}, createOptions(function(data) {
-	    assertEqual(data, 1);
-	}));
+    ConcreteGenericService.execute(0, 0, {}, {}, createOptions(function(data) {
+        assertEqual(data, 1);
+    }));
 };
