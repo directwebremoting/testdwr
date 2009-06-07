@@ -73,7 +73,6 @@
     <!-- Wildcard matching -->
     <convert match="org.testdwr.convert.wildcards.flat.WildcardObjectContainer" converter="object"/>
     <convert match="org.testdwr.convert.wildcards.flat.noname.*" converter="object"/>
-    <convert match="org.testdwr.convert.wildcards.flat.explicitname.*" converter="object" javascript="ExplicitWildcardObject"/>
     <convert match="org.testdwr.convert.wildcards.flat.samename.*" converter="object" javascript="*"/>
     <convert match="org.testdwr.convert.wildcards.flat.extendedname.*" converter="object" javascript="Prefix*Suffix"/>
     <convert match="org.testdwr.convert.wildcards.flat.samepackage.*" converter="object" javascript="**"/>
