@@ -17,6 +17,15 @@
       <exclude method="disallowed"/>
     </create>
     
+    <create creator="script" javascript="TestScriptedSingleton">
+	    <param name="language" value="beanshell"/>	    
+	    <param name="class" value="org.testdwr.plain.TestScriptedSingleton"/>
+	    <param name="script">
+	      import org.testdwr.plain.TestScriptedSingleton;
+	      return TestScriptedSingleton.getInstance();
+	    </param>
+  	</create>
+    
     <create creator="new" javascript="Test" scope="application">
       <param name="class" value="org.testdwr.plain.Test"/>
       <filter class="org.testdwr.plain.Test2Filter"/>
@@ -117,7 +126,7 @@
   Test.testBeanSetParam(Set<TestBean>);
   Test.testBeanListParam(List<TestBean>);
   Test.charTestBeanMapParam(Map<Character, TestBean>);
-
+  Test.stringBooleanParam(Map<String, Boolean>);
   Test.stringStringMapParam(Map<String, String>);
   Test.stringStringHashMapParam(HashMap<String, String>);
   Test.stringStringTreeMapParam(TreeMap<String, String>);

@@ -420,7 +420,7 @@ public class Test
     {
         return test;
     }
-
+    
     public Set<TestBean> testBeanSetParam(Set<TestBean> test)
     {
         if (test.size() > 1)
@@ -527,6 +527,11 @@ public class Test
         return test;
     }
 
+    public Map stringBooleanMapParam(Map<String, Boolean> map) 
+    {
+        return map;
+    }
+    
     public Map<String, String> stringStringMapParam(Map<String, String> test)
     {
         return test;

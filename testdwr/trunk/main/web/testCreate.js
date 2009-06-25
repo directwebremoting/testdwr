@@ -33,3 +33,9 @@ window.testCreateStaticWithCustomInstanceMethod = function() {
     verifyEqual(data, "SUCCESS");
   }));
 };
+
+window.testCreateScriptedSingleton = function() {
+	TestScriptedSingleton.method1(createOptions(function (data) {
+	    verifyEqual(data, "SUCCESS");
+    }));
+};

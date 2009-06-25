@@ -579,6 +579,12 @@ window.testMarshallStringStringMapParam = function() {
   ]);
 };
 
+window.testMarshallStringBooleanMapParam = function() {
+	runComparisonTests([
+	    { code:"stringBooleanMapParam", data: { Key : true } }	    
+    ]);
+};
+
 window.testMarshallStringStringHashMapParam = function() {
   runComparisonTests([
     { code:"stringStringHashMapParam", data:map1 },
