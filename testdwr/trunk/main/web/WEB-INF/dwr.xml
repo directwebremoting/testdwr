@@ -18,12 +18,12 @@
     </create>
     
     <create creator="script" javascript="TestScriptedSingleton">
-	    <param name="language" value="beanshell"/>	    
-	    <param name="class" value="org.testdwr.plain.TestScriptedSingleton"/>
-	    <param name="script">
-	      import org.testdwr.plain.TestScriptedSingleton;
-	      return TestScriptedSingleton.getInstance();
-	    </param>
+	  <param name="language" value="beanshell"/>	    
+	  <param name="class" value="org.testdwr.plain.TestScriptedSingleton"/>
+	  <param name="script">
+	    import org.testdwr.plain.TestScriptedSingleton;
+	    return TestScriptedSingleton.getInstance();
+	  </param>
   	</create>
     
     <create creator="new" javascript="Test" scope="application">
