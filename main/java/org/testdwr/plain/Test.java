@@ -791,14 +791,19 @@ public class Test
         return "static SpringServletTest.staticMethod() says hello.";
     }
 
+    public String dangerOverload(String param1, int param2)
+    {
+        return param1 + "," + param2;
+    }
+    
     public String dangerOverload(String param1)
     {
-        return "SpringServletTest.dangerOverload(" + param1 + ") says hello.";
+        return param1;
     }
 
     public String dangerOverload()
     {
-        return "SpringServletTest.dangerOverload() says hello.";
+        return "hello";
     }
 
     public String error(InboundContext cx)

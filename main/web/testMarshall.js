@@ -37,6 +37,19 @@ window.testMarshallComplexDeep = function() {
   }));
 };
 
+window.testMarshallOverloaded = function() {
+	  Test.dangerOverload("param1", 1, createOptions(function (data) {
+	    verifyEqual(data, "param1,1");
+	  }));
+	  Test.dangerOverload("param1", createOptions(function (data) {
+	    verifyEqual(data, "param1");
+	  }));
+	  Test.dangerOverload(createOptions(function (data) {
+		verifyEqual(data, "hello");
+	  }));
+	};
+
+
 window.testMarshallStringVarArgsEmpty = function() {
   Test.stringVarArgs(createOptions(function (data) {
     verifyEqual(data, [ ]);
