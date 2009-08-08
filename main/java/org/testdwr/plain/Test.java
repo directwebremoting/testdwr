@@ -340,6 +340,32 @@ public class Test
     {
         return test;
     }
+    
+    public String[] stringArrayParam(String[] test)
+    {
+        return test;
+    }
+
+    public String[][] string2DArrayParam(String[][] test)
+    {
+        return test;
+    }
+
+    public String[][][] string3DArrayParam(String[][][] test)
+    {
+        return test;
+    }
+
+    public String[][][][] string4DArrayParam(String[][][][] test)
+    {
+        return test;
+    }
+
+    public String[][][][][] string5DArrayParam(String[][][][][] test)
+    {
+        return test;
+    }
+
 
     public BigInteger bigIntegerParam(BigInteger test)
     {
@@ -347,11 +373,6 @@ public class Test
     }
 
     public BigDecimal bigDecimalParam(BigDecimal test)
-    {
-        return test;
-    }
-
-    public String[] stringArrayParam(String[] test)
     {
         return test;
     }

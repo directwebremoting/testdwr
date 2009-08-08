@@ -370,13 +370,23 @@ window.testMarshallXDArrayParam = function() {
   var double3D = [ double2D, double2D ];
   var double4D = [ double3D, double3D ];
   var double5D = [ double4D, double4D ];
+  var string1D = [ "string1", "string2", "string3", "string4", "string5" ];
+  var string2D = [ string1D, string1D ];
+  var string3D = [ string2D, string2D ];
+  var string4D = [ string3D, string3D ];
+  var string5D = [ string4D, string4D ];
 
   runComparisonTests([
     { code:"doubleArrayParam", data:double1D },
     { code:"double2DArrayParam", data:double2D },
     { code:"double3DArrayParam", data:double3D },
     { code:"double4DArrayParam", data:double4D },
-    { code:"double5DArrayParam", data:double5D }
+    { code:"double5DArrayParam", data:double5D },
+    { code:"stringArrayParam", data:string1D },
+    { code:"string2DArrayParam", data:string2D },
+    { code:"string3DArrayParam", data:string3D },
+    { code:"string4DArrayParam", data:string4D },
+    { code:"string5DArrayParam", data:string5D }
   ]);
 };
 
