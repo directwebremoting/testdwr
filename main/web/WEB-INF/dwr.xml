@@ -128,6 +128,7 @@
   Test.charTestBeanMapParam(Map<Character, TestBean>);
   Test.stringBooleanParam(Map<String, Boolean>);
   Test.stringStringMapParam(Map<String, String>);
+  Test.stringArrayMapParam(Map<String, String[]>);
   Test.stringStringHashMapParam(HashMap<String, String>);
   Test.stringStringTreeMapParam(TreeMap<String, String>);
 
