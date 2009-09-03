@@ -558,6 +558,11 @@ public class Test
         return test;
     }
 
+    public Map<String, String[]> stringArrayMapParam(Map<String, String[]> test)
+    {
+        return test;
+    }
+    
     public Map<Character, TestBean> charTestBeanMapParam(Map<Character, TestBean> test)
     {
         return test;

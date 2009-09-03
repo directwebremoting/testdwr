@@ -588,18 +588,24 @@ map2['h&'] = 'h&';
 map2['i<'] = 'i<';
 map2['j>'] = 'j>';
 map2['k:'] = 'k:';
-map2['l['] = 'l[';
 map2['m]'] = 'm]';
 map2['o{'] = 'o{';
 map2['p}'] = 'p}';
 map2['q,~#'] = 'q,~#';
 map2['r?/,'] = 'r?/,';
+var map3 = { a:["a"], b:["a","b"], c:["c"] };
 
 window.testMarshallStringStringMapParam = function() {
   runComparisonTests([
     { code:"stringStringMapParam", data:map1 },
     { code:"stringStringMapParam", data:map2 }
   ]);
+};
+
+window.testMarshallStringArrayMapParam = function() {
+  Test.stringArrayMapParam(map3, createOptions(function (data) {
+    verifyEqual(data, map3);
+  }));
 };
 
 window.testMarshallStringBooleanMapParam = function() {
