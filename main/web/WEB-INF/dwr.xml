@@ -126,7 +126,7 @@
   Test.testBeanSetParam(Set<TestBean>);
   Test.testBeanListParam(List<TestBean>);
   Test.charTestBeanMapParam(Map<Character, TestBean>);
-  Test.stringBooleanParam(Map<String, Boolean>);
+  Test.stringBooleanMapParam(Map<String, Boolean>);
   Test.stringStringMapParam(Map<String, String>);
   Test.stringArrayMapParam(Map<String, String[]>);
   Test.stringStringHashMapParam(HashMap<String, String>);
