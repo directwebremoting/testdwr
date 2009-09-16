@@ -5,10 +5,6 @@
 
   <allow>
 
-    <!--
-    <filter class="org.directwebremoting.filter.AuditLogAjaxFilter"/>
-    -->
-
     <filter class="org.testdwr.plain.Test1Filter"/>
 
     <create creator="static" javascript="SingletonCustomMethodName">
