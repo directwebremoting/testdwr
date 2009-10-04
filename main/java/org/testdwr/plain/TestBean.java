@@ -15,10 +15,12 @@
  */
 package org.testdwr.plain;
 
+import java.io.Serializable;
+
 /**
  * @author Joe Walker [joe at getahead dot ltd dot uk]
  */
-public class TestBean
+public class TestBean implements Serializable
 {
     /**
      * 
