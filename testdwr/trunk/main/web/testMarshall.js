@@ -608,6 +608,13 @@ window.testMarshallStringArrayMapParam = function() {
   }));
 };
 
+window.testMarshallStringBeanArrayMapParam = function() {
+  var map = {a: [{ integer:1, string:'0987654321', testBean:nested}, {integer:2, string:'012345678', testBean:nested}]};
+  Test.stringBeanArrayMapParam(map, createOptions(function (data) {
+    verifyEqual(data, [ nested, nested ]);
+  }));
+};
+
 window.testMarshallStringBooleanMapParam = function() {
 	runComparisonTests([
 	    { code:"stringBooleanMapParam", data: { Key : true } }	    
