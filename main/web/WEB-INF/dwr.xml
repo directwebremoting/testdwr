@@ -125,6 +125,7 @@
   Test.stringBooleanMapParam(Map<String, Boolean>);
   Test.stringStringMapParam(Map<String, String>);
   Test.stringArrayMapParam(Map<String, String[]>);
+  Test.stringBeanArrayMapParam(Map<String, TestBean[]>);
   Test.stringStringHashMapParam(HashMap<String, String>);
   Test.stringStringTreeMapParam(TreeMap<String, String>);
 
