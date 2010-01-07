@@ -18,9 +18,9 @@ window.testRemotingVarious = function() {
 };
 
 window.testRemotingStatic = function() {
-  Test.staticMethod(function (data) {
-    verifyEqual(data, "static SpringServletTest.staticMethod() says hello.");
-  });
+  Test.staticMethod(createDelayed(function (data) {
+    verifyEqual("static SpringServletTest.staticMethod() says hello.", data);
+  }));
 };
 
 /**
