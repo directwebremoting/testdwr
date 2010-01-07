@@ -17,6 +17,12 @@ window.testRemotingVarious = function() {
   Test.variousChecks(createVerifyCallback());
 };
 
+window.testRemotingStatic = function() {
+  Test.staticMethod(function (data) {
+    verifyEqual(data, "static SpringServletTest.staticMethod() says hello.");
+  });
+};
+
 /**
  *
  */
