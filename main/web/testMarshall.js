@@ -47,6 +47,9 @@ window.testMarshallOverloaded = function() {
 	  Test.dangerOverload(createOptions(function (data) {
 		verifyEqual(data, "hello");
 	  }));
+	  Test.dangerOverload(["param1"], createOptions(function (data) {
+	    verifyEqual(data, "helloarray");
+	  }));
 	};
 
 
