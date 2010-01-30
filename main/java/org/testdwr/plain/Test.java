@@ -836,7 +836,12 @@ public class Test
     {
         return "hello";
     }
-
+    
+    public String dangerOverloadArray(String[] params) 
+    {
+        return "helloarray";        
+    }
+    
     public String error(InboundContext cx)
     {
         return "You should not see this: " + cx;
