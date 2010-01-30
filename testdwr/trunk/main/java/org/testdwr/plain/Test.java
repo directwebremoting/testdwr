@@ -837,7 +837,7 @@ public class Test
         return "hello";
     }
     
-    public String dangerOverloadArray(String[] params) 
+    public String dangerOverload(String[] params) 
     {
         return "helloarray";        
     }
