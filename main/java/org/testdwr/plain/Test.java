@@ -842,6 +842,11 @@ public class Test
         return "helloarray";        
     }
     
+    public String dangerOverload(TestBean test) 
+    {
+        return "helloarray";        
+    }
+    
     public String error(InboundContext cx)
     {
         return "You should not see this: " + cx;
