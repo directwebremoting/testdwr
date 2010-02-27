@@ -50,6 +50,12 @@ window.testMarshallOverloaded = function() {
 	  Test.dangerOverload(["param1"], createOptions(function (data) {
 	    verifyEqual(data, "helloarray");
 	  }));
+	  Test.dangerOverload({string: "param1"}, createOptions(function (data) {
+	    verifyEqual(data, "hellotestbean");
+	  }));
+	  Test.dangerOverload(1, createOptions(function (data) {
+	    verifyEqual(data, "hello");
+	  }));
 	};
 
 
