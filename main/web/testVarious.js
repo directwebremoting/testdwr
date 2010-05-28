@@ -27,5 +27,5 @@ window.testImHere = function() {
  *
  */
 window.testCheckContext = function() {
-  Test.checkContext(createVerifyCallback());
+  Test.checkContext(common.getContextPath(), createVerifyCallback());
 };

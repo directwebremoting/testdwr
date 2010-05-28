@@ -125,5 +125,5 @@ function runAnnotateComparisonTests(compares) {
 }
 
 window.testAnnotateCheckContext = function() {
-  AnnotateTest.checkContext(createVerifyCallback());
+  AnnotateTest.checkContext(common.getContextPath(), createVerifyCallback());
 };

@@ -125,5 +125,5 @@ function runGuiceComparisonTests(compares) {
 }
 
 window.testGuiceCheckContext = function() {
-  GuiceTest.checkContext(createVerifyCallback());
+  GuiceTest.checkContext(common.getContextPath(), createVerifyCallback());
 };
