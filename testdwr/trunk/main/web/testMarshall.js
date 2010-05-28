@@ -54,7 +54,7 @@ window.testMarshallOverloaded = function() {
 	    verifyEqual(data, "hellotestbean");
 	  }));
 	  Test.dangerOverload(1, createOptions(function (data) {
-	    verifyEqual(data, "hello");
+	    verifyEqual(data, "1");
 	  }));
 	};
 
@@ -434,6 +434,12 @@ window.testMarshallTestBeanSetParam = function() {
   ]);
 };
 
+window.testMarshallTestEmptyListParams = function() {
+  Test.testEmptyListParams([], [], createOptions(function(retval) {
+    verifyTrue(retval.match(/error/i) == null);
+  }));
+};
+
 window.testMarshallTestBeanListParam = function() {
   runComparisonTests([
     { code:"testBeanListParam", data:[ ] },
@@ -665,6 +671,8 @@ window.testMarshallDomElementParam = function() {
     if (window.XMLSerializer) output = new XMLSerializer().serializeToString(data);
     else if (data.toXml) output = data.toXml;
     else output = data.innerHTML;
+    // We remove any xmlns attributes that may have been added
+    output = output.replace(/ xmlns=["'][^"']+["']/g, "");
     // We do lower case because xml->html might not preserve tag case or spaces
     output = output.toLowerCase().replace(/ /g, "");
     compare = testHtml.toLowerCase().replace(/ /g, "");
@@ -876,7 +884,7 @@ window.testMarshallLightClassMapping = function() {
   // generated mapped JavaScript class for our objects. We remove any trace
   // of the class in case it has been included:
   if (typeof this.ObjectWithLightClassMapping == "function") {
-    delete this.ObjectWithLightClassMapping;
+    delete ObjectWithLightClassMapping;
     delete dwr.engine._mappedClasses["ObjectWithLightClassMapping"];
   }
 

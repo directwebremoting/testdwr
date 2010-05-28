@@ -125,5 +125,5 @@ function runSpringServletComparisonTests(compares) {
 }
 
 window.testSpringServletCheckContext = function() {
-  SpringServletTest.checkContext(createVerifyCallback());
+  SpringServletTest.checkContext(common.getContextPath(), createVerifyCallback());
 };

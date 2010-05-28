@@ -96,13 +96,13 @@ import org.xml.sax.SAXParseException;
 public class Test
 {
     @SuppressWarnings("deprecation")
-    public Verify checkContext()
+    public Verify checkContext(String contextPath)
     {
         ServerContext serverContext = ServerContextFactory.get();
         Container container = serverContext.getContainer();
         Verify verify = new Verify();
 
-        verify.equals("ContextPath", "/testdwr", serverContext.getContextPath());
+        verify.equals("ContextPath", contextPath, serverContext.getContextPath());
         verify.equals("Version", VersionUtil.getVersion(), serverContext.getVersion());
         verify.equals("Container.class", DefaultContainer.class.getName(), container.getClass().getName());
         verify.equals("Container.getBean", "DwrServlet", container.getBean("ContainerType"));
@@ -441,7 +441,7 @@ public class Test
     {
         return test;
     }
-    
+
     public Set<TestBean> testBeanSetParam(Set<TestBean> test)
     {
         if (test.size() > 1)
@@ -457,6 +457,26 @@ public class Test
         return test;
     }
 
+    public String testEmptyListParams(List<String> list1, List<String> list2)
+    {
+        if (list1 == list2) 
+        {
+            try
+            {
+                list1.add("new item");
+                return "error: same lists and modifiable";
+            }
+            catch(RuntimeException ex)
+            {
+                return "same lists but unmodifiable";
+            }
+        }
+        else
+        {
+            return "different lists";
+        }
+    }
+    
     public List<TestBean> testBeanListParam(List<TestBean> test)
     {
         if (test.size() > 1)
@@ -548,7 +568,7 @@ public class Test
         return test;
     }
 
-    public Map stringBooleanMapParam(Map<String, Boolean> map) 
+    public Map<String, Boolean> stringBooleanMapParam(Map<String, Boolean> map) 
     {
         return map;
     }
@@ -837,16 +857,21 @@ public class Test
         return "hello";
     }
     
-    public String dangerOverload(String[] params) 
+    public String dangerOverload(@SuppressWarnings("unused") String[] params) 
     {
         return "helloarray";        
     }
     
-    public String dangerOverload(TestBean test) 
+    public String dangerOverload(@SuppressWarnings("unused") TestBean test) 
     {
-        return "helloarray";        
+        return "hellotestbean";        
     }
     
+    public int dangerOverload(int param1)
+    {
+        return param1;
+    }
+
     public String error(InboundContext cx)
     {
         return "You should not see this: " + cx;
