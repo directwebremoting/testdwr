@@ -373,9 +373,20 @@ window.testMarshallFloatArrayParam = function() {
   ]);
 };
 
+window.testConsecutiveCalls = function() {
+  runComparisonTests([
+    { code:"stringArrayParam", data:[ "first", "second", "third", "fourth", "fifth"] },
+    { code:"stringArrayParam", data:[ "second", "first", "third", "fourth", "fifth" ] },
+    { code:"stringArrayParam", data:[ "third", "second", "first", "fourth", "fifth" ] },
+    { code:"stringArrayParam", data:[ "fourth", "second", "third", "first", "fifth" ] },
+    { code:"stringArrayParam", data:[ "fifth", "second", "third", "fourth", "first" ] },
+  ]);
+}
+
 window.testMarshallXDArrayParam = function() {
-  var double1D = [ -100000000000000000000, -1, 0, 1, 100000000000000000000 ];
-  var double2D = [ double1D, double1D ];
+  var double2D = [[5,10],[10,50]];
+  var double1D = [ -1.123, "-1", 0, 1.767676756777657, 100000000000000000000 ];
+  // var double2D = [ double1D, double1D ];
   var double3D = [ double2D, double2D ];
   var double4D = [ double3D, double3D ];
   var double5D = [ double4D, double4D ];
