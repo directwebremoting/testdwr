@@ -593,6 +593,13 @@ public class Test
         return test;
     }
 
+    public Map<Object, Boolean> nullKeyMap()
+    {
+        Map<Object, Boolean> map = new HashMap<Object, Boolean>();
+        map.put(null, true);
+        return map;
+    }
+    
     public Map<String, String> stringStringHashMapParam(HashMap<String, String> test)
     {
         return test;
