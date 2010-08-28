@@ -647,6 +647,13 @@ window.testMarshallStringBooleanMapParam = function() {
     ]);
 };
 
+window.testMarshallNullKeyHashMap = function() {
+    var nullMap = {"null" : true};
+    Test.nullKeyMap(createOptions(function (data) {
+      verifyEqual(data, nullMap);
+    }));
+}
+
 window.testMarshallStringStringHashMapParam = function() {
   runComparisonTests([
     { code:"stringStringHashMapParam", data:map1 },

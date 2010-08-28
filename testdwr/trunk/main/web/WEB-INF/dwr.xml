@@ -2,7 +2,6 @@
 <!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 3.0//EN" "http://getahead.ltd.uk/dwr/dwr30.dtd">
 
 <dwr>
-
   <allow>
 
     <filter class="org.testdwr.plain.Test1Filter"/>
@@ -52,6 +51,9 @@
       <param name="class" value="org.testdwr.security.CreatorMethodAccess"/>
     </create>
 
+    <convert converter="map" match="java.util.Map">
+      <param name="nullKey" value="null"/>
+    </convert>    
     <convert match="org.testdwr.plain.TestBean" converter="bean"/>
     <convert match="org.testdwr.plain.TestBeanWithList" converter="bean"/>
     <convert match="org.testdwr.plain.TestObject" converter="object"/>
