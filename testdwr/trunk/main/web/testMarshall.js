@@ -379,7 +379,7 @@ window.testConsecutiveCalls = function() {
     { code:"stringArrayParam", data:[ "second", "first", "third", "fourth", "fifth" ] },
     { code:"stringArrayParam", data:[ "third", "second", "first", "fourth", "fifth" ] },
     { code:"stringArrayParam", data:[ "fourth", "second", "third", "first", "fifth" ] },
-    { code:"stringArrayParam", data:[ "fifth", "second", "third", "fourth", "first" ] },
+    { code:"stringArrayParam", data:[ "fifth", "second", "third", "fourth", "first" ] }
   ]);
 }
 
