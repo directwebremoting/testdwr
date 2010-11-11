@@ -72,7 +72,7 @@ window.testRemotingAsyncNesting = function() {
 /**
  *
  */
-window.testRemotingRequestAttributes = function() {
+window.testRemotingRequestAttributesInCall = function() {
   Test.listParameters({
     callback:createDelayed(function(data) {
       verifyEqual(data.param1, "value1");
@@ -95,6 +95,25 @@ window.testRemotingRequestAttributes = function() {
       'param1':'value1',
       'param2':'value2'
     },
+    errorHandler:createDelayedError()
+  });
+};
+
+/**
+ *
+ */
+window.testRemotingRequestAttributesGlobal = function() {
+  dwr.engine.setRequestAttributes({
+    'param1':'value1',
+    'param2':'value2'
+  });
+  Test.listParameters({
+    callback:createDelayed(function(data) {
+      verifyEqual(data.param1, "value1");
+      verifyEqual(data.param2, "value2");
+      verifyUndefined(data.param3);
+      dwr.engine.setRequestAttributes(null);
+    }),
     errorHandler:createDelayedError()
   });
 };
