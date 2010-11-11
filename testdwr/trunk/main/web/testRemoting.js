@@ -72,26 +72,14 @@ window.testRemotingAsyncNesting = function() {
 /**
  *
  */
-window.testRemotingRequestAttributesInCall = function() {
+window.testRemotingAttributesInCall = function() {
   Test.listParameters({
     callback:createDelayed(function(data) {
       verifyEqual(data.param1, "value1");
       verifyEqual(data.param2, "value2");
       verifyUndefined(data.param3);
     }),
-    requestAttributes:{
-      'param1':'value1',
-      'param2':'value2'
-    },
-    errorHandler:createDelayedError()
-  });
-  Test.listParameters({
-    callback:createDelayed(function(data) {
-      verifyEqual(data.param1, "value1");
-      verifyEqual(data.param2, "value2");
-      verifyUndefined(data.param3);
-    }),
-    parameters:{
+    attributes:{
       'param1':'value1',
       'param2':'value2'
     },
@@ -102,8 +90,8 @@ window.testRemotingRequestAttributesInCall = function() {
 /**
  *
  */
-window.testRemotingRequestAttributesGlobal = function() {
-  dwr.engine.setRequestAttributes({
+window.testRemotingAttributesGlobal = function() {
+  dwr.engine.setAttributes({
     'param1':'value1',
     'param2':'value2'
   });
@@ -112,7 +100,7 @@ window.testRemotingRequestAttributesGlobal = function() {
       verifyEqual(data.param1, "value1");
       verifyEqual(data.param2, "value2");
       verifyUndefined(data.param3);
-      dwr.engine.setRequestAttributes(null);
+      dwr.engine.setAttributes(null);
     }),
     errorHandler:createDelayedError()
   });
