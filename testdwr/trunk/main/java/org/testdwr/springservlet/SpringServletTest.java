@@ -32,7 +32,6 @@ import org.directwebremoting.util.VersionUtil;
  */
 public class SpringServletTest
 {
-    @SuppressWarnings("deprecation")
     public Verify checkContext(String contextPath)
     {
         ServerContext serverContext = ServerContextFactory.get();
@@ -40,7 +39,7 @@ public class SpringServletTest
         Verify verify = new Verify();
 
         verify.equals("ContextPath", contextPath, serverContext.getContextPath());
-        verify.equals("Version", VersionUtil.getVersion(), serverContext.getVersion());
+        verify.equals("Version", VersionUtil.getLabel(), serverContext.getVersion());
         verify.equals("Container.class", SpringContainer.class.getName(), container.getClass().getName());
         verify.equals("Container.getBean", "DwrSpringServlet", container.getBean("ContainerType"));
 

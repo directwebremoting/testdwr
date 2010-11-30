@@ -34,7 +34,6 @@ import org.directwebremoting.util.VersionUtil;
 @RemoteProxy
 public class AnnotateTest
 {
-    @SuppressWarnings("deprecation")
     public Verify checkContext(String contextPath)
     {
         ServerContext serverContext = ServerContextFactory.get();
@@ -42,7 +41,7 @@ public class AnnotateTest
         Verify verify = new Verify();
 
         verify.equals("ContextPath", contextPath, serverContext.getContextPath());
-        verify.equals("Version", VersionUtil.getVersion(), serverContext.getVersion());
+        verify.equals("Version", VersionUtil.getLabel(), serverContext.getVersion());
         verify.equals("Container.class", DefaultContainer.class.getName(), container.getClass().getName());
         verify.equals("Container.getBean", "DwrServlet", container.getBean("ContainerType"));
 
