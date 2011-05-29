@@ -1,6 +1,6 @@
 package org.testdwr.convert;
 
-public class TwoPackages
+public class OnePackageObject
 {
 	public int i;
 }

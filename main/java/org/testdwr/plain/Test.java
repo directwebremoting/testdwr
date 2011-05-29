@@ -43,6 +43,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import junit.framework.Assert;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.directwebremoting.Browser;
@@ -80,8 +82,10 @@ import org.testdwr.convert.MyFancyException;
 import org.testdwr.convert.MyFancyExceptionInPackage;
 import org.testdwr.convert.MyUnmappedException;
 import org.testdwr.convert.ObjectWithLightClassMapping;
-import org.testdwr.convert.OnePackage;
-import org.testdwr.convert.TwoPackages;
+import org.testdwr.convert.OnePackageObject;
+import org.testdwr.convert.StrangeNameObject;
+import org.testdwr.convert.StrangeNameWithPackageObject;
+import org.testdwr.convert.TwoPackagesObject;
 import org.testdwr.convert.wildcards.flat.WildcardObjectContainer;
 import org.testdwr.convert.wildcards.recursive.WildcardRecursiveObjectContainer;
 import org.testdwr.event.Test2ScriptSessionListener;
@@ -908,16 +912,18 @@ public class Test
 
     public ObjectWithLightClassMapping downloadLightlyMapped()
     {
-        return new ObjectWithLightClassMapping();
+        ObjectWithLightClassMapping lightObj = new ObjectWithLightClassMapping();
+        lightObj.obj = new ObjectWithLightClassMapping();
+        lightObj.array = new ObjectWithLightClassMapping[] { new ObjectWithLightClassMapping() };
+        return lightObj;
     }
 
-    public String uploadLightlyMapped(ObjectWithLightClassMapping lightObj)
+    public boolean uploadLightlyMapped(ObjectWithLightClassMapping lightObj)
     {
-        if (lightObj == null)
-        {
-            return "null";
-        }
-        return lightObj.getClass().getName();
+        Assert.assertSame(lightObj.getClass(), ObjectWithLightClassMapping.class);
+        Assert.assertSame(lightObj.obj.getClass(), ObjectWithLightClassMapping.class);
+        Assert.assertSame(lightObj.array[0].getClass(), ObjectWithLightClassMapping.class);
+        return true;
     }
 
     public ConcreteIFace readOnlyProperty()
@@ -947,13 +953,13 @@ public class Test
         return impl.getClass().getName();
     }
 
-    public OnePackage package1(OnePackage obj)
+    public OnePackageObject package1(OnePackageObject obj)
     {
         obj.i++;
         return obj;
     }
 
-    public TwoPackages package2(TwoPackages obj)
+    public TwoPackagesObject package2(TwoPackagesObject obj)
     {
         obj.i++;
         return obj;
@@ -964,8 +970,6 @@ public class Test
         throw new MyFancyExceptionInPackage("fancy");
     }
 
-    // --- Converter wildcard checks
-    
     public WildcardObjectContainer flatWildcardObjects(WildcardObjectContainer in)
     {
         return in;
@@ -976,8 +980,18 @@ public class Test
         return in;
     }
 
-    // --- End converter wildcard checks
-    
+    public StrangeNameObject strangeName(StrangeNameObject obj)
+    {
+        obj.i++;
+        return obj;
+    }
+
+    public StrangeNameWithPackageObject strangeNameWithPackage(StrangeNameWithPackageObject obj)
+    {
+        obj.i++;
+        return obj;
+    }
+
     public String serverChecks()
     {
         ScriptSession scriptSession = WebContextFactory.get().getScriptSession();
