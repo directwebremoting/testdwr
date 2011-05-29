@@ -13,13 +13,13 @@
     </create>
     
     <create creator="script" javascript="TestScriptedSingleton">
-	  <param name="language" value="beanshell"/>	    
-	  <param name="class" value="org.testdwr.plain.TestScriptedSingleton"/>
-	  <param name="script">
-	    import org.testdwr.plain.TestScriptedSingleton;
-	    return TestScriptedSingleton.getInstance();
-	  </param>
-  	</create>
+      <param name="language" value="beanshell"/>        
+      <param name="class" value="org.testdwr.plain.TestScriptedSingleton"/>
+      <param name="script">
+        import org.testdwr.plain.TestScriptedSingleton;
+        return TestScriptedSingleton.getInstance();
+      </param>
+    </create>
     
     <create creator="new" javascript="Test" scope="application">
       <param name="class" value="org.testdwr.plain.Test"/>
@@ -51,6 +51,33 @@
       <param name="class" value="org.testdwr.security.CreatorMethodAccess"/>
     </create>
 
+    <!-- JavaScript package names -->
+    <create creator="new" javascript="pkg1.onePackageCreator">
+      <param name="class" value="org.testdwr.plain.Test"/>
+    </create>    
+    <create creator="new" javascript="pkg1.pkg2.twoPackagesCreator">
+      <param name="class" value="org.testdwr.plain.Test"/>
+    </create>    
+
+    <!-- Wildcard matching -->
+    <create creator="new" javascript="prefix*Suffix">
+      <param name="class" value="org.testdwr.plain.Test"/>
+    </create>    
+    <create creator="new" javascript="otherpackage.*">
+      <param name="class" value="org.testdwr.plain.Test"/>
+    </create>    
+    <create creator="new" javascript="**">
+      <param name="class" value="org.testdwr.plain.Test"/>
+    </create>    
+    
+    <!-- Strange JavaScript names -->
+    <create creator="new" javascript="!@$/()=+,:-_">
+      <param name="class" value="org.testdwr.plain.Test"/>
+    </create>    
+    <create creator="new" javascript="pkg.!@$/()=+,:-_.!@$/()=+,:-_">
+      <param name="class" value="org.testdwr.plain.Test"/>
+    </create>    
+
     <convert converter="map" match="java.util.Map">
       <param name="nullKey" value="null"/>
     </convert>    
@@ -74,8 +101,8 @@
     <convert match="org.testdwr.convert.ConcreteIFace" converter="bean" javascript="ConcreteIFace"/>
 
     <!-- JavaScript package names -->
-    <convert match="org.testdwr.convert.OnePackage" converter="object" javascript="pkg1.OnePackage"/>
-    <convert match="org.testdwr.convert.TwoPackages" converter="object" javascript="pkg1.pkg2.TwoPackages"/>
+    <convert match="org.testdwr.convert.OnePackageObject" converter="object" javascript="pkg1.OnePackageObject"/>
+    <convert match="org.testdwr.convert.TwoPackagesObject" converter="object" javascript="pkg1.pkg2.TwoPackagesObject"/>
     
     <!-- Wildcard matching -->
     <convert match="org.testdwr.convert.wildcards.flat.WildcardObjectContainer" converter="object"/>
@@ -90,6 +117,10 @@
     <convert match="org.testdwr.convert.wildcards.recursive.extendedname.**" converter="object" javascript="Prefix*Suffix"/>
     <convert match="org.testdwr.convert.wildcards.recursive.samepackage.**" converter="object" javascript="**"/>
     <convert match="org.testdwr.convert.wildcards.recursive.otherpackage.**" converter="object" javascript="otherpackage.*"/>
+
+    <!-- Strange JavaScript names -->
+    <convert match="org.testdwr.convert.StrangeNameObject" converter="object" javascript="!@$/()=+,:-_Object"/>
+    <convert match="org.testdwr.convert.StrangeNameWithPackageObject" converter="object" javascript="pkg.!@$/()=+,:-_Package.!@$/()=+,:-_Object"/>
 
     <convert match="org.testdwr.convert.generics.Command" converter="bean"/>
     <convert match="org.testdwr.convert.generics.ConcreteCommand" converter="bean"/>

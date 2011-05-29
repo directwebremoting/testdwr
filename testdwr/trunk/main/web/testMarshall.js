@@ -801,7 +801,7 @@ window.testMarshallUploadInterface = function() {
  *
  */
 window.testMarshallPackage1 = function() {
-  var obj = new pkg1.OnePackage();
+  var obj = new pkg1.OnePackageObject();
   obj.i = 42;
   obj.extraProperty = "THIS TEXT SHOULDN'T BE MARSHALLED TO SERVER";
 
@@ -814,7 +814,7 @@ window.testMarshallPackage1 = function() {
  *
  */
 window.testMarshallPackage2 = function() {
-  var obj = new pkg1.pkg2.TwoPackages();
+  var obj = new pkg1.pkg2.TwoPackagesObject();
   obj.i = 42;
 
   Test.package2(obj, createOptions(function(retval) {
@@ -837,8 +837,6 @@ window.testMarshallPackagedEx = function() {
     })
   });
 };
-
-// --- Converter wildcard checks
 
 /**
  * 
@@ -892,8 +890,6 @@ window.testMarshallConverterWildcardsRecursive = function() {
   );
 };
 
-// --- End converter wildcard checks
-
 /**
  *
  */
@@ -902,22 +898,54 @@ window.testMarshallLightClassMapping = function() {
   // generated mapped JavaScript class for our objects. We remove any trace
   // of the class in case it has been included:
   if (typeof this.ObjectWithLightClassMapping == "function") {
-    delete ObjectWithLightClassMapping;
+    ObjectWithLightClassMapping = undefined; // would like to delete but IE has problems with that
     delete dwr.engine._mappedClasses["ObjectWithLightClassMapping"];
   }
 
   // We should add type as object property for light class-mapping
-  var obj = {$dwrClassName:"ObjectWithLightClassMapping"};
-
+  var obj = {
+    obj: {$dwrClassName:"ObjectWithLightClassMapping"},
+    array: [{$dwrClassName:"ObjectWithLightClassMapping"}],
+    $dwrClassName:"ObjectWithLightClassMapping"
+  };
   Test.uploadLightlyMapped(obj, createOptions(function(reply) {
-    verifyEqual(reply, "org.testdwr.convert.ObjectWithLightClassMapping");
+    verifyEqual(reply, true);
   }));
 
   Test.downloadLightlyMapped(createOptions(function(reply) {
     verifyEqual(reply.$dwrClassName, "ObjectWithLightClassMapping");
+    verifyEqual(reply.obj.$dwrClassName, "ObjectWithLightClassMapping");
+    verifyEqual(reply.array[0].$dwrClassName, "ObjectWithLightClassMapping");
   }));
 };
 
+/**
+*
+*/
+window.testMarshallStrangeName = function() {
+  var clazz = window["!@$/()=+,:-_Object"];
+  var obj = new clazz();
+  obj.i = 42;
+
+  Test.strangeName(obj, createOptions(function(retval) {
+    verifyEqual(retval.i, 43);
+    verifyTrue(retval instanceof clazz);
+  }));
+};
+
+/**
+*
+*/
+window.testMarshallStrangeNameWithPackage = function() {
+  var clazz = window.pkg["!@$/()=+,:-_Package"]["!@$/()=+,:-_Object"];
+  var obj = new clazz();
+  obj.i = 42;
+
+  Test.strangeNameWithPackage(obj, createOptions(function(retval) {
+    verifyEqual(retval.i, 43);
+    verifyTrue(retval instanceof clazz);
+  }));
+};
 
 /**
  *
