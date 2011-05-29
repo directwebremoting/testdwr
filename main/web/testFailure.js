@@ -10,10 +10,10 @@ createTestGroup("Fail");
  * 
  */
 window.testFailEnforceTypesOnMappedArguments = function() {
-  var obj = new pkg1.OnePackage();
+  var obj = new pkg1.OnePackageObject();
 
   // Note that we are sending an argument with the wrong type to this method!
-  // Either a TwoPackages object or an untyped object should be marshalled and 
+  // Either a TwoPackagesObject object or an untyped object should be marshalled and 
   // run for this method, but not a mapped object of the wrong class.
   Test.package2(obj, {
     callback:createDelayedError(),
