@@ -3,9 +3,39 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
   <link type="text/css" href="dwrunit/index.css" rel="stylesheet" />
+  
+  <!-- Libraries -->
+
+  <script type='text/javascript'>
+    var djConfig = {
+	  modulePaths: {
+	    "dwralt": "../dwralt/dojo",
+	    "interface": "../dwralt/dojo/interface",
+	    "dto": "../dwralt/dojo/dto"
+	  }
+	};  
+  </script>
+  <script type='text/javascript' src='lib/dojo.js'> </script>
+  
+  <script type='text/javascript'>
+    var require = {
+      paths: {
+	    "dwralt": "dwralt/commonjs/amd",
+	    "interface": "dwralt/commonjs/amd/interface",
+	    "dto": "dwralt/commonjs/amd/dto"
+	  }
+    };
+  </script>
+  <script type='text/javascript' src='lib/require.js'> </script>
+  
+  <!-- Test framework -->
+
   <script type='text/javascript' src='common.js'> </script>
   <script type='text/javascript' src='dwrunit/index.js'> </script>
+
+  <!-- Test files -->
   <!-- See testdwr/readme.txt for help on writing tests -->
+
   <script type='text/javascript' src='./dwr/engine.js'> </script>
   <script type='text/javascript' src='./dwr/util.js'> </script>
   <script type='text/javascript' src='./dwr/interface/Test.js'> </script>
@@ -35,6 +65,7 @@
   <script type='text/javascript' src='testFailure.js'> </script>
   <script type='text/javascript' src='testBinary.js'> </script>
   <script type='text/javascript' src='testDwrUtil.js'> </script>
+  <script type='text/javascript' src='testModuleSystems.js'> </script>
 
   <script type='text/javascript' src='./springservlet/interface/SpringServletTest.js'> </script>
   <script type='text/javascript' src='testSpringServlet.js'> </script>
