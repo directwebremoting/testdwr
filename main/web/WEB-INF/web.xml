@@ -62,6 +62,10 @@
       <param-name>ContainerType</param-name>
       <param-value>DwrServlet</param-value>
     </init-param>
+    <init-param>
+      <param-name>generateDtoClasses</param-name>
+      <param-value>interface, dto, dtoall</param-value>
+    </init-param>
     <!--
     <init-param>
       <param-name>org.directwebremoting.Container</param-name>
@@ -75,6 +79,41 @@
     <init-param>
       <param-name>allowScriptTagRemoting</param-name>
       <param-value>true</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <!-- Part of alternative module system tests -->
+  <servlet>
+    <servlet-name>dwralt</servlet-name>
+    <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>generateDtoClasses</param-name>
+      <param-value>interface, dto, dtoall</param-value>
+    </init-param>
+    <init-param>
+      <param-name>commonJsAmdDwrBaseModulePath</param-name>
+      <param-value>${servletPath}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>commonJsAmdDtoBaseModulePath</param-name>
+      <param-value>dto</param-value>
+    </init-param>
+    <init-param>
+      <param-name>dojoDwrBaseModulePath</param-name>
+      <param-value>${servletPath}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>dojoInterfaceBaseModulePath</param-name>
+      <param-value>interface</param-value>
+    </init-param>
+    <init-param>
+      <param-name>dojoDtoBaseModulePath</param-name>
+      <param-value>dto</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -129,6 +168,12 @@
   <servlet-mapping>
     <servlet-name>dwr</servlet-name>
     <url-pattern>/dwr/*</url-pattern>
+  </servlet-mapping>
+
+  <!-- Part of alternative module system tests -->
+  <servlet-mapping>
+    <servlet-name>dwralt</servlet-name>
+    <url-pattern>/dwralt/*</url-pattern>
   </servlet-mapping>
 
   <!-- Part of bayeux -->
