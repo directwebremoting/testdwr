@@ -92,7 +92,7 @@ window.testErrorLevels = function() {
  */
 window.testError404Handling = function() {
   var oldPath = Test._path;
-  Test._path = "/thisPathDoesNotExist/dwr";
+  Test._path = oldPath + "/thisPathDoesNotExist/dwr";
   Test.intParam(1, {
     callback:createDelayedError(),
     errorHandler:createDelayed(function(message, ex) {
