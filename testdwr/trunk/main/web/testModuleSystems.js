@@ -2,18 +2,18 @@
 createTestGroup("ModuleSystems");
 
 // Tests when AMD loader mapped on application root (default) implying that
-// modules are addressed with <servletpath>/commonjs/amd/ base.
-window.testModuleSystemsCommonJsAmdStandardMapping = function() {
-  _moduleSystemsCommonJsAmd("dwr/commonjs/amd", "dwr/commonjs/amd/interface", "dwr/commonjs/amd/dto");
+// modules are addressed with <servletpath>/amd/ base.
+window.testModuleSystemsAmdStandardMapping = function() {
+  _moduleSystemsAmd("dwr/amd", "dwr/amd/interface", "dwr/amd/dto");
 };
 
 // Tests when AMD loader mapped inside the DWR URL space to provide a custom
 // module namespace.
-window.testModuleSystemsCommonJsAmdCustomMapping = function() {
-	_moduleSystemsCommonJsAmd("dwralt", "interface", "dto");
+window.testModuleSystemsAmdCustomMapping = function() {
+	_moduleSystemsAmd("dwralt", "interface", "dto");
 };
 
-function _moduleSystemsCommonJsAmd(dwrmap, ifcmap, dtomap) {
+function _moduleSystemsAmd(dwrmap, ifcmap, dtomap) {
   // Note: we need to create the call options object outside the module system's
   // asynchronous wrapper function as the dwrunit framework depends on these
   // objects being created before exiting the main function

@@ -96,11 +96,11 @@
       <param-value>interface, dto, dtoall</param-value>
     </init-param>
     <init-param>
-      <param-name>commonJsAmdDwrBaseModulePath</param-name>
+      <param-name>amdDwrBaseModulePath</param-name>
       <param-value>${servletPath}</param-value>
     </init-param>
     <init-param>
-      <param-name>commonJsAmdDtoBaseModulePath</param-name>
+      <param-name>amdDtoBaseModulePath</param-name>
       <param-value>dto</param-value>
     </init-param>
     <init-param>
