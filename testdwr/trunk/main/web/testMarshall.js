@@ -104,7 +104,7 @@ window.testMarshallStringBeanVarArgs = function() {
   Test.testStringBeanVarArgs("1", nested, createOptions(function (data) {
     verifyEqual(data, [ nested ]);
   }));
-  Test.testStringBeanVarArgs("1" nested, nested, createOptions(function (data) {
+  Test.testStringBeanVarArgs("1", nested, nested, createOptions(function (data) {
     verifyEqual(data, [ nested ]);
   }));
   dwr.engine.endBatch({
