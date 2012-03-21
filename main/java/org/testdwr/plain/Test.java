@@ -672,6 +672,10 @@ public class Test
     {
         return value;
     }
+    
+    public TestBean[] testStringBeanVarArgs(String value, TestBean... testBean) {
+    	return testBean;
+    }
 
     public class InnerSubTestBean extends TestBean
     {
