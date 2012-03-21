@@ -101,17 +101,11 @@ window.testMarshallBeanVarArgs = function() {
 
 window.testMarshallStringBeanVarArgs = function() {
   dwr.engine.beginBatch();
-  Test.testStringBeanVarArgs(createOptions(function (data) {
-    verifyEqual(data, [ ]);
-  }));
-  Test.testStringBeanVarArgs(nested, createOptions(function (data) {
+  Test.testStringBeanVarArgs("1", nested, createOptions(function (data) {
     verifyEqual(data, [ nested ]);
   }));
-  Test.testStringBeanVarArgs(nested, nested, createOptions(function (data) {
-    verifyEqual(data, [ nested, nested ]);
-  }));
-  Test.testStringBeanVarArgs(nested, nested, nested, createOptions(function (data) {
-    verifyEqual(data, [ nested, nested, nested ]);
+  Test.testStringBeanVarArgs("1" nested, nested, createOptions(function (data) {
+    verifyEqual(data, [ nested ]);
   }));
   dwr.engine.endBatch({
     errorHandler:createDelayedError()
