@@ -99,7 +99,7 @@ window.testMarshallBeanVarArgs = function() {
   });
 };
 
-window.testStringBeanVarArgs = function() {
+window.testMarshallStringBeanVarArgs = function() {
   dwr.engine.beginBatch();
   Test.testStringBeanVarArgs(createOptions(function (data) {
     verifyEqual(data, [ ]);
