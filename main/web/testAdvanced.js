@@ -15,7 +15,7 @@ window.testAdvancedMemoryLeaks = function(count) {
     var next = count + 1;
     Test.doNothing(function() {
       setTimeout(function() {
-        testMemoryLeaks(next);
+        testAdvancedMemoryLeaks(next);
       }, 0);
     });
   }
