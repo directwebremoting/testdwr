@@ -103,7 +103,7 @@ window.testMarshallStringBeanVarArgs = function() {
     verifyEqual(data, [ nested ]);
   }));
   Test.testStringBeanVarArgs("1", nested, nested, waitDwrCallbackOptions(function (data) {
-    verifyEqual(data, [ nested ]);
+    verifyEqual(data, [ nested, nested ]);
   }));
   dwr.engine.endBatch();
 };

@@ -7,7 +7,7 @@
       <fileset dir="${basedir}/etc/ant" includes="**/*"/>
     </classpath>
   </taskdef>
-  <property name="dwr.home" value="${basedir}/../dwr"/>
+  <property name="dwr.home" value="${basedir}/../dwr_trunk"/>
   <property name="downloads" value="${basedir}/downloads"/>
   <property name="servers" value="${basedir}/servers"/>
   <property name="target" value="${basedir}/target/ant"/>
@@ -23,14 +23,14 @@
     <copy file="${dwr.home}/target/ant/dwr.jar" todir="${basedir}/main/web/WEB-INF/lib"/>
     <copy file="${dwr.home}/target/ant/junitdwr.jar" todir="${basedir}/main/web/WEB-INF/lib"/>
     <mkdir dir="${basedir}/main/web/WEB-INF/classes"/>
-    <javac debug="on" destdir="${basedir}/main/web/WEB-INF/classes" srcdir="${basedir}/main/java" includes="**/*.java" excludes="**/package-info.java">
+    <javac debug="on" destdir="${basedir}/main/web/WEB-INF/classes" srcdir="${basedir}/main/java" includes="**/*.java" includeantruntime="false" excludes="**/package-info.java">
       <classpath>
         <fileset dir="${basedir}/main/lib" includes="**/*.jar"/>
         <fileset dir="${basedir}/main/web/WEB-INF/lib" includes="**/*.jar"/>
       </classpath>
     </javac>
     <mkdir dir="${target}/launch"/>
-    <javac debug="on" destdir="${target}/launch" srcdir="${basedir}/main/launch" includes="**/*.java" excludes="**/package-info.java">
+    <javac debug="on" destdir="${target}/launch" srcdir="${basedir}/main/launch" includes="**/*.java" includeantruntime="false" excludes="**/package-info.java">
       <classpath>
         <fileset dir="${basedir}/main/lib" includes="**/*.jar"/>
         <fileset dir="${basedir}/main/web/WEB-INF/lib" includes="**/*.jar"/>
