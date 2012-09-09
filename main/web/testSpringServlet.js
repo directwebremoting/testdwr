@@ -115,15 +115,14 @@ function runSpringServletComparisonTests(compares) {
   for (var i = 0; i < compares.length; i++) (function(i) {
     var compare = compares[i];
 
-    SpringServletTest[compare.code](compare.data, {
-      callback:createDelayed(function(data) {
+    SpringServletTest[compare.code](compare.data, waitDwrCallbackOptions(
+	  function(data) {
         assertEqual(data, compare.data);
-      }),
-      exceptionHandler:createDelayedError()
-    });
+      }
+    ));
   })(i)
 }
 
 window.testSpringServletCheckContext = function() {
-  SpringServletTest.checkContext(common.getContextPath(), createVerifyCallback());
+  SpringServletTest.checkContext(common.getContextPath(), waitDwrVerifyCallbackOptions());
 };

@@ -2,114 +2,110 @@
 createTestGroup("Marshall");
 
 window.testMarshallComplexNull = function() {
-  Test.testComplex(createOptions(function (data) {
+  Test.testComplex(waitDwrCallbackOptions(function (data) {
     verifyNull(data);
   }));
 };
 
 window.testMarshallComplex = function() {
-  Test.testComplex([], createOptions(function (data) {
+  Test.testComplex([], waitDwrCallbackOptions(function (data) {
     verifyEqual(data, []);
   }));
-  Test.testComplex([[]], createOptions(function (data) {
+  Test.testComplex([[]], waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [[]]);
   }));
-  Test.testComplex([[], []], createOptions(function (data) {
+  Test.testComplex([[], []], waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [[], []]);
   }));
-  Test.testComplex([[{}]], createOptions(function (data) {
+  Test.testComplex([[{}]], waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [[{}]]);
   }));
-  Test.testComplex([[{}], [{}]], createOptions(function (data) {
+  Test.testComplex([[{}], [{}]], waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [[{}], [{}]]);
   }));
-  Test.testComplex([[{"a":nested}]], createOptions(function (data) {
+  Test.testComplex([[{"a":nested}]], waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [[{"a":nested}]]);
   }));
 };
 
 window.testMarshallComplexDeep = function() {
-  Test.testComplex([[{}, {}], [{}, {}]], createOptions(function (data) {
+  Test.testComplex([[{}, {}], [{}, {}]], waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [[{}, {}], [{}, {}]]);
   }));
-  Test.testComplex([[{}, {"a":nested}], [{"b":nested}, {"a":nested, "c":nested}]], createOptions(function (data) {
+  Test.testComplex([[{}, {"a":nested}], [{"b":nested}, {"a":nested, "c":nested}]], waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [[{}, {"a":nested}], [{"b":nested}, {"a":nested, "c":nested}]]);
   }));
 };
 
 window.testMarshallOverloaded = function() {
-	  Test.dangerOverload("param1", 1, createOptions(function (data) {
+	  Test.dangerOverload("param1", 1, waitDwrCallbackOptions(function (data) {
 	    verifyEqual(data, "param1,1");
 	  }));
-	  Test.dangerOverload("param1", createOptions(function (data) {
+	  Test.dangerOverload("param1", waitDwrCallbackOptions(function (data) {
 	    verifyEqual(data, "param1");
 	  }));
-	  Test.dangerOverload(createOptions(function (data) {
+	  Test.dangerOverload(waitDwrCallbackOptions(function (data) {
 		verifyEqual(data, "hello");
 	  }));
-	  Test.dangerOverload(["param1"], createOptions(function (data) {
+	  Test.dangerOverload(["param1"], waitDwrCallbackOptions(function (data) {
 	    verifyEqual(data, "helloarray");
 	  }));
-	  Test.dangerOverload({string: "param1"}, createOptions(function (data) {
+	  Test.dangerOverload({string: "param1"}, waitDwrCallbackOptions(function (data) {
 	    verifyEqual(data, "hellotestbean");
 	  }));
-	  Test.dangerOverload(1, createOptions(function (data) {
+	  Test.dangerOverload(1, waitDwrCallbackOptions(function (data) {
 	    verifyEqual(data, "1");
 	  }));
 	};
 
 
 window.testMarshallStringVarArgsEmpty = function() {
-  Test.stringVarArgs(createOptions(function (data) {
+  Test.stringVarArgs(waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [ ]);
   }));
 };
 
 window.testMarshallStringVarArgsSingle = function() {
-  Test.stringVarArgs("1", createOptions(function (data) {
+  Test.stringVarArgs("1", waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [ "1" ]);
   }));
 };
 
 window.testMarshallStringVarArgsMultiple = function() {
-  Test.stringVarArgs("1", "2", createOptions(function (data) {
+  Test.stringVarArgs("1", "2", waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [ "1", "2" ]);
   }));
-  Test.stringVarArgs("1", "2", "3", createOptions(function (data) {
+  Test.stringVarArgs("1", "2", "3", waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [ "1", "2", "3" ]);
   }));
 };
 
 window.testMarshallBeanVarArgs = function() {
   dwr.engine.beginBatch();
-  Test.testBeanVarArgs(createOptions(function (data) {
+  Test.testBeanVarArgs(waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [ ]);
   }));
-  Test.testBeanVarArgs(nested, createOptions(function (data) {
+  Test.testBeanVarArgs(nested, waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [ nested ]);
   }));
-  Test.testBeanVarArgs(nested, nested, createOptions(function (data) {
+  Test.testBeanVarArgs(nested, nested, waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [ nested, nested ]);
   }));
-  Test.testBeanVarArgs(nested, nested, nested, createOptions(function (data) {
+  Test.testBeanVarArgs(nested, nested, nested, waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [ nested, nested, nested ]);
   }));
-  dwr.engine.endBatch({
-   errorHandler:createDelayedError()
-  });
+  dwr.engine.endBatch();
 };
 
 window.testMarshallStringBeanVarArgs = function() {
   dwr.engine.beginBatch();
-  Test.testStringBeanVarArgs("1", nested, createOptions(function (data) {
+  Test.testStringBeanVarArgs("1", nested, waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [ nested ]);
   }));
-  Test.testStringBeanVarArgs("1", nested, nested, createOptions(function (data) {
+  Test.testStringBeanVarArgs("1", nested, nested, waitDwrCallbackOptions(function (data) {
     verifyEqual(data, [ nested ]);
   }));
-  dwr.engine.endBatch({
-    errorHandler:createDelayedError()
-  });
+  dwr.engine.endBatch();
 };
 
 window.testMarshallByteParam = function() {
@@ -386,7 +382,7 @@ window.testMarshallFloatArrayParam = function() {
   ]);
 };
 
-window.testConsecutiveCalls = function() {
+window.testMarshallConsecutiveCalls = function() {
   runComparisonTests([
     { code:"stringArrayParam", data:[ "first", "second", "third", "fourth", "fifth"] },
     { code:"stringArrayParam", data:[ "second", "first", "third", "fourth", "fifth" ] },
@@ -459,7 +455,7 @@ window.testMarshallTestBeanSetParam = function() {
 };
 
 window.testMarshallTestEmptyListParams = function() {
-  Test.testEmptyListParams([], [], createOptions(function(retval) {
+  Test.testEmptyListParams([], [], waitDwrCallbackOptions(function(retval) {
     verifyTrue(retval.match(/error/i) == null);
   }));
 };
@@ -642,14 +638,14 @@ window.testMarshallStringStringMapParam = function() {
 };
 
 window.testMarshallStringArrayMapParam = function() {
-  Test.stringArrayMapParam(map3, createOptions(function (data) {
+  Test.stringArrayMapParam(map3, waitDwrCallbackOptions(function (data) {
     verifyEqual(data, map3);
   }));
 };
 
 window.testMarshallStringBeanArrayMapParam = function() {
   var map = {a: [{ integer:1, string:'0987654321', testBean:nested}, {integer:2, string:'012345678', testBean:nested}]};
-  Test.stringBeanArrayMapParam(map, createOptions(function (data) {
+  Test.stringBeanArrayMapParam(map, waitDwrCallbackOptions(function (data) {
     verifyEqual(data, map);
   }));
 };
@@ -662,7 +658,7 @@ window.testMarshallStringBooleanMapParam = function() {
 
 window.testMarshallNullKeyHashMap = function() {
     var nullMap = {"null" : true};
-    Test.nullKeyMap(createOptions(function (data) {
+    Test.nullKeyMap(waitDwrCallbackOptions(function (data) {
       verifyEqual(data, nullMap);
     }));
 }
@@ -687,7 +683,7 @@ window.testMarshallStringStringTreeMapParam = function() {
 function runComparisonTests(compares) {
   for (var i = 0; i < compares.length; i++) (function(i) {
     var compare = compares[i];
-    Test[compare.code](compare.data, createOptions(function(data) {
+    Test[compare.code](compare.data, waitDwrCallbackOptions(function(data) {
       verifyEqual(data, compare.data);
     }));
   })(i)
@@ -695,7 +691,7 @@ function runComparisonTests(compares) {
 
 window.testMarshallDomElementParam = function() {
   var testHtml = '<p id="test">This is a <em>test node</em> to check on <strong>DOM</strong> <span class="small">manipulation</span>.</p>';
-  dwr.util.setValue(currentTest.scratch, testHtml, { escapeHtml:false });
+  useHtml(testHtml);
   var testNode = dwr.util.byId("test");
   var nodeCompare = function(data) {
     var output;
@@ -710,17 +706,17 @@ window.testMarshallDomElementParam = function() {
     verifyEqual(output, compare);
   };
 
-  Test.dom4jElementParam(testNode, createOptions(nodeCompare));
-  Test.xomElementParam(testNode, createOptions(nodeCompare));
-  Test.jdomElementParam(testNode, createOptions(nodeCompare));
-  Test.domElementParam(testNode, createOptions(nodeCompare));
+  Test.dom4jElementParam(testNode, waitDwrCallbackOptions(nodeCompare));
+  Test.xomElementParam(testNode, waitDwrCallbackOptions(nodeCompare));
+  Test.jdomElementParam(testNode, waitDwrCallbackOptions(nodeCompare));
+  Test.domElementParam(testNode, waitDwrCallbackOptions(nodeCompare));
 };
 
 /**
  *
  */
 window.testMarshallDownloadMappedWithInheritance = function() {
-  Test.downloadMapped(createOptions(function(arr) {
+  Test.downloadMapped(waitDwrCallbackOptions(function(arr) {
     var b = arr[0];
     verifyTrue(b instanceof AbstractBase, "b instanceof AbstractBase");
     verifyTrue(b instanceof ConcreteBBase, "b instanceof ConcreteBBase");
@@ -739,13 +735,13 @@ window.testMarshallDownloadMappedWithInheritance = function() {
  *
  */
 window.testMarshallUploadMapped = function() {
-  Test.uploadMapped(new ConcreteBBase(), createOptions(function(reply) {
+  Test.uploadMapped(new ConcreteBBase(), waitDwrCallbackOptions(function(reply) {
     verifyEqual(reply, "org.testdwr.convert.ConcreteBBase");
   }));
-  Test.uploadMapped(new ConcreteCBase(), createOptions(function(reply) {
+  Test.uploadMapped(new ConcreteCBase(), waitDwrCallbackOptions(function(reply) {
     verifyEqual(reply, "org.testdwr.convert.ConcreteCBase");
   }));
-  Test.uploadMapped(null, createOptions(function(reply) {
+  Test.uploadMapped(null, waitDwrCallbackOptions(function(reply) {
     verifyEqual(reply, "null");
   }));
 };
@@ -754,13 +750,13 @@ window.testMarshallUploadMapped = function() {
  *
  */
 window.testMarshallUploadMappedToUnmappedParamClass = function() {
-  Test.uploadMappedToUnmappedParamClass(new ConcreteBBase(), createOptions(function(reply) {
+  Test.uploadMappedToUnmappedParamClass(new ConcreteBBase(), waitDwrCallbackOptions(function(reply) {
     verifyEqual(reply, "org.testdwr.convert.ConcreteBBase");
   }));
-  Test.uploadMappedToUnmappedParamClass(new ConcreteCBase(), createOptions(function(reply) {
+  Test.uploadMappedToUnmappedParamClass(new ConcreteCBase(), waitDwrCallbackOptions(function(reply) {
     verifyEqual(reply, "org.testdwr.convert.ConcreteCBase");
   }));
-  // Test.uploadMappedToUnmappedParamClass(null, createOptions(function(reply) {
+  // Test.uploadMappedToUnmappedParamClass(null, waitDwrCallbackOptions(function(reply) {
   //   verifyEqual(reply, "null");
   // }));
 };
@@ -769,30 +765,23 @@ window.testMarshallUploadMappedToUnmappedParamClass = function() {
  * Receive a mapped exception from server
  */
 window.testMarshallThrowMapped = function() {
-  Test.throwMapped({
-    callback:createDelayedError(),
-    exceptionHandler:createDelayed(function(message, ex) {
-      verifyTrue(ex instanceof MyFancyException);
-      verifyEqual(message, "fancy");
-      verifyEqual(message, ex.message);
-      verifyEqual(ex.javaClassName, "org.testdwr.convert.MyFancyException");
-    })
-  });
+  Test.throwMapped(waitDwrExceptionHandlerOptions(function(message, ex) {
+    verifyTrue(ex instanceof MyFancyException);
+    verifyEqual(message, "fancy");
+    verifyEqual(message, ex.message);
+    verifyEqual(ex.javaClassName, "org.testdwr.convert.MyFancyException");
+  }));
 };
 
 /**
  *
  */
 window.testMarshallThrowUnmapped = function() {
-  Test.throwUnmapped({
-    callback:createDelayedError(),
-    exceptionHandler:createDelayed(function(message, ex) {
-      verifyFalse(ex instanceof MyFancyException);
-      verifyNotEqual(message, "Error");
-      verifyEqual(message, ex.message);
-      verifyEqual(ex.javaClassName, "java.lang.Throwable");
-    })
-  });
+  Test.throwUnmapped(waitDwrExceptionHandlerOptions(function(message, ex) {
+    verifyFalse(ex instanceof MyFancyException);
+    verifyEqual(message, ex.message);
+    verifyEqual(ex.javaClassName, "java.lang.Throwable");
+  }));
 };
 
 /**
@@ -801,11 +790,11 @@ window.testMarshallThrowUnmapped = function() {
 window.testMarshallUploadInterface = function() {
   var c = new ConcreteIFace();
   c.i = 42;
-  Test.uploadInterface(c, createOptions(function(reply) {
+  Test.uploadInterface(c, waitDwrCallbackOptions(function(reply) {
     verifyEqual(reply, "org.testdwr.convert.ConcreteIFace");
   }));
 
-  Test.uploadInterface(null, createOptions(function(reply) {
+  Test.uploadInterface(null, waitDwrCallbackOptions(function(reply) {
     verifyEqual(reply, "null");
   }));
 };
@@ -818,7 +807,7 @@ window.testMarshallPackage1 = function() {
   obj.i = 42;
   obj.extraProperty = "THIS TEXT SHOULDN'T BE MARSHALLED TO SERVER";
 
-  Test.package1(obj, createOptions(function(retval) {
+  Test.package1(obj, waitDwrCallbackOptions(function(retval) {
     verifyEqual(retval.i, 43);
   }));
 };
@@ -830,7 +819,7 @@ window.testMarshallPackage2 = function() {
   var obj = new pkg1.pkg2.TwoPackagesObject();
   obj.i = 42;
 
-  Test.package2(obj, createOptions(function(retval) {
+  Test.package2(obj, waitDwrCallbackOptions(function(retval) {
     verifyEqual(retval.i, 43);
   }));
 };
@@ -839,16 +828,12 @@ window.testMarshallPackage2 = function() {
  *
  */
 window.testMarshallPackagedEx = function() {
-  Test.packagedException({
-    callback:createDelayedError(),
-    exceptionHandler: createDelayed(function(message, ex) {
-      verifyFalse(ex instanceof MyFancyException);
-      verifyNotEqual(message, "fancy");
-      verifyEqual(message, ex.message);
-      verifyEqual(ex.javaClassName, "org.testdwr.convert.MyFancyExceptionInPackage");
-      //verifyEqual(ex.javaClassName, "pkg1.MyFancyExceptionInPackage");
-    })
-  });
+  Test.packagedException(waitDwrExceptionHandlerOptions(function(message, ex) {
+    verifyFalse(ex instanceof MyFancyException);
+    verifyEqual(message, ex.message);
+    verifyEqual(ex.javaClassName, "org.testdwr.convert.MyFancyExceptionInPackage");
+    //verifyEqual(ex.javaClassName, "pkg1.MyFancyExceptionInPackage");
+  }));
 };
 
 /**
@@ -863,7 +848,7 @@ window.testMarshallConverterWildcards = function() {
       samepackage:  org.testdwr.convert.wildcards.flat.samepackage.WildcardObject.createFromMap({i:4}),
       otherpackage: otherpackage.WildcardObject.createFromMap({i:5})
     },
-    createOptions(function(reply) {
+    waitDwrCallbackOptions(function(reply) {
       verifyEqual(reply.noname.i, 1);
       verifyEqual(reply.samename.i, 2);
       verifyTrue(reply.samename instanceof WildcardObject);
@@ -889,7 +874,7 @@ window.testMarshallConverterWildcardsRecursive = function() {
       samepackage:  org.testdwr.convert.wildcards.recursive.samepackage.subpkg.WildcardSubObject.createFromMap({i:4}),
       otherpackage: otherpackage.WildcardSubObject.createFromMap({i:5})
     },
-    createOptions(function(reply) {
+    waitDwrCallbackOptions(function(reply) {
       verifyEqual(reply.noname.i, 1);
       verifyEqual(reply.samename.i, 2);
       verifyTrue(reply.samename instanceof WildcardSubObject);
@@ -921,11 +906,11 @@ window.testMarshallLightClassMapping = function() {
     array: [{$dwrClassName:"ObjectWithLightClassMapping"}],
     $dwrClassName:"ObjectWithLightClassMapping"
   };
-  Test.uploadLightlyMapped(obj, createOptions(function(reply) {
+  Test.uploadLightlyMapped(obj, waitDwrCallbackOptions(function(reply) {
     verifyEqual(reply, true);
   }));
 
-  Test.downloadLightlyMapped(createOptions(function(reply) {
+  Test.downloadLightlyMapped(waitDwrCallbackOptions(function(reply) {
     verifyEqual(reply.$dwrClassName, "ObjectWithLightClassMapping");
     verifyEqual(reply.obj.$dwrClassName, "ObjectWithLightClassMapping");
     verifyEqual(reply.array[0].$dwrClassName, "ObjectWithLightClassMapping");
@@ -940,7 +925,7 @@ window.testMarshallStrangeName = function() {
   var obj = new clazz();
   obj.i = 42;
 
-  Test.strangeName(obj, createOptions(function(retval) {
+  Test.strangeName(obj, waitDwrCallbackOptions(function(retval) {
     verifyEqual(retval.i, 43);
     verifyTrue(retval instanceof clazz);
   }));
@@ -954,7 +939,7 @@ window.testMarshallStrangeNameWithPackage = function() {
   var obj = new clazz();
   obj.i = 42;
 
-  Test.strangeNameWithPackage(obj, createOptions(function(retval) {
+  Test.strangeNameWithPackage(obj, waitDwrCallbackOptions(function(retval) {
     verifyEqual(retval.i, 43);
     verifyTrue(retval instanceof clazz);
   }));
@@ -965,11 +950,11 @@ window.testMarshallStrangeNameWithPackage = function() {
  */
 window.testMarshallAreIdentical = function() {
   var arr = [];
-  Test.areIdentical(arr, arr, createOptions(function(reply) {
+  Test.areIdentical(arr, arr, waitDwrCallbackOptions(function(reply) {
     verifyTrue(reply, "isIdentical:true");
   }));
 
-  Test.areIdentical([], [], createOptions(function(reply) {
+  Test.areIdentical([], [], waitDwrCallbackOptions(function(reply) {
     verifyFalse(reply, "isIdentical:false");
   }));
 };
@@ -978,7 +963,7 @@ window.testMarshallAreIdentical = function() {
  * 
  */
 window.testMarshallReadOnlyProperties = function () {
-    Test.readOnlyProperty(createOptions(function(data) {
+    Test.readOnlyProperty(waitDwrCallbackOptions(function(data) {
         assertEqual(data.i, 10)
         assertEqual(data.fieldAbstract, 5.0)
         assertEqual(data.fieldReadOnly, "readOnly")
@@ -986,7 +971,7 @@ window.testMarshallReadOnlyProperties = function () {
 };
 
 window.testMarshallGenericsImplementation = function() {
-    ConcreteGenericService.execute(0, 0, {}, {}, createOptions(function(data) {
+    ConcreteGenericService.execute(0, 0, {}, {}, waitDwrCallbackOptions(function(data) {
         assertEqual(data, 1);
     }));
 };

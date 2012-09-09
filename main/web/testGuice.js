@@ -115,15 +115,12 @@ function runGuiceComparisonTests(compares) {
   for (var i = 0; i < compares.length; i++) (function(i) {
     var compare = compares[i];
 
-    GuiceTest[compare.code](compare.data, {
-      callback:createDelayed(function(data) {
-        assertEqual(data, compare.data);
-      }),
-      exceptionHandler:createDelayedError()
-    });
+    GuiceTest[compare.code](compare.data, waitDwrCallbackOptions(function(data) {
+      assertEqual(data, compare.data);
+    }));
   })(i)
 }
 
 window.testGuiceCheckContext = function() {
-  GuiceTest.checkContext(common.getContextPath(), createVerifyCallback());
+  GuiceTest.checkContext(common.getContextPath(), waitDwrVerifyCallbackOptions());
 };

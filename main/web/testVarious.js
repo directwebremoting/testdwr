@@ -1,8 +1,10 @@
 
+createTestGroup("Various");
+
 /**
  *
  */
-window.testAreIdentical = function() {
+window.testVariousAreIdentical = function() {
   var data = [ 1, 2, 3, 4 ];
   Test.areIdentical(data, data, function(reply) {
     assertTrue(reply);
@@ -12,20 +14,20 @@ window.testAreIdentical = function() {
 /**
  *
  */
-window.testScriptSessionBindingListener = function() {
-  Test.checkScriptSessionBindingListener(createVerifyCallback());
+window.testVariousScriptSessionBindingListener = function() {
+  Test.checkScriptSessionBindingListener(waitDwrVerifyCallbackOptions());
 };
 
 /**
  *
  */
-window.testImHere = function() {
-  Test.checkImHere(createVerifyCallback());
+window.testVariousImHere = function() {
+  Test.checkImHere(waitDwrVerifyCallbackOptions());
 };
 
 /**
  *
  */
-window.testCheckContext = function() {
-  Test.checkContext(common.getContextPath(), createVerifyCallback());
+window.testVariousCheckContext = function() {
+  Test.checkContext(common.getContextPath(), waitDwrVerifyCallbackOptions());
 };

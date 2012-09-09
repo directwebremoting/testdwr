@@ -20,7 +20,7 @@ function _moduleSystemsAmd(dwrmap, ifcmap, dtomap) {
 
   // No package names
   var callback1;
-  var dwrCallOptions1 = createOptions(function (data) {
+  var dwrCallOptions1 = waitDwrCallbackOptions(function (data) {
     callback1(data);
   });
   require([
@@ -28,7 +28,7 @@ function _moduleSystemsAmd(dwrmap, ifcmap, dtomap) {
     dtomap + "/AbstractBase",
     dtomap + "/ConcreteBBase",
     dtomap + "/ConcreteCBase"], 
-    function(test, AbstractBase, ConcreteBBase, ConcreteCBase) {
+    waitAsync(function(test, AbstractBase, ConcreteBBase, ConcreteCBase) {
       callback1 = function(arr) {
         var b = arr[0];
         verifyTrue(b instanceof AbstractBase, "b instanceof AbstractBase");
@@ -43,18 +43,18 @@ function _moduleSystemsAmd(dwrmap, ifcmap, dtomap) {
         verifyEqual(c.fieldC, 3.14);
       };
       test.downloadMapped(dwrCallOptions1);
-    }
+    })
   );
 
   // One package
   var callback2;
-  var dwrCallOptions2 = createOptions(function (data) {
+  var dwrCallOptions2 = waitDwrCallbackOptions(function (data) {
     callback2(data);
   });
   require([
     ifcmap + "/pkg1/onePackageCreator", 
     dtomap + "/pkg1/OnePackageObject"], 
-    function(test, OnePackageObject) {
+    waitAsync(function(test, OnePackageObject) {
       var obj = new OnePackageObject();
       obj.i = 42;
       obj.extraProperty = "THIS TEXT SHOULDN'T BE MARSHALLED TO SERVER";
@@ -62,25 +62,25 @@ function _moduleSystemsAmd(dwrmap, ifcmap, dtomap) {
         verifyEqual(retval.i, 43);
       };
       test.package1(obj, dwrCallOptions2);
-    }
+    })
   );
 
   // Two packages
   var callback3;
-  var dwrCallOptions3 = createOptions(function (data) {
+  var dwrCallOptions3 = waitDwrCallbackOptions(function (data) {
     callback3(data);
   });
   require([
     ifcmap + "/pkg1/pkg2/twoPackagesCreator", 
     dtomap + "/pkg1/pkg2/TwoPackagesObject"], 
-    function(test, TwoPackagesObject) {
+    waitAsync(function(test, TwoPackagesObject) {
       var obj = new TwoPackagesObject();
       obj.i = 42;
       callback3 = function(retval) {
         verifyEqual(retval.i, 43);
       };
       test.package2(obj, dwrCallOptions3);
-    }
+    })
   );
 }
 
@@ -102,7 +102,7 @@ function _moduleSystemsDojo(dwrmap, ifcmap, dtomap) {
   dojo.require(dtomap + ".AbstractBase");
   dojo.require(dtomap + ".ConcreteBBase");
   dojo.require(dtomap + ".ConcreteCBase");
-  dojo.getObject(ifcmap).Test.downloadMapped(createOptions(function(arr) {
+  dojo.getObject(ifcmap).Test.downloadMapped(waitDwrCallbackOptions(function(arr) {
     var b = arr[0];
     verifyTrue(b instanceof dojo.getObject(dtomap).AbstractBase, "b instanceof AbstractBase");
     verifyTrue(b instanceof dojo.getObject(dtomap).ConcreteBBase, "b instanceof ConcreteBBase");
@@ -122,7 +122,7 @@ function _moduleSystemsDojo(dwrmap, ifcmap, dtomap) {
   var obj = new (dojo.getObject(dtomap).pkg1.OnePackageObject)();
   obj.i = 42;
   obj.extraProperty = "THIS TEXT SHOULDN'T BE MARSHALLED TO SERVER";
-  dojo.getObject(ifcmap).pkg1.onePackageCreator.package1(obj, createOptions(function(retval) {
+  dojo.getObject(ifcmap).pkg1.onePackageCreator.package1(obj, waitDwrCallbackOptions(function(retval) {
     verifyEqual(retval.i, 43);
   }));
 
@@ -131,7 +131,7 @@ function _moduleSystemsDojo(dwrmap, ifcmap, dtomap) {
   dojo.require(dtomap + ".pkg1.pkg2.TwoPackagesObject");
   var obj = new (dojo.getObject(dtomap).pkg1.pkg2.TwoPackagesObject)();
   obj.i = 42;
-  dojo.getObject(ifcmap).pkg1.pkg2.twoPackagesCreator.package2(obj, createOptions(function(retval) {
+  dojo.getObject(ifcmap).pkg1.pkg2.twoPackagesCreator.package2(obj, waitDwrCallbackOptions(function(retval) {
     verifyEqual(retval.i, 43);
   }));
 };
