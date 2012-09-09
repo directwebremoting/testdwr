@@ -8,12 +8,12 @@ window.testIsolatedSyncNesting = function() {
   dwr.engine.setAsync(false);
   var count = 0;
 
-  Test.slowStringParam("1", 100, createDelayed(function(data1) {
+  Test.slowStringParam("1", 100, waitDwrCallbackOptions(function(data1) {
     count++;
     verifyEqual(count, 1);
     verifyEqual(data1, "1");
 
-    Test.slowStringParam("2", 200, createDelayed(function(data2) {
+    Test.slowStringParam("2", 200, waitDwrCallbackOptions(function(data2) {
       count++;
       verifyEqual(count, 2);
       verifyEqual(data2, "2");
@@ -45,14 +45,14 @@ window.testIsolatedSyncReturning = function() {
  */
 window.testIsolatedSyncCallMetaData = function() {
   var count = 0;
-  Test.slowStringParam("param", 100, {
+  Test.slowStringParam("param", 100, waitDwrCallbackOptions({
     async:false,
-    callback:createDelayed(function(param) {
+    callback:function(param) {
       count++;
       verifyEqual(count, 1, "callback should be first with sync");
       verifyEqual(param, "param");
-    })
-  });
+    }
+  }));
   count++;
   verifyEqual(count, 2, "after should be last with sync");
 };
@@ -84,7 +84,7 @@ window.testIsolatedNonLocalhost = function() {
   hostPart = hostPart.replace(/localhost/, '127.0.0.1');
   Test._path = "http://" + hostPart + path;
 
-  Test.stringParam("param", createOptions(function(param){
+  Test.stringParam("param", waitDwrCallbackOptions(function(param){
     verifyEqual(param, "param");
   }));
 

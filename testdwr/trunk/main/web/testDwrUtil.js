@@ -209,7 +209,7 @@ window.testDwrUtilAddOptionsInOtherWindow = function() {
       pwin.close();
     }
   }
-  setTimeout(createDelayed(test), 1000);
+  setTimeout(waitAsync(test), 1000);
 };
 
 /**

@@ -1,35 +1,33 @@
-// http://www.helephant.com/Article.aspx?ID=675
 
 var tests = {};
-var groups = { 'Global':[] };
-var groupNames = [ 'Global' ];
-var boredTimeout = null;
+var groups = {};
+var groupNames = [];
 
-var currentTest = null;
+var stati = { notrun:0, executing:1, pass:2, fail:3 };
+var statusBackgrounds = [ "#EEE", "#FFA", "#8F8", "#F00" ];
+var statusColors = [ "#000", "#000", "#000", "#FFF" ];
+var statusNames = [ "Skipped", "Executing", "Pass", "Fail" ];
 
-var stati = { notrun:0, executing:1, asynchronous:2, pass:3, fail:4 };
-var statusBackgrounds = [ "#EEE", "#888", "#FFA", "#8F8", "#F00" ];
-var statusColors = [ "#000", "#FFF", "#000", "#000", "#FFF" ];
-var statusNames = [ "Skipped", "Executing", "Waiting", "Pass", "Fail" ];
+//
+// API USED BY TEST PAGE
+//
 
 /**
- *
+ * Initialize on page load
  */
 function init() {
+  // Add functions beginning with "test" as test cases
   for (var prop in window) {
     if (prop.match(/test/) && typeof window[prop] == "function") {
       addTest(prop, window[prop]);
     }
   }
+  // Initialize test case table 
   displayTestTable();
   updateTestResults();
+  
   if (window.location.href.match(/autoRun=true/)) {
     runAllTests();
-  }
-  var delayMatch = window.location.href.match(/delay=(\d+)/);
-  if (delayMatch != null && delayMatch.length >= 1) {
-    var delay = delayMatch[1] - 0;
-    dwr.util.setValue("delay", delay);
   }
   if (window.location.href.match(/autoSend=true/)) {
     dwr.util.setValue("autoSend", true);
@@ -37,7 +35,7 @@ function init() {
 }
 
 /**
- *
+ * Add test case to test database
  */
 function addTest(testName, func) {
   var groupName = "Global";
@@ -45,6 +43,10 @@ function addTest(testName, func) {
     if (testName.indexOf("test" + groupNames[i]) == 0) {
       groupName = groupNames[i];
     }
+  }
+
+  if (groupName == "Global" && !groups[groupName]) {
+  	groups[groupName] = [];
   }
 
   groups[groupName].push(testName);
@@ -55,10 +57,11 @@ function addTest(testName, func) {
     group: groupName,
     messages: []
   };
+  dwrunit.addTest(testName, func);
 }
 
 /**
- * 
+ * Add test group
  */
 function createTestGroup(groupName) {
   groupNames.push(groupName);
@@ -66,19 +69,17 @@ function createTestGroup(groupName) {
 }
 
 /**
- *
+ * Create html result table with headings and all tests
  */
 function displayTestTable() {
   var html = "";
   html += '<div id="settingsPanel">';
   html += '  <strong>Settings:</strong>';
-  html += '  <label for="delay" class="hover" title="The delay between starting tests.">Inter-test delay:</label>';
-  html += '  <input id="delay" value="0" size="3"/> ms.';
   html += '  <label for="autoSend" class="hover" title="DWR can record a test runs in (~/.dwr_test_results.xml) Do we automatically send the results to the server on completion?">Auto send results:</label>';
   html += '  <input id="autoSend" type="checkbox"/>';
   html += '</div>';
   html += '<table class="grey form">';
-  html += '  <thead><tr><th>#</th><th>Group</th><th>Run</th><th>Results</th><th>Actions</th><th>Scratch</th></tr></thead>';
+  html += '  <thead><tr><th>#</th><th>Group</th><th>Results</th><th>Actions</th><th>Scratch</th></tr></thead>';
   html += '  <tbody id="testSummary"> </tbody>';
   html += '</table>';
   html += '<div id="output"> </div>';
@@ -92,12 +93,11 @@ function displayTestTable() {
 
     dwr.util.addRows("testSummary", [ groupName ], [
       function(groupName) {
-        return '<a class="headInline" href="#" id="groupDisplay' + groupName + '" onclick="_toggleGroup(\'' + groupName + '\');">Show</a>';
+        return '<a class="headInline" href="#" id="groupDisplay' + groupName + '" onclick="_toggleGroup(\'' + groupName + '\'); return false;">Show</a>';
       },
       function(groupName) {
         return "<strong>" + groupName + "</strong>";
       },
-      function(groupName) { return ""; },
       function(groupName) { return ""; },
       function(groupName) { return '<input type="button" value="Run Group" onclick="runTestGroup(\'' + groupName + '\')"/>'; },
       function(groupName) { return "<div id='scratch" + groupName + "'></div>"; }
@@ -108,8 +108,7 @@ function displayTestTable() {
           return document.createElement("th");
         }
         var td = document.createElement("td");
-        if (options.cellNum == 2) td.setAttribute("id", "groupStarted" + options.rowData);
-        if (options.cellNum == 3) td.setAttribute("id", "groupCount" + options.rowData);
+        if (options.cellNum == 2) td.setAttribute("id", "groupCount" + options.rowData);
         return td;
       }
     });
@@ -127,11 +126,8 @@ function displayTestTable() {
         // We did add  title='" + dwr.util.escapeHtml(tests[testName].func.toString()) + "'
         // But this confuses things because we're not currently escaping for attributes properly
         // The best solution is a better drilldown thing anyway because the wrapping is wrong here
-        return '<a href="#" id="testDisplay' + groupName + '" onclick="_toggleTest(\'' + testName + '\');">' + name + '</a>' +
+        return '<a href="#" id="testDisplay' + groupName + '" onclick="_toggleTest(\'' + testName + '\'); return false;">' + name + '</a>' +
             '<pre style="display:none;" class="codeBlock" id="testDetail' + testName + '">' + dwr.util.escapeHtml(tests[testName].func.toString()) + '</pre>';
-      },
-      function(testName) {
-         return "<span id='asyncReturn" + testName + "'>0</span>/<span id='asyncSent" + testName + "'>0</span>";
       },
       function(testName) { return ""; },
       function(testName) {
@@ -145,7 +141,7 @@ function displayTestTable() {
           return document.createElement("th");
         }
         var td = document.createElement("td");
-        if (options.cellNum == 3) td.setAttribute("id", options.rowData);
+        if (options.cellNum == 2) td.setAttribute("id", options.rowData);
         return td;
       },
       rowCreator:function(options) {
@@ -159,8 +155,7 @@ function displayTestTable() {
 
   dwr.util.addRows("testSummary", [ 1 ], [
     function() { return ""; },
-    function() { return "<strong>All</strong>"; },
-    function() { return ""; },
+    function() { return "<strong>Total:<span id='totalCount'></span></strong>"; },
     function() { return ""; },
     function() { return '<input type="button" value="Run All" onclick="runAllTests();"/>'; },
     function() { return "<div id='scratchAll'></div>"; }
@@ -168,8 +163,7 @@ function displayTestTable() {
     escapeHtml:false,
     cellCreator:function(options) {
       var td = document.createElement("th");
-      if (options.cellNum == 2) td.setAttribute("id", "testsStarted");
-      if (options.cellNum == 3) td.setAttribute("id", "testCount");
+      if (options.cellNum == 2) td.setAttribute("id", "testCount");
       return td;
     }
   });
@@ -182,7 +176,7 @@ function displayTestTable() {
 }
 
 /**
- *
+ * Show/hide test group test cases
  */
 function _toggleGroup(groupName) {
   var toToggle = _getElementsByClass("groupDetail" + groupName);
@@ -205,7 +199,7 @@ function _toggleGroup(groupName) {
 }
 
 /**
- *
+ * Show/hide test function details
  */
 function _toggleTest(testName) {
   var toToggle = dwr.util.byId("testDetail" + testName);
@@ -218,26 +212,13 @@ function _toggleTest(testName) {
 }
 
 /**
- *
- */
-function _toggleDisplay(id) {
-  id = dwr.util.byId(id);
-  if (id.style.display == "none") {
-    id.style.display = "block";
-  }
-  else {
-    id.style.display = "none";
-  }
-}
-
-/**
- *
+ * Update html table from test case database and possibly send report to server
  */
 function updateTestResults(reportAnyway) {
-  var counts = [ 0, 0, 0, 0, 0 ];
+  var counts = [ 0, 0, 0, 0 ];
   var groupCounts = {};
   for (var i = 0; i < groupNames.length; i++) {
-    groupCounts[groupNames[i]] = [ 0, 0, 0, 0, 0 ];
+    groupCounts[groupNames[i]] = [ 0, 0, 0, 0 ];
   }
 
   var testCount = 0;
@@ -253,13 +234,12 @@ function updateTestResults(reportAnyway) {
     var groupCount = groups[groupName].length;
     var groupStatus = groupCounts[groupName];
 
-    var outstanding = groupStatus[stati.asynchronous] + groupStatus[stati.executing];
+    var outstanding = groupStatus[stati.executing];
     var failed = groupStatus[stati.fail];
     var passed = groupStatus[stati.pass];
     var started = groupCount - groupStatus[stati.notrun];
 
     dwr.util.setValue("groupCount" + groupName, "Pass:" + passed + " Fail:" + failed);
-    dwr.util.setValue("groupStarted" + groupName, started + "/" + (started - outstanding));
 
     dwr.util.byId("groupCount" + groupName).style.backgroundColor = "";
     dwr.util.byId("groupCount" + groupName).style.color = "";
@@ -269,8 +249,8 @@ function updateTestResults(reportAnyway) {
       dwr.util.byId("groupCount" + groupName).style.color = statusColors[stati.fail];
     }
     if (outstanding > 0 && failed > 0) {
-      dwr.util.byId("groupCount" + groupName).style.backgroundColor = statusBackgrounds[stati.asynchronous];
-      dwr.util.byId("groupCount" + groupName).style.color = statusColors[stati.asynchronous];
+      dwr.util.byId("groupCount" + groupName).style.backgroundColor = statusBackgrounds[stati.executing];
+      dwr.util.byId("groupCount" + groupName).style.color = statusColors[stati.executing];
     }
     if (passed == groupCount) {
       dwr.util.byId("groupCount" + groupName).style.backgroundColor = statusBackgrounds[stati.pass];
@@ -278,21 +258,21 @@ function updateTestResults(reportAnyway) {
     }
   }
 
-  var outstanding = counts[stati.asynchronous] + counts[stati.executing];
+  var outstanding = counts[stati.executing];
   var failed = counts[stati.fail];
   var passed = counts[stati.pass];
   var started = testCount - counts[stati.notrun];
 
+  dwr.util.setValue("totalCount", testCount);
   dwr.util.setValue("testCount", "Pass:" + passed + " Fail:" + failed);
-  dwr.util.setValue("testsStarted", started + "/" + (started - outstanding));
 
   if (failed > 0) {
     dwr.util.byId("testCount").style.backgroundColor = statusBackgrounds[stati.fail];
     dwr.util.byId("testCount").style.color = statusColors[stati.fail];
   }
   if (outstanding > 0 && failed > 0) {
-    dwr.util.byId("testCount").style.backgroundColor = statusBackgrounds[stati.asynchronous];
-    dwr.util.byId("testCount").style.color = statusColors[stati.asynchronous];
+    dwr.util.byId("testCount").style.backgroundColor = statusBackgrounds[stati.executing];
+    dwr.util.byId("testCount").style.color = statusColors[stati.executing];
   }
   if (passed == testCount) {
     dwr.util.byId("testCount").style.backgroundColor = statusBackgrounds[stati.pass];
@@ -315,486 +295,416 @@ function updateTestResults(reportAnyway) {
     Recorder.postResults(testCount, passed, failed, failures, function() {
       dwr.util.setValue("scratchAll", "Posted report to server");
     });
-    clearTimeout(boredTimeout);
   }
 }
 
+function runTests(testNames) {
+  dwrunit.runTests(
+    testNames,
+    {
+      startCallback: function(ts) {
+        var testinfo = tests[ts.getName()];
+        _setStatus(testinfo, stati.executing);
+        testinfo.messages = [];
+        dwr.util.setValue(testinfo.name, "");
+      },
+      statusCallback: function(ts) {
+        var testinfo = tests[ts.getName()];
+        var result;
+        if (ts.isPassed()) result = stati.pass;
+        if (ts.isFailed()) result = stati.fail;
+        _setStatus(testinfo, result);
+        if (ts.isFailed()) {
+          testinfo.messages = ts.getErrors();
+          var output = testinfo.messages.join("<br />");
+          dwr.util.setValue(testinfo.name, output, { escapeHtml:false });
+          logConsole("FAILED: " + ts.getName());
+          for(var i=0; i<ts.getErrors().length; i++) {
+            logConsole(ts.getErrors()[i]);
+          }
+          logConsole(" ");
+        }
+        updateTestResults(false);
+      },
+      completeCallback: function() {
+    	// Use this for something?
+      },
+      concurrency: 3,
+      timeout: 10000
+    }
+  );
+}
+
+function logConsole(p) {
+  var handled = false;
+  if (typeof p == "string") {
+    var message = p;
+    if (typeof console != "undefined" && console && console.log) {
+      console.log(message);
+      handled = true;
+    }
+  } else if (p instanceof Error) {
+    var ex = p;
+    if (typeof console != "undefined" && console && console.exception) {
+      console.exception(ex);
+      handled = true;
+    } else if (typeof console != "undefined" && console && console.log) {
+      var message = ex.name + ": " + ex.message;
+      if (ex.stack) {
+        message += "\n" + ex.stack;
+      }
+      console.log(message);
+      handled = true;
+    }
+  }
+  return handled;
+}
+
 /**
- *
+ * Run one test and update result table after
  */
 function runTest(testName) {
-  var subTest = (currentTest != null);
-  if (!subTest) {
-    currentTest = tests[testName];
-  }
-
-  _setStatus(currentTest, stati.executing, true);
-  currentTest.messages = [];
-  dwr.util.setValue(currentTest.name, "");
-
-  var scope = currentTest.scope || window;
-  try {
-    currentTest.func.apply(scope);
-  }
-  catch (ex) {
-    _setStatus(currentTest, stati.fail);
-    if (ex.message && ex.message.length > 0) {
-      _record(currentTest, ex.message);
-    }
-    if (window.console && console.trace) console.trace();
-  }
-  if (_getStatus(currentTest) == stati.executing) {
-    _setStatus(currentTest, stati.pass, true);
-  }
-
-  if (!subTest) {
-    currentTest = null;
-  }
-  updateTestResults(false);
+  runTests([testName]);	
 }
 
 /**
- *
+ * Run tests in a test group
  */
 function runTestGroup(groupName) {
   var testNames = groups[groupName];
   if (testNames == null) {
     throw new Error("No test group called: " + groupName);
   }
-  var delay = dwr.util.getValue("delay");
-
-  var pauseAndRunGroup = function(groupName, i) {
-    if (i >= testNames.length) {
-      return;
-    }
-
-    runTest(testNames[i]);
-    setTimeout(function() {
-      pauseAndRunGroup(groupName, i + 1);
-    }, delay);
-  }
-
-  pauseAndRunGroup(groupName, 0);
+  runTests(testNames);
 }
 
 /**
- *
+ * Run all tests
  */
 function runAllTests() {
-  var testNames = [];
-  for (var testName in tests) {
-    testNames.push(testName);
+  runTests(dwrunit.getTestNames());
+}
+
+//
+// API FOR TEST CASES
+//
+
+function waitAsync(varargs) {
+  return dwrunit.waitAsync.apply(dwrunit, arguments);
+}
+
+function waitAsyncAndFail(varargs) {
+  var args = [];
+  var message;
+  for(var i=0; i<arguments.length; i++) {
+    var arg = arguments[i];
+    if (typeof arg == "string") {
+      message = arg;
+    } else if (typeof arg != "function") {
+      args.push(arg);
+    }
   }
-  testNames.sort();
-  var delay = dwr.util.getValue("delay");
-
-  var pauseAndRunAll = function(index) {
-    if (index >= testNames.length) {
-      boredTimeout = setTimeout(function() {
-        updateTestResults(true);
-      }, 10000);
-      return;
-    }
-    var testName = testNames[index];
-    runTest(testName);
-
-    setTimeout(function() {
-      pauseAndRunAll(index + 1);
-    }, delay);
-  };
-
-  pauseAndRunAll(0);
+  args.push(function(){fail(message);});
+  return dwrunit.waitAsync.apply(dwrunit, args);
 }
 
-/**
- * 
- */
-function createOptions(func, message) {
-  return {
-      callback:createDelayed(func),
-      exceptionHandler:createDelayedError(message),
-      errorHandler:createDelayedError(message)
-  };
+function waitDwrHandlerOptions(options) {
+  var modopt = {};
+  for(var p in options) modopt[p] = options[p];
+  var c = new dwrunit.SingleAsyncCompletor;
+  modopt.callback = waitAsync(c, function() {
+    if (options.callback) options.callback.apply(this, arguments);
+  });
+  modopt.exceptionHandler = waitAsync(c, function() {
+    if (options.exceptionHandler) options.exceptionHandler.apply(this, arguments);
+  });
+  modopt.errorHandler = waitAsync(c, function() {
+    if (options.errorHandler) options.errorHandler.apply(this, arguments);
+  });
+  return modopt;
 }
 
-/**
- *
- */
-function createDelayed(func) {
-  _setStatus(currentTest, stati.asynchronous, true);
-  var delayedTest = currentTest;
-  if (!delayedTest.outstanding) {
-    delayedTest.outstanding = 1;
+function waitDwrCallbackOptions(handlerOrOptions) {
+  var modopt = {};
+  var handler;
+  if (typeof handlerOrOptions == "function") {
+  	handler = handlerOrOptions;
+  } else if (handlerOrOptions && typeof handlerOrOptions == "object") {
+    for(var p in handlerOrOptions) modopt[p] = handlerOrOptions[p];
+  	handler = handlerOrOptions.callback;
   }
-  else {
-    delayedTest.outstanding++;
+  modopt.callback = function() { if (handler) handler.apply(this, arguments); };
+  modopt.exceptionHandler = _wrongHandlerCalled;
+  modopt.errorHandler = _wrongHandlerCalled;
+  return waitDwrHandlerOptions(modopt);
+}
+
+function waitDwrExceptionHandlerOptions(handlerOrOptions) {
+  var modopt = {};
+  var handler;
+  if (typeof handlerOrOptions == "function") {
+  	handler = handlerOrOptions;
+  } else if (handlerOrOptions && typeof handlerOrOptions == "object") {
+    for(var p in handlerOrOptions) modopt[p] = handlerOrOptions[p];
+  	handler = handlerOrOptions.exceptionHandler;
   }
-  var sent = dwr.util.getValue("asyncSent" + currentTest.name) - 0;
-  dwr.util.setValue("asyncSent" + currentTest.name, sent + 1);
-
-  return function() {
-    var isSync = (currentTest != null);
-    currentTest = delayedTest;
-    if (typeof func == "function") {
-      try {
-        func.apply(this, arguments);
-      }
-      catch (ex) {
-        _setStatus(currentTest, stati.fail);
-        if (ex.message && ex.message.length > 0) {
-          _record(currentTest, ex.message);
-        }
-        if (window.console && console.trace) console.trace();
-      }
-    }
-    delayedTest.outstanding--;
-    if (delayedTest.outstanding == 0 && _getStatus(delayedTest) == stati.asynchronous) {
-      _setStatus(currentTest, stati.pass, true);
-    }
-    var returned = dwr.util.getValue("asyncReturn" + currentTest.name) - 0;
-    dwr.util.setValue("asyncReturn" + currentTest.name, returned + 1);
-
-    if (!isSync) {
-      currentTest = null;
-    }
-    updateTestResults(false);
-  };
+  modopt.callback = _wrongHandlerCalled;
+  modopt.exceptionHandler = function() { if (handler) handler.apply(this, arguments); };
+  modopt.errorHandler = _wrongHandlerCalled;
+  return waitDwrHandlerOptions(modopt);
 }
 
-/**
- *
- */
-function createDelayedError(func) {
-  var delayedTest = currentTest;
-  return function() {
-    currentTest = delayedTest;
-    _setStatus(currentTest, stati.fail);
-    if (func == null) {
-      _record(currentTest.name, "Executing delayed error handler: " + dwr.util.toDescriptiveString(Array().slice.call(arguments), 3));
-    }
-    else if (typeof func == "function") {
-      _record(currentTest.name, "Executing delayed error handler: " + dwr.util.toDescriptiveString(Array().slice.call(arguments), 3));
-      func.apply(createDelayed, arguments);
-    }
-    else if (typeof func == "string") {
-      _record(currentTest.name, "Executing delayed error handler: " + func);
-    }
-    else {
-      _record(currentTest.name, "Executing delayed error handler: " + dwr.util.toDescriptiveString(Array().slice.call(arguments), 3));
-    }
-    currentTest = null;
-    updateTestResults(false);
-  };
+function waitDwrErrorHandlerOptions(handlerOrOptions) {
+  var modopt = {};
+  var handler;
+  if (typeof handlerOrOptions == "function") {
+  	handler = handlerOrOptions;
+  } else if (handlerOrOptions && typeof handlerOrOptions == "object") {
+    for(var p in handlerOrOptions) modopt[p] = handlerOrOptions[p];
+  	handler = handlerOrOptions.errorHandler;
+  }
+  modopt.callback = _wrongHandlerCalled;
+  modopt.exceptionHandler = _wrongHandlerCalled;
+  modopt.errorHandler = function() { if (handler) handler.apply(this, arguments); };
+  return waitDwrHandlerOptions(modopt);
 }
 
-/**
- *
- */
-function createVerifyCallback() {
-  return {
-    callback:createDelayed(function(data) {
-      if (data.report.length == 0) {
-        return;
-      }
-      fail(data.report.join("<br/>"));
-    }),
-    exceptionHandler:createDelayedError()
-  };
+function _wrongHandlerCalled() {
+  dwrunit.fail("Wrong DWR call handler triggered.");
+}
+
+function waitDwrVerifyCallbackOptions() {
+  return waitDwrCallbackOptions(function(data) {
+  	// Add errors from server-side
+  	var errors = data.report;
+  	for(var i=0; i<errors.length; i++) {
+  	  dwrunit.fail(errors[i]);
+  	}
+  });
 }
 
 /**
  *
  */
 function useHtml(html) {
-  dwr.util.setValue(currentTest.scratch, html, { escapeHtml:false });
+  var testinfo = tests[dwrunit.getRunningTest().getName()];
+  dwr.util.setValue(testinfo.scratch, html, { escapeHtml:false });
 }
 
 /**
  *
  */
 function fail(message) {
-  _recordThrow("fail", arguments);
+  dwrunit.fail(message);
 }
 
 /**
  *
  */
 function assertTrue(value) {
-  if (!value) {
-    _recordThrow("assertTrue", arguments);
-  }
+  _assert("assertTrue", value, arguments);
 }
 
 /**
  *
  */
 function verifyTrue(value) {
-  if (!value) {
-    _recordTrace("verifyTrue", arguments);
-  }
+  _verify("verifyTrue", value, arguments);
 }
 
 /**
  *
  */
 function assertFalse(value) {
-  if (value) {
-    _recordThrow("assertFalse", arguments);
-  }
+  _assert("assertFalse", !value, arguments);
 }
 
 /**
  *
  */
 function verifyFalse(value) {
-  if (value) {
-    _recordTrace("verifyFalse", arguments);
-  }
+  _verify("verifyFalse", !value, arguments);
 }
 
 /**
  *
  */
 function assertNull(value) {
-  if (value !== null) {
-    _recordThrow("assertNull", arguments);
-  }
+  _assert("assertNull", value === null, arguments);
 }
 
 /**
  *
  */
 function verifyNull(value) {
-  if (value !== null) {
-    _recordTrace("verifyNull", arguments);
-  }
+  _verify("verifyNull", value === null, arguments);
 }
 
 /**
  *
  */
 function assertNotNull(value) {
-  if (value === null) {
-    _recordThrow("assertNotNull", arguments);
-  }
+  _assert("assertNotNull", value !== null, arguments);
 }
 
 /**
  *
  */
 function verifyNotNull(value) {
-  if (value === null) {
-    _recordTrace("verifyNotNull", arguments);
-  }
+  _verify("verifyNotNull", value !== null, arguments);
 }
 
 /**
  *
  */
 function assertUndefined(value) {
-  if (value !== undefined) {
-    _recordThrow("assertUndefined", arguments);
-  }
+  _assert("assertUndefined", value === undefined, arguments);
 }
 
 /**
  *
  */
 function verifyUndefined(value) {
-  if (value !== undefined) {
-    _recordTrace("verifyUndefined", arguments);
-  }
+  _verify("verifyUndefined", value === undefined, arguments);
 }
 
 /**
  *
  */
 function assertNotUndefined(value) {
-  if (value === undefined) {
-    _recordThrow("assertNotUndefined", arguments);
-  }
+  _assert("assertNotUndefined", value !== undefined, arguments);
 }
 
 /**
  *
  */
 function verifyNotUndefined(value) {
-  if (value === undefined) {
-    _recordTrace("verifyNotUndefined", arguments);
-  }
+  _verify("verifyNotUndefined", value !== undefined, arguments);
 }
 
 /**
  *
  */
 function assertUndefined(value) {
-  if (value !== undefined) {
-    _recordThrow("assertUndefined", arguments);
-  }
+  _assert("assertUndefined", value === undefined, arguments);
 }
 
 /**
  *
  */
 function verifyUndefined(value) {
-  if (value !== undefined) {
-    _recordTrace("verifyUndefined", arguments);
-  }
+  _verify("verifyUndefined", value === undefined, arguments);
 }
 
 /**
  *
  */
 function assertNotUndefined(value) {
-  if (value === undefined) {
-    _recordThrow("assertNotUndefined", arguments);
-  }
+  _assert("assertNotUndefined", value !== undefined, arguments);
 }
 
 /**
  *
  */
 function verifyNotUndefined(value) {
-  if (value === undefined) {
-    _recordTrace("verifyNotUndefined", arguments);
-  }
+  _verify("verifyNotUndefined", value !== undefined, arguments);
 }
 
 /**
  *
  */
 function assertNaN(value) {
-  if (!isNaN(value)) {
-    _recordThrow("assertNaN", arguments);
-  }
+  _assert("assertNaN", isNaN(value), arguments);
 }
 
 /**
  *
  */
 function verifyNaN(value) {
-  if (!isNaN(value)) {
-    _recordTrace("verifyNaN", arguments);
-  }
+  _verify("verifyNaN", isNaN(value), arguments);
 }
 
 /**
  *
  */
 function assertNotNaN(value) {
-  if (isNaN(value)) {
-    _recordThrow("assertNotNaN", arguments);
-  }
+  _assert("assertNotNaN", !isNaN(value), arguments);
 }
 
 /**
  *
  */
 function verifyNotNaN(value) {
-  if (isNaN(value)) {
-    _recordTrace("verifyNotNaN", arguments);
-  }
+  _verify("verifyNotNaN", !isNaN(value), arguments);
 }
 
 /**
  *
  */
 function assertEqual(expected, actual) {
-  if (!_isEqual(expected, actual)) {
-    _recordThrow("assertEqual", arguments);
-  }
+  _assert("assertEqual", _isEqual(expected, actual), arguments);
 }
 
 /**
  *
  */
 function verifyEqual(expected, actual) {
-  if (!_isEqual(expected, actual)) {
-    _recordTrace("verifyEqual", arguments);
-  }
+  _verify("verifyEqual", _isEqual(expected, actual), arguments);
 }
 
 /**
  *
  */
 function assertNotEqual(expected, actual) {
-  if (_isEqual(expected, actual)) {
-    _recordThrow("assertNotEqual", arguments);
-  }
+  _assert("assertNotEqual", !_isEqual(expected, actual), arguments);
 }
 
 /**
  *
  */
 function verifyNotEqual(expected, actual) {
-  if (!_isEqual(expected, actual)) {
-    _recordTrace("verifyNotEqual", arguments);
+  _verify("verifyNotEqual", !_isEqual(expected, actual), arguments)
+}
+
+/**
+ *
+ */
+function _verify(name, status, args) {
+  if (!status) {
+    dwrunit.verify(status, _buildMessage(name, args));
   }
 }
 
 /**
  *
  */
-function _recordTrace() {
-  _record.apply(this, arguments);
-  if (window.console && console.trace) console.trace();
-}
-
-/**
- *
- */
-function _recordThrow() {
-  _record.apply(this, arguments);
-  throw new Error();
-}
-
-/**
- *
- */
-function success(message) {
-  _appendMessage(message);
-}
-
-/**
- *
- */
-function _record() {
-  window.console && console.error(arguments);
-  _setStatus(currentTest, stati.fail);
-  var message = arguments[0] + "(";
-  var data = arguments[1];
-  if (typeof data == "string") {
-    message += data;
+function _assert(name, status, args) {
+  if (!status) {
+    dwrunit.assert(status, _buildMessage(name, args));
   }
-  else {
-    for (var i = 0; i < data.length; i++) {
-      if (i != 0) message += ", ";
-      message += dwr.util.toDescriptiveString(data[i], 3);
-    }
+}
+
+/**
+ *
+ */
+function _buildMessage(name, args) {
+  var msg = name + "(";
+  for(var i=0; i<args.length; i++) {
+    if (i != 0) msg += ", ";
+    msg += dwr.util.toDescriptiveString(args[i], 3);
   }
-  message += ")";
-  _appendMessage(currentTest, message);
+  msg += ")";
+  return msg;
 }
 
 /**
  *
  */
-function _appendMessage(test, message) {
-  test.messages.push(message);
-  var output = test.messages.join("<br />");
-  dwr.util.setValue(test.name, output, { escapeHtml:false });
-}
-
-/**
- *
- */
-function _setStatus(test, newStatus, override) {
+function _setStatus(test, newStatus) {
   if (typeof test == "string") {
     test = tests[test];
   }
-  if (test.status < newStatus || override) {
-    test.status = newStatus;
-  }
+  test.status = newStatus;
   dwr.util.byId(test.name).style.backgroundColor = statusBackgrounds[newStatus];
   dwr.util.byId(test.name).style.color = statusColors[newStatus];
 }

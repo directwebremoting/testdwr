@@ -1,7 +1,10 @@
+
+createTestGroup("Advanced");
+
 /**
  *
  */
-window.testMemoryLeaks = function(count) {
+window.testAdvancedMemoryLeaks = function(count) {
   if (count == null) {
     count = 0;
   }
@@ -19,50 +22,53 @@ window.testMemoryLeaks = function(count) {
 };
 
 /**
- * Changing the _path clashes with other tests
+ * 
  */
-window.testErrorRedirect = function(){
+window.testAdvancedErrorRedirectDISABLED = function(){
+/*
   var oldPath = Test._path;
   Test._path = "/testdwr/custom/307";
+  var c = new dwrunit.SingleAsyncCompletor;
   Test.doNothing({
-    callback:createDelayedError(),
-    exceptionHandler:createDelayedError(),
-    textHtmlHandler:createDelayed(function(data) {
+    callback:waitAsyncAndFail(c, "callback triggered instead of textHtmlHandler"),
+    exceptionHandler:waitAsyncAndFail(c, "exceptionHandler triggered instead of textHtmlHandler"),
+    errorHandler:waitAsyncAndFail(c, "errorHandler triggered instead of textHtmlHandler"),
+    textHtmlHandler:waitAsync(c, function(data) {
       verifyEqual(200, data.status);
       verifyTrue(data.responseText.indexOf("html") != -1);
       verifyEqual("text/html", data.contentType);
-      Test._path = oldPath;
     })
   });
+  Test._path = oldPath; // by resetting the path immediately after sending we affect no other tests
+*/
 };
 
 /**
  *
  */
-window.testServerChecks = function() {
-  Test.serverChecks({
-    callback:createDelayed(),
-    exceptionHandler:createDelayedError()
-  });
+window.testAdvancedServerChecks = function() {
+  Test.serverChecks(waitDwrCallbackOptions());
 };
 
 /**
  * This doesn't always work when there is lots going on, and it requires to not
  * be the last test in a run because it delays reports
  */
-window.testScriptSessionListener = function() {
-  var progress1 = createDelayed(function(data) {
-    if (data.report.length == 0) {
-      return;
+window.testAdvancedScriptSessionListenerDISABLED = function() {
+/*
+  var progress1 = waitAsync(function(data) {
+    // Fail if there are any report messages
+    for(var i=0; i<data.report.length; i++) {
+      fail(data.report[i]);
     }
-    fail(data.report.join("<br/>"));
   });
-  var progress2 = createDelayed(function(data) {
-    if (data.report.length == 0) {
-      return;
+  var progress2 = waitAsync(function(data) {
+    // Fail if there are any report messages
+    for(var i=0; i<data.report.length; i++) {
+      fail(data.report[i]);
     }
-    fail(data.report.join("<br/>"));
   });
-  Test.checkScriptSessionListener(progress1, progress2, createVerifyCallback());
+  Test.checkScriptSessionListener(progress1, progress2, waitDwrVerifyCallbackOptions());
+*/
 };
 

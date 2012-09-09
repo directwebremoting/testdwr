@@ -6,10 +6,10 @@ createTestGroup("Binary");
 function binaryOnload() {};
 
 window.testBinarySimple = function() {
-  Test.binary("Hello", createOptions(function(retval) {
+  Test.binary("Hello", waitDwrCallbackOptions(function(retval) {
     useHtml('<iframe id="byIdTestBinarySimple" onload="binaryOnload();" src="' + retval + '"></iframe>');
     var iframe = dwr.util.byId("byIdTestBinarySimple");
-    binaryOnload = createDelayed(function() {
+    binaryOnload = waitAsync(function() {
       verifyEqual(iframe.contentDocument.body.innerHTML, "<p>Hello</p>");
     });	  
   }));

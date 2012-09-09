@@ -115,15 +115,12 @@ function runAnnotateComparisonTests(compares) {
   for (var i = 0; i < compares.length; i++) (function(i) {
     var compare = compares[i];
 
-    AnnotateTest[compare.code](compare.data, {
-      callback:createDelayed(function(data) {
-        assertEqual(data, compare.data);
-      }),
-      exceptionHandler:createDelayedError()
-    });
+    AnnotateTest[compare.code](compare.data, waitDwrCallbackOptions(function(data) {
+      assertEqual(data, compare.data);
+    }));
   })(i)
 }
 
 window.testAnnotateCheckContext = function() {
-  AnnotateTest.checkContext(common.getContextPath(), createVerifyCallback());
+  AnnotateTest.checkContext(common.getContextPath(), waitDwrVerifyCallbackOptions());
 };

@@ -10,7 +10,7 @@ window.testJUnitAll = function() {
     dwr.util.setValue(scratch, "Pass:" + passed + " Fail:" + failed + " Total:" + total);
   };
 
-  Test.runAllJUnitTests(noteProgressInScratch, createDelayed(function(reply) {
+  Test.runAllJUnitTests(noteProgressInScratch, waitDwrCallbackOptions(function(reply) {
     if (reply != null && reply.length != 0) {
       fail(reply);
     }

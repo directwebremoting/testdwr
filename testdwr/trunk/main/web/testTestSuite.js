@@ -11,7 +11,7 @@ window.testTestSuiteWillFail = function() {
 };
 
 window.testTestSuiteWillFailLater = function() {
-  setTimeout(createDelayed(function() {
+  setTimeout(waitAsync(function() {
     verifyTrue(false);
     fail("This should fail");
     verifyFalse(true);
@@ -19,34 +19,28 @@ window.testTestSuiteWillFailLater = function() {
 };
 
 window.testTestSuiteWillPassLater = function() {
-  setTimeout(createDelayed(function() {
+  setTimeout(waitAsync(function() {
     verifyTrue(true);
   }), 1000);
 };
 
-window.testTestSuiteWillDelayError = function() {
-  setTimeout(createDelayedError(function() {
-    verifyTrue(false);
-  }), 1000);
-};
-
 window.testTestSuiteWillNotComplete = function() {
-  createDelayed(function() {
+  waitAsync(function() {
     verifyTrue(true);
   });
 };
 
 window.testTestSuitePartialComplete = function() {
-  createDelayed(function() {
+  waitAsync(function() {
     verifyTrue(true);
   });
-  setTimeout(createDelayed(function() {
+  setTimeout(waitAsync(function() {
     verifyTrue(true);
   }), 1000);
 };
 
 window.testTestSuiteSyncAsync = function() {
-  createDelayed(function() {
+  waitAsync(function() {
     verifyTrue(true);
   })();
 };
