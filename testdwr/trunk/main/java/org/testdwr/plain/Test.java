@@ -15,6 +15,7 @@
  */
 package org.testdwr.plain;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -1159,7 +1160,12 @@ public class Test
 
         return verify;
     }
-
+     
+    public void testRedirectResponse(HttpServletResponse response) throws IOException 
+    {
+    	response.setStatus(302);
+    }
+    
     public Verify checkImHere()
     {
         WebContext webContext = WebContextFactory.get();
@@ -1233,7 +1239,7 @@ public class Test
 
         private String attributeName;
     }
-
+    
     /**
      * A checker that ensures there are a given number of matching sessions
      */
@@ -1348,7 +1354,7 @@ public class Test
 
         return verify;
     }
-
+   
     /**
      * The log stream
      */
