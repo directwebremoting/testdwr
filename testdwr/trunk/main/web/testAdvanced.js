@@ -1,7 +1,9 @@
 
 createTestGroup("Advanced");
 
-window.testAdvancedGlobalRedirectResponse = function() {
+/*
+ * Redirects are now handled by the error handler, should we remove these tests?
+ * window.testAdvancedGlobalRedirectResponse = function() {
     var c = new dwrunit.SingleAsyncCompletor;
     dwr.engine.setTextOrRedirectHandler(waitAsync(c, function(data) {
         verifyEqual(302, data.status);
@@ -25,7 +27,6 @@ window.testAdvancedRedirectResponse = function() {
     });
 }
 
-/*
  The textHtmlResponse tests only work on Jetty for now.  Comment them unless you need to run these tests and you are deployed to Jetty.
 window.testAdvancedGlobalTextHtmlResponse = function() {
     var oldPath = Test._path;
