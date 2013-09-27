@@ -963,15 +963,22 @@ window.testMarshallAreIdentical = function() {
  * 
  */
 window.testMarshallReadOnlyProperties = function () {
-    Test.readOnlyProperty(waitDwrCallbackOptions(function(data) {
-        assertEqual(data.i, 10)
-        assertEqual(data.fieldAbstract, 5.0)
-        assertEqual(data.fieldReadOnly, "readOnly")
-    }));
+  Test.readOnlyProperty(waitDwrCallbackOptions(function(data) {
+    assertEqual(data.i, 10)
+    assertEqual(data.fieldAbstract, 5.0)
+    assertEqual(data.fieldReadOnly, "readOnly")
+  }));
 };
 
 window.testMarshallGenericsImplementation = function() {
-    ConcreteGenericService.execute(0, 0, {}, {}, waitDwrCallbackOptions(function(data) {
-        assertEqual(data, 1);
-    }));
+  ConcreteGenericService.execute(0, 0, {}, {}, waitDwrCallbackOptions(function(data) {
+    assertEqual(data, 1);
+  }));
 };
+
+window.testMarshallJSONArrayBean = function() {
+  $.post("../../../testdwr/dwr/jsonp/Test/testBeanListReturnForJSONP/", { },
+    function(data) {
+      dwr.util.toDescriptiveString(data);
+    }, "jsonp"); 
+}

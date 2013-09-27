@@ -556,7 +556,24 @@ public class Test
 
         return test;
     }
-
+    
+    public List<TestBean> testBeanListReturn()
+    {
+        List<TestBean> testBeanList = new ArrayList<TestBean>();
+        TestBean childTestBean = new TestBean(1, "ChildTestBean", null);
+        TestBean testBean = new TestBean(1, "TestBean", childTestBean);
+        testBeanList.add(testBean);        
+        testBeanList.add(testBean);
+        return testBeanList;
+    }
+    
+    public List<TestBean> testBeanListReturnForJSONP() {
+        List<TestBean> testBeanList = testBeanListReturn();
+        // Add the bean to the list again, to test that DWR does not create references for JSON.
+        testBeanList.add(testBeanList.get(0));
+        return testBeanList;
+    }
+    
     public HashSet<String> stringHashSetParam(HashSet<String> test)
     {
         return test;
