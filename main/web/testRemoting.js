@@ -89,10 +89,17 @@ window.testRemotingAttributesInCall = function() {
 *
 */
 window.testRemotingRequestAutoFillParams = function() {
-  Test.httpObjectParams(1, "AutoRequestTest", [1, 2, 3], new Date(), waitDwrCallbackOptions({
+  var date = new Date();
+  Test.httpObjectParams(1, "AutoRequestTest", [1, 2, 3], date, waitDwrCallbackOptions({
     callback:function(httpObjectParamsBean) {
-      //verifyEqual(data.param1, "value1");
-      //TODO verify httpObjectParamsBean
+      verifyEqual(httpObjectParamsBean.intValue, 1);
+      verifyEqual(httpObjectParamsBean.stringValue, "AutoRequestTest");      
+      verifyEqual(httpObjectParamsBean.shortArrayValue[0], 1);
+      verifyEqual(httpObjectParamsBean.shortArrayValue[1], 2);
+      verifyEqual(httpObjectParamsBean.shortArrayValue[2], 3);
+      verifyEqual(httpObjectParamsBean.dateValue, date);
+      verifyEqual(httpObjectParamsBean.requestHeaderValue.param1, "value1");
+      verifyEqual(httpObjectParamsBean.requestHeaderValue.param2, "value2");
     },
     attributes:{
       'param1':'value1',
