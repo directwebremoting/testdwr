@@ -86,6 +86,22 @@ window.testRemotingAttributesInCall = function() {
 };
 
 /**
+*
+*/
+window.testRemotingRequestAutoFillParams = function() {
+  Test.httpObjectParams(1, "AutoRequestTest", [1, 2, 3], new Date(), waitDwrCallbackOptions({
+    callback:function(httpObjectParamsBean) {
+      //verifyEqual(data.param1, "value1");
+      //TODO verify httpObjectParamsBean
+    },
+    attributes:{
+      'param1':'value1',
+      'param2':'value2'
+    }
+  }));
+};
+
+/**
  *
  */
 window.testRemotingAttributesGlobal = function() {
