@@ -804,9 +804,15 @@ public class Test
         return reply;
     }
 
-    public String httpObjectParams(HttpServletRequest req, int i, HttpServletResponse resp, String s, HttpSession session, short[] ss, ServletContext scx, Date d, ServletConfig scfg)
+    public HttpObjectParamsBean httpObjectParams(HttpServletRequest req, int i, HttpServletResponse resp, String s, HttpSession session, short[] ss, ServletContext scx, Date d, ServletConfig scfg)
     {
-        return req.getRemoteAddr() + i + resp.hashCode() + s + session.getId() + ss.length + scx.getMajorVersion() + d.getTime() + scfg.getServletName();
+        HttpObjectParamsBean httpObjectParamsBean = new HttpObjectParamsBean();
+        httpObjectParamsBean.setIntValue(i);
+        httpObjectParamsBean.setStringValue(s);
+        httpObjectParamsBean.setShortArrayValue(ss);
+        httpObjectParamsBean.setDateValue(d);
+    	httpObjectParamsBean.setRequestHeaderValue(listParameters(req));
+    	return httpObjectParamsBean;
     }
 
     public TestBean[] getNestingTest()
