@@ -7,7 +7,7 @@
       <fileset dir="${basedir}/etc/ant" includes="**/*"/>
     </classpath>
   </taskdef>
-  <property name="dwr.home" value="${basedir}/../dwr_trunk"/>
+  <property name="dwr.home" value="${basedir}/../../dwr"/>
   <property name="downloads" value="${basedir}/downloads"/>
   <property name="servers" value="${basedir}/servers"/>
   <property name="target" value="${basedir}/target/ant"/>
@@ -42,6 +42,7 @@
   <target name="package" depends="compile" description="Create packaged outputs: testdwr.war">
     <!-- Rezip the demo war file if it's contents have changed -->
     <mkdir dir="${target}"/>
+    <copy file="${basedir}/main/java/org/testdwr/custom/index.html" tofile="${basedir}/main/web/WEB-INF/classes/org/testdwr/custom/index.html"/>   
     <if-not-uptodate destfile="${target}/testdwr.war" sourcedir="${basedir}/main/web">
       <action>
         <zip destfile="${target}/testdwr.war" basedir="${basedir}/main/web"/>
