@@ -153,25 +153,25 @@
   Test.untypedTestBeanListParam(List<TestBean> test)
 
   // Needed on JDK 1.4
-  Test.testBeanSetParam(Set<TestBean>);
-  Test.testBeanListParam(List<TestBean>);
-  Test.charTestBeanMapParam(Map<Character, TestBean>);
-  Test.stringBooleanMapParam(Map<String, Boolean>);
-  Test.stringStringMapParam(Map<String, String>);
-  Test.stringArrayMapParam(Map<String, String[]>);
-  Test.stringBeanArrayMapParam(Map<String, TestBean[]>);
-  Test.stringStringHashMapParam(HashMap<String, String>);
-  Test.stringStringTreeMapParam(TreeMap<String, String>);
+  // Test.testBeanSetParam(Set<TestBean>);
+  // Test.testBeanListParam(List<TestBean>);
+  // Test.charTestBeanMapParam(Map<Character, TestBean>);
+  // Test.stringBooleanMapParam(Map<String, Boolean>);
+  // Test.stringStringMapParam(Map<String, String>);
+  // Test.stringArrayMapParam(Map<String, String[]>);
+  // Test.stringBeanArrayMapParam(Map<String, TestBean[]>);
+  // Test.stringStringHashMapParam(HashMap<String, String>);
+  // Test.stringStringTreeMapParam(TreeMap<String, String>);
 
-  Test.stringCollectionParam(Collection<String>);
+  // Test.stringCollectionParam(Collection<String>);
 
-  Test.stringListParam(List<String>);
-  Test.stringLinkedListParam(LinkedList<String>);
-  Test.stringArrayListParam(ArrayList<String>);
+  // Test.stringListParam(List<String>);
+  // Test.stringLinkedListParam(LinkedList<String>);
+  // Test.stringArrayListParam(ArrayList<String>);
 
-  Test.stringSetParam(Set<String>);
-  Test.stringHashSetParam(HashSet<String>);
-  Test.stringTreeSetParam(TreeSet<String>);
+  // Test.stringSetParam(Set<String>);
+  // Test.stringHashSetParam(HashSet<String>);
+  // Test.stringTreeSetParam(TreeSet<String>);
   ]]>
   </signatures>
 
