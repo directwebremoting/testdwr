@@ -33,7 +33,7 @@ window.testAdvancedGlobalTextHtmlResponse = function() {
     var c = new dwrunit.SingleAsyncCompletor;
     dwr.engine.setTextHtmlHandler(waitAsync(c, function(data) {
         verifyEqual(200, data.status);
-        verifyTrue(data.responseText.indexOf("html") != -1);
+        verifyTrue(data.htmlResponseText.indexOf("html") != -1);
         verifyEqual("text/html", data.contentType);
     }));
     Test.doNothing({
@@ -54,7 +54,7 @@ window.testAdvancedTextHtmlResponse = function() {
         errorHandler:waitAsyncAndFail(c, "errorHandler triggered instead of textHtmlHandler."),
         textHtmlHandler:waitAsync(c, function(data) {
           verifyEqual(200, data.status);
-          verifyTrue(data.responseText.indexOf("html") != -1);
+          verifyTrue(data.htmlResponseText.indexOf("html") != -1);
           verifyEqual("text/html", data.contentType);
         })
     });
