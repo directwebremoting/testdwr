@@ -27,10 +27,10 @@ window.testAdvancedRedirectResponse = function() {
     });
 }
 
- The textHtmlResponse tests only work on Jetty for now.  Comment them unless you need to run these tests and you are deployed to Jetty.
+ The textHtmlResponse tests only work on Jetty for now.  Comment them unless you need to run these tests and you are deployed to Jetty.*/
 window.testAdvancedGlobalTextHtmlResponse = function() {
     var oldPath = Test._path;
-    Test._path = "/testdwr/custom/307"; // This only works in Jetty
+    Test._path = common.getContextPath() + "/custom/307"; // This only works in Jetty
     var c = new dwrunit.SingleAsyncCompletor;
     dwr.engine.setTextHtmlHandler(waitAsync(c, function(data) {
         verifyEqual(200, data.status);
@@ -47,7 +47,7 @@ window.testAdvancedGlobalTextHtmlResponse = function() {
 
 window.testAdvancedTextHtmlResponse = function() {
     var oldPath = Test._path;
-    Test._path = "/testdwr/custom/307"; // This only works in Jetty
+    Test._path = common.getContextPath() + "/custom/307"; // This only works in Jetty
     var c = new dwrunit.SingleAsyncCompletor;
     Test.doNothing({
         callback:waitAsyncAndFail(c, "callback triggered instead of textHtmlHandler.  This application must be deployed to Jetty for this test to pass."),
@@ -60,7 +60,7 @@ window.testAdvancedTextHtmlResponse = function() {
         })
     });
     Test._path = oldPath; // by resetting the path immediately after sending we affect no other tests
-}*/
+}
 
 /**
  *

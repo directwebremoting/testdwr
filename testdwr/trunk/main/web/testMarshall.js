@@ -977,7 +977,7 @@ window.testMarshallGenericsImplementation = function() {
 };
 
 window.testMarshallJSONArrayBean = function() {
-  $.post("../../../testdwr/dwr/jsonp/Test/testBeanListReturnForJSONP/", { },
+  $.post("../../.." + common.getContextPath() + "/dwr/jsonp/Test/testBeanListReturnForJSONP/", { },
     waitAsync(function(data) {
       assertEqual(data[0].string, "TestBean");
     }), "jsonp"); 
