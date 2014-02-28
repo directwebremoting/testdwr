@@ -53,12 +53,18 @@ window.testAdvancedTextHtmlResponse = function() {
         exceptionHandler:waitAsyncAndFail(c, "exceptionHandler triggered instead of textHtmlHandler."),
         errorHandler:waitAsyncAndFail(c, "errorHandler triggered instead of textHtmlHandler."),
         textHtmlHandler:waitAsync(c, function(data) {
-          verifyEqual(200, data.status);
           verifyTrue(data.htmlResponseText.indexOf("html") != -1);
           verifyEqual("text/html", data.contentType);
         })
     });
     Test._path = oldPath; // by resetting the path immediately after sending we affect no other tests
+}
+
+window.testAdvancedIframeTextHtmlResponse = function() {
+    dwr.engine.beginBatch();
+    dwr.engine._batch.fileUpload = true; // hack    
+    window.testAdvancedTextHtmlResponse();
+    dwr.engine.endBatch();
 }
 
 /**
