@@ -28,20 +28,21 @@ public class TestObject
     }
 
     /**
-     * @param string
-     * @param integer
-     * @param testObj
+     * 
      */
-    public TestObject(int integer, String string, TestObject testObj)
+    public TestObject(int integer, boolean bool, String string, TestObject testObj)
     {
-        this.string = string;
         this.integer = integer;
+        this.bool = bool;
+        this.string = string;
         this.testObj = testObj;
     }
 
-    public String string = "Default initial value";
-
     public int integer = 0;
+
+    public boolean bool = false;
+
+    public String string = "Default initial value";
 
     public TestObject testObj = null;
 }

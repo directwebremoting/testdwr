@@ -30,21 +30,22 @@ public class TestObjectWithList
     }
 
     /**
-     * @param string
-     * @param integer
-     * @param testObj
+     * 
      */
-    public TestObjectWithList(int integer, String string, TestObject testObj, List<TestObject> list)
+    public TestObjectWithList(int integer, boolean bool, String string, TestObject testObj, List<TestObject> list)
     {
-        this.string = string;
         this.integer = integer;
+        this.bool = bool;
+        this.string = string;
         this.testObj = testObj;
         this.list = list;
     }
 
-    public String string = "Default initial value";
-
     public int integer = 0;
+
+    public boolean bool = false;
+
+    public String string = "Default initial value";
 
     public TestObject testObj = null;
 

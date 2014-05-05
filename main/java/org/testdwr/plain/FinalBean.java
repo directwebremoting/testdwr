@@ -25,10 +25,11 @@ public class FinalBean
      * @param integer
      * @param testBean
      */
-    public FinalBean(int integer, String string, TestBean testBean)
+    public FinalBean(int integer, boolean bool, String string, TestBean testBean)
     {
-        this.string = string;
         this.integer = integer;
+        this.bool = bool;
+        this.string = string;
         this.testBean = testBean;
     }
 
@@ -38,6 +39,14 @@ public class FinalBean
     public int getInteger()
     {
         return integer;
+    }
+
+    /**
+     * @return Returns the bool.
+     */
+    public boolean isBool()
+    {
+        return bool;
     }
 
     /**
@@ -56,9 +65,11 @@ public class FinalBean
         return testBean;
     }
 
-    private final String string;
-
     private final int integer;
+
+    private final boolean bool;
+
+    private final String string;
 
     private final TestBean testBean;
 }
