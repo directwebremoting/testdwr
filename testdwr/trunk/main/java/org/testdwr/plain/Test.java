@@ -560,8 +560,8 @@ public class Test
     public List<TestBean> testBeanListReturn()
     {
         List<TestBean> testBeanList = new ArrayList<TestBean>();
-        TestBean childTestBean = new TestBean(1, "ChildTestBean", null);
-        TestBean testBean = new TestBean(1, "TestBean", childTestBean);
+        TestBean childTestBean = new TestBean(1, true, "ChildTestBean", null);
+        TestBean testBean = new TestBean(1, true, "TestBean", childTestBean);
         testBeanList.add(testBean);        
         testBeanList.add(testBean);
         return testBeanList;
@@ -834,10 +834,10 @@ public class Test
 
     public TestBean[] getNestingTest()
     {
-        TestBean a = new TestBean(0, "!\"$%^&*()_1", null);
-        TestBean b = new TestBean(0, "!\"$%^&*()_2", a);
-        TestBean c = new TestBean(0, "!\"$%^&*()_3", b);
-        TestBean d = new TestBean(0, "!\"$%^&*()_4", c);
+        TestBean a = new TestBean(0, true, "!\"$%^&*()_1", null);
+        TestBean b = new TestBean(0, true, "!\"$%^&*()_2", a);
+        TestBean c = new TestBean(0, true, "!\"$%^&*()_3", b);
+        TestBean d = new TestBean(0, true, "!\"$%^&*()_4", c);
 
         TestBean[] reply = new TestBean[]
         {

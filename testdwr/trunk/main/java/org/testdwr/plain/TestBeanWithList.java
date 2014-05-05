@@ -30,14 +30,13 @@ public class TestBeanWithList
     }
 
     /**
-     * @param string
-     * @param integer
-     * @param testBean
+     * 
      */
-    public TestBeanWithList(int integer, String string, TestBean testBean, List<TestBean> list)
+    public TestBeanWithList(int integer, boolean bool, String string, TestBean testBean, List<TestBean> list)
     {
-        this.string = string;
         this.integer = integer;
+        this.bool = bool;
+        this.string = string;
         this.testBean = testBean;
         this.list = list;
     }
@@ -56,6 +55,22 @@ public class TestBeanWithList
     public void setInteger(int integer)
     {
         this.integer = integer;
+    }
+
+    /**
+     * @return Returns the bool.
+     */
+    public boolean isBool()
+    {
+        return bool;
+    }
+
+    /**
+     * @param bool The bool to set.
+     */
+    public void setBool(boolean bool)
+    {
+        this.bool = bool;
     }
 
     /**
@@ -106,9 +121,11 @@ public class TestBeanWithList
         this.list = list;
     }
 
-    private String string = "Default initial value";
-
     private int integer = 0;
+
+    private boolean bool = false;
+
+    private String string = "Default initial value";
 
     private TestBean testBean = null;
     

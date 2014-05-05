@@ -30,14 +30,13 @@ public class TestBean implements Serializable
     }
 
     /**
-     * @param string
-     * @param integer
-     * @param testBean
+     * 
      */
-    public TestBean(int integer, String string, TestBean testBean)
+    public TestBean(int integer, boolean bool, String string, TestBean testBean)
     {
-        this.string = string;
+        this.bool = bool;
         this.integer = integer;
+        this.string = string;
         this.testBean = testBean;
     }
 
@@ -55,6 +54,22 @@ public class TestBean implements Serializable
     public void setInteger(int integer)
     {
         this.integer = integer;
+    }
+
+    /**
+     * @return Returns the bool.
+     */
+    public boolean isBool()
+    {
+        return bool;
+    }
+
+    /**
+     * @param bool The bool to set.
+     */
+    public void setBool(boolean bool)
+    {
+        this.bool = bool;
     }
 
     /**
@@ -89,9 +104,11 @@ public class TestBean implements Serializable
         this.testBean = testBean;
     }
 
-    private String string = "Default initial value";
-
     private int integer = 0;
+
+    private boolean bool = false;
+
+    private String string = "Default initial value";
 
     private TestBean testBean = null;
 }

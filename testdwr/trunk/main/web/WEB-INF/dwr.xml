@@ -87,7 +87,7 @@
     <convert match="org.testdwr.plain.TestObject" converter="object"/>
     <convert match="org.testdwr.plain.TestObjectWithList" converter="object"/>
     <convert match="org.testdwr.plain.FinalBean" converter="bean">
-      <param name="constructor" value="int integer, String string, org.testdwr.plain.TestBean testBean"/>
+      <param name="constructor" value="int integer, boolean bool, String string, org.testdwr.plain.TestBean testBean"/>
     </convert>
     <convert match="org.testdwr.plain.ObjB" converter="bean" javascript="ObjB"/>
     <convert match="org.testdwr.plain.ObjA" converter="object" javascript="ObjA">
