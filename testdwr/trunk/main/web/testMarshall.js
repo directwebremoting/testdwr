@@ -420,9 +420,9 @@ window.testMarshallXDArrayParam = function() {
 };
 
 // Used in a few tests
-var nested = { integer:0, string:'0123456789' };
+var nested = { integer:0, bool:true, string:'0123456789' };
 nested.testBean = nested;
-var nestedObj = { integer:0, string:'0123456789' };
+var nestedObj = { integer:0, bool:true, string:'0123456789' };
 nestedObj.testObj = nestedObj;
 
 var obja = new ObjA();
@@ -439,17 +439,17 @@ window.testMarshallLoopedParam = function() {
 
 window.testMarshallTestBeanParam = function() {
   runComparisonTests([
-    { code:"testBeanParam", data:{ integer:-2147483648, string:'!"$%^&*()', testBean:null } },
-    { code:"testBeanParam", data:{ integer:-1, string:'Null', testBean:null } },
-    { code:"testBeanParam", data:{ integer:0, string:'null', testBean:null } },
-    { code:"testBeanParam", data:{ integer:1, string:'0987654321', testBean:nested } }
+    { code:"testBeanParam", data:{ integer:-2147483648, bool:true, string:'!"$%^&*()', testBean:null } },
+    { code:"testBeanParam", data:{ integer:-1, bool:true, string:'Null', testBean:null } },
+    { code:"testBeanParam", data:{ integer:0, bool:true, string:'null', testBean:null } },
+    { code:"testBeanParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested } }
   ]);
 };
 
 window.testMarshallTestBeanSetParam = function() {
   runComparisonTests([
     { code:"testBeanSetParam", data:[ ] },
-    { code:"testBeanSetParam", data:[{ integer:1, string:'0987654321', testBean:nested }] },
+    { code:"testBeanSetParam", data:[{ integer:1, bool:true, string:'0987654321', testBean:nested }] },
     { code:"testBeanSetParam", data:[ nested ] }
   ]);
 };
@@ -477,10 +477,10 @@ window.testMarshallTestBeanListParam = function() {
  */
 window.testMarshallTestBeanWithListParam = function() {
   runComparisonTests([
-    { code:"testBeanWithListParam", data:{ integer:1, string:'0987654321', testBean:nested, list:[] } },
-    { code:"testBeanWithListParam", data:{ integer:1, string:'0987654321', testBean:nested, list:[nested] } },
-    { code:"testBeanWithListParam", data:{ integer:1, string:'0987654321', testBean:nested, list:[nested, nested] } },
-    { code:"testBeanWithListParam", data:{ integer:1, string:'0987654321', testBean:nested, list:[nested, nested, nested] } }
+    { code:"testBeanWithListParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested, list:[] } },
+    { code:"testBeanWithListParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested, list:[nested] } },
+    { code:"testBeanWithListParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested, list:[nested, nested] } },
+    { code:"testBeanWithListParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested, list:[nested, nested, nested] } }
   ]);
 };
 
@@ -501,14 +501,14 @@ window.testMarshallTestObjectListParam = function() {
 /  
 window.testMarshallTestObjectWithListParam = function() {
   runComparisonTests([
-    { code:"testObjectWithListParam", data:{ integer:1, string:'0987654321', testObj:nestedObj, list:[] } },
-    { code:"testObjectWithListParam", data:{ integer:1, string:'0987654321', testObj:nestedObj, list:[nestedObj] } },
-    { code:"testObjectWithListParam", data:{ integer:1, string:'0987654321', testObj:nestedObj, list:[nestedObj, nestedObj] } },
-    { code:"testObjectWithListParam", data:{ integer:1, string:'0987654321', testObj:nestedObj, list:[nestedObj, nestedObj, nestedObj] } }
+    { code:"testObjectWithListParam", data:{ integer:1, bool:true, string:'0987654321', testObj:nestedObj, list:[] } },
+    { code:"testObjectWithListParam", data:{ integer:1, bool:true, string:'0987654321', testObj:nestedObj, list:[nestedObj] } },
+    { code:"testObjectWithListParam", data:{ integer:1, bool:true, string:'0987654321', testObj:nestedObj, list:[nestedObj, nestedObj] } },
+    { code:"testObjectWithListParam", data:{ integer:1, bool:true, string:'0987654321', testObj:nestedObj, list:[nestedObj, nestedObj, nestedObj] } }
   ]);
 };*/
 
-var finalBean = { integer:0, string:'0123456789', testBean:nested };
+var finalBean = { integer:0, bool:true, string:'0123456789', testBean:nested };
 
 window.testMarshallFinalBeanParam = function() {
   runComparisonTests([
@@ -539,7 +539,7 @@ window.testMarshallUntypedTestBeanListParam = function() {
 window.testMarshallTestBeanMapParam = function() {
   runComparisonTests([
     { code:"charTestBeanMapParam", data:{ } },
-    { code:"charTestBeanMapParam", data:{ d:{ integer:1, string:'0987654321', testBean:nested } } }
+    { code:"charTestBeanMapParam", data:{ d:{ integer:1, bool:true, string:'0987654321', testBean:nested } } }
   ]);
 };
 
@@ -644,7 +644,7 @@ window.testMarshallStringArrayMapParam = function() {
 };
 
 window.testMarshallStringBeanArrayMapParam = function() {
-  var map = {a: [{ integer:1, string:'0987654321', testBean:nested}, {integer:2, string:'012345678', testBean:nested}]};
+  var map = {a: [{ integer:1, bool:true, string:'0987654321', testBean:nested}, {integer:2, bool:true, string:'012345678', testBean:nested}]};
   Test.stringBeanArrayMapParam(map, waitDwrCallbackOptions(function (data) {
     verifyEqual(data, map);
   }));
