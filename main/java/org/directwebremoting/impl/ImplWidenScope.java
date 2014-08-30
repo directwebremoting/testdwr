@@ -54,30 +54,6 @@ public class ImplWidenScope
                     DefaultScriptSession scriptSession = entry.getValue();
                     log.info("    - " + scriptSession.getDebugName() + " on " + scriptSession.getPage());
                 }
-
-                log.info("    - DefaultScriptSessionManager.pageSessionMap has " + dssm.pageSessionMap.size() + " pages");
-                for (Entry<String, Set<DefaultScriptSession>> entry : dssm.pageSessionMap.entrySet())
-                {
-                    Set<DefaultScriptSession> sessions = entry.getValue();
-                    log.info("      - " + entry.getKey() + " has " + sessions.size() + " entries");
-
-                    for (DefaultScriptSession scriptSession : sessions)
-                    {
-                        log.info("        - " + scriptSession.getDebugName() + " on " + scriptSession.getPage());
-                    }
-                }
-
-                log.info("    - DefaultScriptSessionManager.sessionXRef has " + dssm.sessionXRef.size() + " entries");
-                for (Entry<String, Set<String>> entry : dssm.sessionXRef.entrySet())
-                {
-                    Set<String> sessions = entry.getValue();
-                    log.info("      - " + entry.getKey() + " has " + sessions.size() + " entries");
-
-                    for (String value : sessions)
-                    {
-                        log.info("        - " + value);
-                    }
-                }
             }
             else
             {
