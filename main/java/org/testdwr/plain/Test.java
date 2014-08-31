@@ -692,7 +692,7 @@ public class Test
     }
     
     public TestBean[] testStringBeanVarArgs(String value, TestBean... testBean) {
-    	return testBean;
+        return testBean;
     }
 
     public class InnerSubTestBean extends TestBean
@@ -828,8 +828,8 @@ public class Test
         httpObjectParamsBean.setStringValue(s);
         httpObjectParamsBean.setShortArrayValue(ss);
         httpObjectParamsBean.setDateValue(d);
-    	httpObjectParamsBean.setRequestHeaderValue(listParameters(req));
-    	return httpObjectParamsBean;
+        httpObjectParamsBean.setRequestHeaderValue(listParameters(req));
+        return httpObjectParamsBean;
     }
 
     public TestBean[] getNestingTest()
@@ -1186,7 +1186,7 @@ public class Test
      
     public void testRedirectResponse(HttpServletResponse response) throws IOException 
     {
-    	response.setStatus(302);
+        response.setStatus(302);
     }
     
     public Verify checkImHere()
@@ -1262,7 +1262,15 @@ public class Test
 
         private String attributeName;
     }
-    
+
+    public String testVulnerabilitiesXmlExternalEntity(org.w3c.dom.Document doc) {
+        return doc.getElementsByTagName("text").item(0).getTextContent();
+    }
+
+    public String getWebXMLPath() {
+        return WebContextFactory.get().getServletContext().getRealPath("WEB-INF/web.xml");
+    }
+
     /**
      * A checker that ensures there are a given number of matching sessions
      */
@@ -1376,6 +1384,14 @@ public class Test
         }
 
         return verify;
+    }
+
+    public String testVulnerabilitiesXmlExternalEntity(org.w3c.dom.Document doc) {
+        return doc.getElementsByTagName("text").item(0).getTextContent();
+    }
+
+    public String getWebXMLPath() {
+        return WebContextFactory.get().getServletContext().getRealPath("WEB-INF/web.xml");
     }
    
     /**
