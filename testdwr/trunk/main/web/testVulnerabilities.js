@@ -19,17 +19,16 @@ window.testVulnerabilitiesXssScriptTag = function() {
 
 // See https://www.owasp.org/index.php/XML_External_Entity_%28XXE%29_Processing
 window.testVulnerabilitiesXmlExternalEntity = function() {
-    var c = new dwrunit.SingleAsyncCompletor;
-    var convertFunction =  dwr.engine.serialize.convert;
-    dwr.engine.serialize.convert = function(batch, directrefmap, otherrefmap, data, name, depth) {
-         batch.map[name] = 'dom:<!DOCTYPE+root+[<!ENTITY+foo+SYSTEM+"/home/david/dev/test.txt">]><text>%26foo;</text>';
-    }
-    Test.testVulnerabilitiesXmlExternalEntity(null, waitDwrExceptionHandlerOptions(function(message, ex) {
-      verifyEqual("Error", message);
-      verifyNotNull(ex);
-      verifyEqual(ex.message, message);
-      verifyEqual("java.lang.Throwable", ex.javaClassName);
+    Test.getWebXMLPath(waitAsync(function(webXMLPath) {
+      var convertFunction =  dwr.engine.serialize.convert;
+      dwr.engine.serialize.convert = function(batch, directrefmap, otherrefmap, data, name, depth) {
+        batch.map[name] = 'xml:<!DOCTYPE+root+[<!ENTITY+foo+SYSTEM+"' + webXMLPath + '">]><text>%26foo;</text>';
+      }
+      var resultCheck = function(data) {
+        verifyTrue(data.lastIndexOf('<?xml version="1.0" encoding="ISO-8859-1"?>', 0) === -1);
+      }
+      Test.testVulnerabilitiesXmlExternalEntity(null, waitDwrCallbackOptions(resultCheck));
+      dwr.engine.serialize.convert = convertFunction;
     }));
-    dwr.engine.serialize.convert = convertFunction;
 };
 
