@@ -1263,14 +1263,10 @@ public class Test
         private String attributeName;
     }
 
-    public String testVulnerabilitiesXmlExternalEntity(org.w3c.dom.Document doc) {
-        return doc.getElementsByTagName("text").item(0).getTextContent();
+    public String getSecretFilePath() {
+        return WebContextFactory.get().getServletContext().getRealPath("WEB-INF/secretfile.txt");
     }
-
-    public String getWebXMLPath() {
-        return WebContextFactory.get().getServletContext().getRealPath("WEB-INF/web.xml");
-    }
-
+   
     /**
      * A checker that ensures there are a given number of matching sessions
      */
@@ -1386,14 +1382,6 @@ public class Test
         return verify;
     }
 
-    public String testVulnerabilitiesXmlExternalEntity(org.w3c.dom.Document doc) {
-        return doc.getElementsByTagName("text").item(0).getTextContent();
-    }
-
-    public String getWebXMLPath() {
-        return WebContextFactory.get().getServletContext().getRealPath("WEB-INF/web.xml");
-    }
-   
     /**
      * The log stream
      */
