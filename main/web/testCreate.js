@@ -1,7 +1,9 @@
 createTestGroup("Create");
 
 window.testCreateStaticWithGetInstanceMethod = function() {
-  SingletonGetInstance.disallowed(
+  // We need to hack to call disallowed methods
+  verifyUndefined(SingletonGetInstance.disallowed);
+  dwr.engine._execute(SingletonGetInstance._path, 'SingletonGetInstance', 'disallowed', [
     waitDwrExceptionHandlerOptions(
       function(message, ex) {
         verifyEqual(message, ex.message);
@@ -10,14 +12,16 @@ window.testCreateStaticWithGetInstanceMethod = function() {
         verifyEqual(ex.javaClassName, "java.lang.Throwable");
       }
     )
-  );
+  ]);
   SingletonGetInstance.allowed(waitDwrCallbackOptions(function (data) {
     verifyEqual(data, "SUCCESS");
   }));
 };
 
 window.testCreateStaticWithCustomInstanceMethod = function() {
-  SingletonCustomMethodName.disallowed(
+  // We need to hack to call disallowed methods
+  verifyUndefined(SingletonCustomMethodName.disallowed);
+  dwr.engine._execute(SingletonCustomMethodName._path, 'SingletonCustomMethodName', 'disallowed', [ 
     waitDwrExceptionHandlerOptions(
       function(message, ex) {
         verifyEqual(message, ex.message);
@@ -26,7 +30,7 @@ window.testCreateStaticWithCustomInstanceMethod = function() {
         verifyEqual(ex.javaClassName, "java.lang.Throwable");
       }
     )
-  );
+  ]);
   SingletonCustomMethodName.allowed(waitDwrCallbackOptions(function (data) {
     verifyEqual(data, "SUCCESS");
   }));
