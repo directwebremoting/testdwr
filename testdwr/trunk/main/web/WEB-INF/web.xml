@@ -51,8 +51,9 @@
       <param-value>activeReverseAjax</param-value>
     </init-param>
     <init-param>
+      <!-- Previously we've had this enabled but remoted toString() interferes with FireBug so it has been disabled and tests adjusted accordingly -->
       <param-name>allowImpossibleTests</param-name>
-      <param-value>true</param-value>
+      <param-value>false</param-value>
     </init-param>
     <init-param>
       <param-name>allowGetForSafariButMakeForgeryEasier</param-name>
