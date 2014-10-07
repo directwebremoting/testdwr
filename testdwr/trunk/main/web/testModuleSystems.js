@@ -6,14 +6,21 @@ createTestGroup("ModuleSystems");
 window.testModuleSystemsAmdStandardMapping = function() {
   _moduleSystemsAmd("dwr/amd", "dwr/amd/interface", "dwr/amd/dto");
 };
+window.testModuleSystemsAmdStandardMappingIframeMode = function() {
+  _moduleSystemsAmd("dwr/amd", "dwr/amd/interface", "dwr/amd/dto", true);
+  _moduleSystemsAmd("dwralt", "interface", "dto", true);
+};
 
 // Tests when AMD loader mapped inside the DWR URL space to provide a custom
 // module namespace.
 window.testModuleSystemsAmdCustomMapping = function() {
-	_moduleSystemsAmd("dwralt", "interface", "dto");
+  _moduleSystemsAmd("dwralt", "interface", "dto");
+};
+window.testModuleSystemsAmdCustomMappingIframeMode = function() {
+  _moduleSystemsAmd("dwralt", "interface", "dto", true);
 };
 
-function _moduleSystemsAmd(dwrmap, ifcmap, dtomap) {
+function _moduleSystemsAmd(dwrmap, ifcmap, dtomap, iframeMode) {
   // Note: we need to create the call options object outside the module system's
   // asynchronous wrapper function as the dwrunit framework depends on these
   // objects being created before exiting the main function
@@ -27,8 +34,9 @@ function _moduleSystemsAmd(dwrmap, ifcmap, dtomap) {
     ifcmap + "/Test", 
     dtomap + "/AbstractBase",
     dtomap + "/ConcreteBBase",
-    dtomap + "/ConcreteCBase"], 
-    waitAsync(function(test, AbstractBase, ConcreteBBase, ConcreteCBase) {
+    dtomap + "/ConcreteCBase",
+    dwrmap + "/engine"], 
+    waitAsync(function(test, AbstractBase, ConcreteBBase, ConcreteCBase, dwrEngine) {
       callback1 = function(arr) {
         var b = arr[0];
         verifyTrue(b instanceof AbstractBase, "b instanceof AbstractBase");
@@ -42,7 +50,14 @@ function _moduleSystemsAmd(dwrmap, ifcmap, dtomap) {
         verifyUndefined(c.fieldB);
         verifyEqual(c.fieldC, 3.14);
       };
+      if (iframeMode) {
+      	dwrEngine.beginBatch();
+        dwrEngine._batch.fileUpload = true;
+      }
       test.downloadMapped(dwrCallOptions1);
+      if (iframeMode) {
+      	dwrEngine.endBatch();
+      }
     })
   );
 
@@ -53,15 +68,23 @@ function _moduleSystemsAmd(dwrmap, ifcmap, dtomap) {
   });
   require([
     ifcmap + "/pkg1/onePackageCreator", 
-    dtomap + "/pkg1/OnePackageObject"], 
-    waitAsync(function(test, OnePackageObject) {
+    dtomap + "/pkg1/OnePackageObject",
+    dwrmap + "/engine"], 
+    waitAsync(function(test, OnePackageObject, dwrEngine) {
       var obj = new OnePackageObject();
       obj.i = 42;
       obj.extraProperty = "THIS TEXT SHOULDN'T BE MARSHALLED TO SERVER";
       callback2 = function(retval) {
         verifyEqual(retval.i, 43);
       };
+      if (iframeMode) {
+      	dwrEngine.beginBatch();
+        dwrEngine._batch.fileUpload = true;
+      }
       test.package1(obj, dwrCallOptions2);
+      if (iframeMode) {
+      	dwrEngine.endBatch();
+      }
     })
   );
 
@@ -72,14 +95,22 @@ function _moduleSystemsAmd(dwrmap, ifcmap, dtomap) {
   });
   require([
     ifcmap + "/pkg1/pkg2/twoPackagesCreator", 
-    dtomap + "/pkg1/pkg2/TwoPackagesObject"], 
-    waitAsync(function(test, TwoPackagesObject) {
+    dtomap + "/pkg1/pkg2/TwoPackagesObject",
+    dwrmap + "/engine"], 
+    waitAsync(function(test, TwoPackagesObject, dwrEngine) {
       var obj = new TwoPackagesObject();
       obj.i = 42;
       callback3 = function(retval) {
         verifyEqual(retval.i, 43);
       };
+      if (iframeMode) {
+      	dwrEngine.beginBatch();
+        dwrEngine._batch.fileUpload = true;
+      }
       test.package2(obj, dwrCallOptions3);
+      if (iframeMode) {
+      	dwrEngine.endBatch();
+      }
     })
   );
 }
