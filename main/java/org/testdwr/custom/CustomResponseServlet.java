@@ -49,63 +49,14 @@ public class CustomResponseServlet extends HttpServlet
         String pathInfo = request.getPathInfo();
         String homePage = request.getContextPath() + request.getServletPath() + "/";
 
+        // Redirect from root dir without trailing slash to with trailing slash
         if (pathInfo == null)
         {
             response.sendRedirect(homePage);
             return;
         }
-
-        if (pathInfo.matches("\\/[1-9][0-9][0-9]\\/?.*"))
-        {
-            String responseCodeStr = pathInfo.substring(1, 4);
-            int responseCode = Integer.parseInt(responseCodeStr);
-
-            String extra = "";
-            if (pathInfo.length() == 4)
-            {
-                if (responseCode == HttpServletResponse.SC_TEMPORARY_REDIRECT)
-                {
-                    extra = homePage;
-                }
-            }
-            else
-            {
-                if (pathInfo.charAt(4) != '/')
-                {
-                    response.sendError(404);
-                }
-                else
-                {
-                    extra = URLDecoder.decode(pathInfo.substring(5), "utf-8");
-                    if (!extra.startsWith("http"))
-                    {
-                        extra = homePage;
-                    }
-                }
-            }
-
-            log.info("Sending " + responseCode + ":" + extra + "(" + pathInfo + ")");
-            switch (responseCode)
-            {
-            case HttpServletResponse.SC_MULTIPLE_CHOICES:
-            case HttpServletResponse.SC_MOVED_PERMANENTLY:
-            case HttpServletResponse.SC_FOUND:
-            case HttpServletResponse.SC_SEE_OTHER:
-                response.setHeader("Location", "/" + extra);
-                response.setStatus(responseCode);
-                break;
-
-            case HttpServletResponse.SC_TEMPORARY_REDIRECT:
-                response.sendRedirect(extra);
-                break;
-
-            default:
-                response.sendError(responseCode, "/" + extra);
-                break;
-            }
-        }
-        else
-        {
+        // Send home page
+        else if (pathInfo.equals("/") || pathInfo.startsWith("/page")) {
             InputStream in = getClass().getResourceAsStream(RESOURCE_HELP);
             if (in == null)
             {
@@ -118,6 +69,42 @@ public class CustomResponseServlet extends HttpServlet
                 ServletOutputStream out = response.getOutputStream();
                 CopyUtils.copy(in, out);
             }
+        } 
+        // Send empty page
+        else if (pathInfo.startsWith("/empty")) {
+            response.setContentType("text/html");
+        }
+        // Handle redirects
+        else if (pathInfo.matches("\\/redirect\\/[1-9][0-9][0-9]\\/.*"))
+        {
+            String responseCodeStr = pathInfo.substring(10, 10+3);
+            int responseCode = Integer.parseInt(responseCodeStr);
+            String redirectPath = URLDecoder.decode(pathInfo.substring(13), "utf-8");
+            redirectPath = request.getContextPath() + request.getServletPath() + redirectPath;
+
+            log.info("Sending " + responseCode + ":" + redirectPath + "(" + pathInfo + ")");
+            switch (responseCode)
+            {
+            case HttpServletResponse.SC_MULTIPLE_CHOICES:
+            case HttpServletResponse.SC_MOVED_PERMANENTLY:
+            case HttpServletResponse.SC_FOUND:
+            case HttpServletResponse.SC_SEE_OTHER:
+                response.setHeader("Location", "/" + redirectPath);
+                response.setStatus(responseCode);
+                break;
+
+            case HttpServletResponse.SC_TEMPORARY_REDIRECT:
+                response.sendRedirect(redirectPath);
+                break;
+
+            default:
+                response.sendError(responseCode, "/" + redirectPath);
+                break;
+            }
+        }
+        // Send 404
+        else {
+            response.sendError(404);
         }
     }
 

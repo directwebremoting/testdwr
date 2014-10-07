@@ -3,7 +3,8 @@ createTestGroup("Advanced");
 
 /*
  * Redirects are now handled by the error handler, should we remove these tests?
- * window.testAdvancedGlobalRedirectResponse = function() {
+ * 
+window.testAdvancedGlobalRedirectResponse = function() {
     var c = new dwrunit.SingleAsyncCompletor;
     dwr.engine.setTextOrRedirectHandler(waitAsync(c, function(data) {
         verifyEqual(302, data.status);
@@ -27,45 +28,90 @@ window.testAdvancedRedirectResponse = function() {
     });
 }*/
 
-window.testAdvancedGlobalTextHtmlResponse = function() {
-    var oldPath = Test._path;
-    Test._path = common.getContextPath() + "/custom/307"; // This only works in Jetty
-    var c = new dwrunit.SingleAsyncCompletor;
-    dwr.engine.setTextHtmlHandler(waitAsync(c, function(data) {
-        verifyEqual(200, data.status);
-        verifyTrue(data.htmlResponseText.indexOf("html") != -1);
-        verifyEqual("text/html", data.contentType);
-    }));
-    Test.doNothing({
-        callback:waitAsyncAndFail(c, "callback triggered instead of textHtmlHandler.  This application must be deployed to Jetty for this test to pass."),
-        exceptionHandler:waitAsyncAndFail(c, "exceptionHandler triggered instead of textHtmlHandler.  This application must be deployed to Jetty for this test to pass."),
-        errorHandler:waitAsyncAndFail(c, "errorHandler triggered instead of textHtmlHandler.  This application must be deployed to Jetty for this test to pass.")
-    });
-    Test._path = oldPath; // by resetting the path immediately after sending we affect no other tests
-}
+(function(){
+	var handler = {
+		GlobalTextHtmlHandler: "global",
+		BatchTextHtmlHandler: "batch",
+		TextHtmlErrorHandler: "error"
+	};
+	var redirect = {
+		"": "",
+		RedirectTo: "/redirect/307" // this will cause a 307 redirect
+	};
+	var response = {
+		EmptyHtml: {
+			path: "/empty",
+			verify: function(responseText) {
+				assertNotNull(responseText); 
+				verifyTrue(!responseText.toLowerCase().contains("<body>") || responseText.toLowerCase().contains("<body></body>"));
+			}
+		},
+		HtmlPage: {
+			path: "/page",
+			verify: function(responseText) {
+				verifyTrue(responseText.indexOf("html") != -1);
+			}
+		}
+	};
+	var mode = {
+		"": false,
+		"InIframeMode": true
+	}
 
-window.testAdvancedTextHtmlResponse = function() {
-    var oldPath = Test._path;
-    Test._path = common.getContextPath() + "/custom/307"; // This only works in Jetty
-    var c = new dwrunit.SingleAsyncCompletor;
-    Test.doNothing({
-        callback:waitAsyncAndFail(c, "callback triggered instead of textHtmlHandler."),
-        exceptionHandler:waitAsyncAndFail(c, "exceptionHandler triggered instead of textHtmlHandler."),
-        errorHandler:waitAsyncAndFail(c, "errorHandler triggered instead of textHtmlHandler."),
-        textHtmlHandler:waitAsync(c, function(data) {
-          verifyTrue(data.htmlResponseText.indexOf("html") != -1);
-          verifyEqual("text/html", data.contentType);
-        })
-    });
-    Test._path = oldPath; // by resetting the path immediately after sending we affect no other tests
-}
-
-window.testAdvancedIframeTextHtmlResponse = function() {
-    dwr.engine.beginBatch();
-    dwr.engine._batch.fileUpload = true; // hack    
-    window.testAdvancedTextHtmlResponse();
-    dwr.engine.endBatch();
-}
+	for(var handlerName in handler) {
+		for(var redirectName in redirect) {
+			for(var responseName in response) {
+				for (var modeName in mode) {
+					var testFuncName = "testAdvanced" + handlerName + "With" + redirectName + responseName + modeName;
+					(function(hand, red, resp, mod) {
+						var fullPath = common.getContextPath() + "/custom" + red + resp.path;
+						window[testFuncName] = function() {
+							testTextHtml(hand, fullPath, resp.verify, mod);
+						}
+					})(handler[handlerName], redirect[redirectName], response[responseName], mode[modeName]);
+				}
+			}
+		}
+	}
+	
+	function testTextHtml(handler, path, verifyFunc, iframeMode) {
+	    if (!dwr.engine._scriptSessionId) Test.doNothing({async:false}); // Make sure we have established scriptSessionId before hacking _path
+	    var oldPath = Test._path;
+	    Test._path = path;
+	    var c = new dwrunit.SingleAsyncCompletor;
+	    function verify(ex) {
+    		verifyEqual(ex.name, "dwr.engine.textHtmlReply");
+    		verifyFunc(ex.responseText);
+	    }
+    	var oldGlobal = dwr.engine._textHtmlHandler;
+	    dwr.engine.setTextHtmlHandler(
+	    	handler == "global" ?
+	    		waitAsync(c, verify)
+	    	:
+	        	null
+	    );
+	    dwr.engine.beginBatch();
+	    if (iframeMode) dwr.engine._batch.fileUpload = true; // hack    
+	    Test.doNothing({
+	        callback: waitAsyncAndFail(c, "wrong handler triggered (callback)"),
+	        exceptionHandler: waitAsyncAndFail(c, "wrong handler triggered (exceptionHandler)"),
+	        errorHandler: 
+	        	handler == "error" ? 
+		        	waitAsync(c, function(msg, ex){verify(ex);})
+		        :
+		        	waitAsyncAndFail(c, "wrong handler triggered (errorHandler)")
+	    });
+	    dwr.engine.endBatch({
+	        textHtmlHandler:
+	        	handler == "batch" ? 
+		        	waitAsync(c, verify)
+		        :
+		        	null
+		});
+	    Test._path = oldPath; // by resetting the path immediately after sending we affect no other tests
+    	dwr.engine.setTextHtmlHandler(oldGlobal);
+	}
+})();
 
 /**
  *
