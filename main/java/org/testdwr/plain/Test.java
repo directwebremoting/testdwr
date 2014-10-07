@@ -1194,7 +1194,7 @@ public class Test
         WebContext webContext = WebContextFactory.get();
         ScriptSession scriptSession = webContext.getScriptSession();
 
-        String attributeName = "attr:" + scriptSession.getId().substring(0, 4) + ":" + scriptSession.getPage();
+        String attributeName = "attr:" + scriptSession.getId() + ":" + scriptSession.getPage();
         Verify verify = new Verify();
 
         scriptSession.setAttribute(attributeName, true);

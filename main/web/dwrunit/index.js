@@ -2,6 +2,7 @@
 var tests = {};
 var groups = {};
 var groupNames = [];
+createTestGroup("no_group");
 
 var stati = { notrun:0, executing:1, pass:2, fail:3 };
 var statusBackgrounds = [ "#EEE", "#FFA", "#8F8", "#F00" ];
@@ -18,7 +19,7 @@ var statusNames = [ "Skipped", "Executing", "Pass", "Fail" ];
 function init() {
   // Add functions beginning with "test" as test cases
   for (var prop in window) {
-    if (prop.match(/test/) && typeof window[prop] == "function") {
+    if (prop.match(/^test/) && typeof window[prop] == "function") {
       addTest(prop, window[prop]);
     }
   }
@@ -29,23 +30,20 @@ function init() {
   if (window.location.href.match(/autoRun=true/)) {
     runAllTests();
   }
-  if (window.location.href.match(/autoSend=true/)) {
-    dwr.util.setValue("autoSend", true);
-  }
 }
 
 /**
  * Add test case to test database
  */
 function addTest(testName, func) {
-  var groupName = "Global";
+  var groupName = "no_group"; // default
   for (var i = 0; i < groupNames.length; i++) {
     if (testName.indexOf("test" + groupNames[i]) == 0) {
       groupName = groupNames[i];
     }
   }
 
-  if (groupName == "Global" && !groups[groupName]) {
+  if (!groups[groupName]) {
   	groups[groupName] = [];
   }
 
@@ -75,8 +73,6 @@ function displayTestTable() {
   var html = "";
   html += '<div id="settingsPanel">';
   html += '  <strong>Settings:</strong>';
-  html += '  <label for="autoSend" class="hover" title="DWR can record a test runs in (~/.dwr_test_results.xml) Do we automatically send the results to the server on completion?">Auto send results:</label>';
-  html += '  <input id="autoSend" type="checkbox"/>';
   html += '</div>';
   html += '<table class="grey form">';
   html += '  <thead><tr><th>#</th><th>Group</th><th>Results</th><th>Actions</th><th>Scratch</th></tr></thead>';
@@ -89,6 +85,7 @@ function displayTestTable() {
   for (var i = 0; i < groupNames.length; i++) {
     var groupName = groupNames[i];
     var testNames = groups[groupName];
+    if (testNames.length == 0) continue;
     testNames.sort();
 
     dwr.util.addRows("testSummary", [ groupName ], [
@@ -117,7 +114,7 @@ function displayTestTable() {
       function(testName) { return "" + (++testNum); },
       function(testName) {
         var name;
-        if (groupName == "Global") {
+        if (groupName == "no_group") {
           name = _addSpaces(testName.substring(4));
         }
         else {
@@ -217,8 +214,8 @@ function _toggleTest(testName) {
 function updateTestResults(reportAnyway) {
   var counts = [ 0, 0, 0, 0 ];
   var groupCounts = {};
-  for (var i = 0; i < groupNames.length; i++) {
-    groupCounts[groupNames[i]] = [ 0, 0, 0, 0 ];
+  for(var name in groups) {
+    groupCounts[name] = [ 0, 0, 0, 0 ];
   }
 
   var testCount = 0;
@@ -239,6 +236,8 @@ function updateTestResults(reportAnyway) {
     var passed = groupStatus[stati.pass];
     var started = groupCount - groupStatus[stati.notrun];
 
+	if (dwr.util.byId("groupCount" + groupName) == null) continue;
+	
     dwr.util.setValue("groupCount" + groupName, "Pass:" + passed + " Fail:" + failed);
 
     dwr.util.byId("groupCount" + groupName).style.backgroundColor = "";
@@ -277,24 +276,6 @@ function updateTestResults(reportAnyway) {
   if (passed == testCount) {
     dwr.util.byId("testCount").style.backgroundColor = statusBackgrounds[stati.pass];
     dwr.util.byId("testCount").style.color = statusColors[stati.pass];
-  }
-
-  if ((started == testCount && outstanding == 0 && dwr.util.getValue("report")) || reportAnyway) {
-    var failures = [];
-    for (var testName in tests) {
-      test = tests[testName];
-      if (test.status != stati.pass) {
-        failures.push({
-          name: test.name,
-          status: test.status,
-          group: test.group,
-          messages: test.messages
-        });
-      }
-    }
-    Recorder.postResults(testCount, passed, failed, failures, function() {
-      dwr.util.setValue("scratchAll", "Posted report to server");
-    });
   }
 }
 

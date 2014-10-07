@@ -107,44 +107,33 @@ dwrunit = (function() {
 		var loop = true;
 		var done = false;
 		var runner = this;
-		function handleNextTestOrCompleted() {
-			// If done it's done
-			if (done) {
-				// NOP
-			}
-			// Finish up if all tests completed
-			else if (completed == total) {
-				if (options.completionCallback) options.completionCallback();
-				done = true;
-				loop = false;
-			}
-			// Hold off if we already have the maximum number of asynchronous tests running
-			else if (started >= completed + concurrency) {
-				loop = false;
-			}
-			// Hold off if all tests are already started
-			else if (started == total) {
-				loop = false;
-			}
-			// Run next test
-			else {
-				started++;
-				var name = names[started-1];
-				var test = runner._tests[name];
-				test.run(
-					options.startCallback,
-					function(ts) {
-						if (options.statusCallback) options.statusCallback(ts);
-						completed++;
-						if (!loop) setTimeout(handleNextTestOrCompleted, 0);
-					},
-					timeout
-				);
-			}
+
+		// Start initially as many we are allowed to according to concurrency
+		for(var i=0; i<Math.min(total, concurrency); i++) {
+			runNextTest();
+		}
+
+		function runNextTest() {
+			if (started == total) return;
+			started++;
+			var name = names[started-1];
+			var test = runner._tests[name];
+			// Start new test
+			test.run(options.startCallback, testComplete, timeout);
 		}
 		
-		while(loop) {
-			handleNextTestOrCompleted();
+		function testComplete(ts) {
+			// Test is done, update its status
+			if (options.statusCallback) options.statusCallback(ts);
+			completed++;
+			// Decide what to do
+			if (completed == total) {
+				// Test run is complete so update its status
+				if (options.completionCallback) options.completionCallback();
+			} else {
+				// Invoke the next test if there is one
+				setTimeout(runNextTest, 0);
+			}
 		}
 	};
 	

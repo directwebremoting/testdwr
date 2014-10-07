@@ -63,8 +63,9 @@ var debugOverrideCount = 0;
 function debugOverrideFunc(arg1) {
   if (arg1.addTestResult) {
     arg1.addTestResult();
+  } else {
+    oldDebugFunc.apply(dwr.engine, arguments);
   }
-  oldDebugFunc.apply(dwr.engine, arguments);
 }
 function handlerTest2(conf, throwExceptionInHandlers) {
   var confWithoutExpected = {};
@@ -203,7 +204,7 @@ function handlerTest2(conf, throwExceptionInHandlers) {
       var match = p.match(/([^_]*)(?:_(.*))?/);
       var key = match[1];
       var oper = match[2];
-      if (key.startsWith("call")) {
+      if (key.indexOf("call") == 0) {
         var callOpt = {};
         if (key == "call") {
           isSingleShot = true;
