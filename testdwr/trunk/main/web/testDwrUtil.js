@@ -316,7 +316,6 @@ window.testDwrUtilCloneNode1 = function() {
   dwr.util.byId("precloneNode1suf").style.backgroundColor = "#AFA";
   dwr.util.setValue("precloneNode1Inner2suf", "v2");
   var clonetext = dwr.util.getValue("precloneNode1Inner1suf", { textContent:true });
-  dwr.util.setValue("cloneNode1Results", clonetext);
 
   // TODO: we need to assert more
   assertNotNull(dwr.util.byId('precloneNode1suf'));
