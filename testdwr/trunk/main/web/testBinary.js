@@ -6,11 +6,11 @@ createTestGroup("Binary");
 function binaryOnload() {};
 
 window.testBinarySimple = function() {
-  Test.binary("Hello", waitDwrCallbackOptions(function(retval) {
-    useHtml('<iframe id="byIdTestBinarySimple" onload="binaryOnload();" src="' + retval + '"></iframe>');
+  Test.binary("Hello", waitDwrCallbackOptions(function(downloadUrl) {
+    useHtml('<iframe id="byIdTestBinarySimple" onload="binaryOnload();" src="' + downloadUrl + '"></iframe>');
     var iframe = dwr.util.byId("byIdTestBinarySimple");
     binaryOnload = waitAsync(function() {
-      verifyEqual(iframe.contentDocument.body.innerHTML, "<p>Hello</p>");
+      verifyTrue(iframe.contentDocument.body.innerHTML.indexOf("Hello") >= 0);
     });	  
   }));
 };
