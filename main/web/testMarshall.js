@@ -690,26 +690,24 @@ function runComparisonTests(compares) {
 }
 
 window.testMarshallDomElementParam = function() {
-  var testHtml = '<p id="test">This is a <em>test node</em> to check on <strong>DOM</strong> <span class="small">manipulation</span>.</p>';
-  useHtml(testHtml);
-  var testNode = dwr.util.byId("test");
-  var nodeCompare = function(data) {
-    var output;
-    if (window.XMLSerializer) output = new XMLSerializer().serializeToString(data);
-    else if (data.toXml) output = data.toXml;
-    else output = data.innerHTML;
+  var testXml = '<p id="test">This is a <em>test node</em> to check on <strong>DOM</strong> <span class="small">manipulation</span>.</p>';
+  var testElement = dwr.engine.serialize.toDomElement(testXml);
+  var nodeCompare = function(element) {
+    var resultXml = dwr.engine.serialize.serializeDom(element);
     // We remove any xmlns attributes that may have been added
-    output = output.replace(/ xmlns=["'][^"']+["']/g, "");
-    // We do lower case because xml->html might not preserve tag case or spaces
-    output = output.toLowerCase().replace(/ /g, "");
-    compare = testHtml.toLowerCase().replace(/ /g, "");
-    verifyEqual(output, compare);
+    testXml = testXml.replace(/ xmlns=["'][^"']+["']/g, "");
+    resultXml = resultXml.replace(/ xmlns=["'][^"']+["']/g, "");
+    // We do lower case and whitespace removal because parsing+serialization might not preserve tag case or whitespace
+    testXml = testXml.toLowerCase().replace(/[ \t\n\r]/g, "");
+    resultXml = resultXml.toLowerCase().replace(/[ \t\n\r]/g, "");
+    // Identical?
+    verifyEqual(testXml, resultXml);
   };
 
-  Test.dom4jElementParam(testNode, waitDwrCallbackOptions(nodeCompare));
-  Test.xomElementParam(testNode, waitDwrCallbackOptions(nodeCompare));
-  Test.jdomElementParam(testNode, waitDwrCallbackOptions(nodeCompare));
-  Test.domElementParam(testNode, waitDwrCallbackOptions(nodeCompare));
+  Test.dom4jElementParam(testElement, waitDwrCallbackOptions(nodeCompare));
+  Test.xomElementParam(testElement, waitDwrCallbackOptions(nodeCompare));
+  Test.jdomElementParam(testElement, waitDwrCallbackOptions(nodeCompare));
+  Test.domElementParam(testElement, waitDwrCallbackOptions(nodeCompare));
 };
 
 /**

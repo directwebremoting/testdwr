@@ -43,7 +43,7 @@ window.testAdvancedRedirectResponse = function() {
 			path: "/empty",
 			verify: function(responseText) {
 				assertNotNull(responseText); 
-				verifyTrue(!responseText.toLowerCase().contains("<body>") || responseText.toLowerCase().contains("<body></body>"));
+				verifyTrue(responseText.toLowerCase().indexOf("<body>") < 0 || responseText.toLowerCase().indexOf("<body></body>") >= 0);
 			}
 		},
 		HtmlPage: {
