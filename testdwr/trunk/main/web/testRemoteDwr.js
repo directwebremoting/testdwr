@@ -25,7 +25,7 @@ window.testRemoteDwrSetValueScriptTagMode = function() {
 };
 function _remoteDwrSetValue(id) {
   useHtml('<input id="' + id + '" value="start"/>');
-  Test.setValue("remoteDwrSetValue", "changed", waitDwrCallbackOptions(function(data) {
+  Test.setValue(id, "changed", waitDwrCallbackOptions(function(data) {
     assertEqual("changed", data);
     var remoteDwrSetValue = dwr.util.getValue(id);
     assertEqual("changed", remoteDwrSetValue);
