@@ -5,14 +5,32 @@ createTestGroup("RemoteDwr");
  * 
  */
 window.testRemoteDwrSetValue = function() {
-  useHtml('<input id="remoteDwrSetValue" value="start"/>');
-  
+  _remoteDwrSetValue("testRemoteDwrSetValue");
+};
+window.testRemoteDwrSetValueIframeMode = function() {
+  dwr.engine.beginBatch();
+  dwr.engine._batch.fileUpload = true;
+  _remoteDwrSetValue("testRemoteDwrSetValueIframeMode");
+  dwr.engine.endBatch();
+};
+window.testRemoteDwrSetValueScriptTagMode = function() {
+  var origSend2 = dwr.engine.transport.send2;
+  dwr.engine.transport.send2 = function(batch) {
+  	dwr.engine.batch.prepareToSend(batch);
+  	batch.transport = dwr.engine.transport.scriptTag;
+  	return batch.transport.send(batch);
+  };
+  _remoteDwrSetValue("testRemoteDwrSetValueScriptTagMode");
+  dwr.engine.transport.send2 = origSend2;
+};
+function _remoteDwrSetValue(id) {
+  useHtml('<input id="' + id + '" value="start"/>');
   Test.setValue("remoteDwrSetValue", "changed", waitDwrCallbackOptions(function(data) {
     assertEqual("changed", data);
-    var remoteDwrSetValue = dwr.util.getValue("remoteDwrSetValue");
+    var remoteDwrSetValue = dwr.util.getValue(id);
     assertEqual("changed", remoteDwrSetValue);
   }));
-};
+}
 
 /**
  * 
