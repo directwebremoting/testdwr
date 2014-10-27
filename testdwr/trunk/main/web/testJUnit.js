@@ -5,9 +5,9 @@ createTestGroup("JUnit");
  *
  */
 window.testJUnitAll = function() {
-  var scratch = currentTest.scratch;
+  useHtml("<div id='junitStatus'></div>");
   var noteProgressInScratch = function(passed, failed, total) {
-    dwr.util.setValue(scratch, "Pass:" + passed + " Fail:" + failed + " Total:" + total);
+    dwr.util.setValue("junitStatus", "Pass:" + passed + " Fail:" + failed + " Total:" + total);
   };
 
   Test.runAllJUnitTests(noteProgressInScratch, waitDwrCallbackOptions(function(reply) {

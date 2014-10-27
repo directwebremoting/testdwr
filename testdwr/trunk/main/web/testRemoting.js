@@ -157,3 +157,37 @@ window.testRemotingTimeout = function() {
     }
   }));
 };
+
+/**
+ *
+ */
+window.testRemotingSyncCallOrdering = function() {
+  var count = 0;
+  Test.slowStringParam("param", 100, waitDwrCallbackOptions({
+    async:false,
+    callback:function(param) {
+      count++;
+      verifyEqual(count, 1, "callback should be first with sync");
+      verifyEqual(param, "param");
+    }
+  }));
+  count++;
+  verifyEqual(count, 2, "after should be last with sync");
+};
+
+/**
+ *
+ */
+window.testRemotingAsyncCallOrdering = function() {
+  var count = 0;
+  Test.slowStringParam("param", 100, {
+    async:true, // the default
+    callback:function(param) {
+      count++;
+      verifyEqual(count, 2, "callback should be last with async");
+      verifyEqual(param, "param");
+    }
+  });
+  count++;
+  verifyEqual(count, 1, "after should be first with async");
+};

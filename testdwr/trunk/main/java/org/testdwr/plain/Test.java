@@ -1267,6 +1267,47 @@ public class Test
         return WebContextFactory.get().getServletContext().getRealPath("WEB-INF/secretfile.txt");
     }
    
+    public void reverseAjaxCallFunction(final String clientFunction, final int[] callIntervals) 
+    {
+        final String scriptSessionId = WebContextFactory.get().getScriptSession().getId();
+        final ServerContext serverContext = WebContextFactory.get();
+        Runnable r = new Runnable()
+        {
+            public void run()
+            {
+                try
+                {
+                    for(int i=0; i<callIntervals.length; i++) {
+                        final int callIndex = i;
+                        Thread.sleep(callIntervals[i]);
+                        Browser.withAllSessionsFiltered(
+                            serverContext,
+                            new ScriptSessionFilter()
+                            {
+                                public boolean match(ScriptSession session)
+                                {
+                                    return session.getId().equals(scriptSessionId);
+                                }
+                            }, 
+                            new Runnable()
+                            {
+                                public void run()
+                                {
+                                    ScriptSessions.addFunctionCall(clientFunction, callIndex);
+                                }
+                            });
+                    }
+                }
+                catch (InterruptedException e)
+                {
+                    // Ignore
+                }
+            }
+        };
+        Thread t = new Thread(r);
+        t.start();
+    }
+    
     /**
      * A checker that ensures there are a given number of matching sessions
      */
@@ -1323,62 +1364,75 @@ public class Test
 
     /**
      * JUnit test runner!
+     * @throws InterruptedException 
      */
-    public Verify runAllJUnitTests(final JavascriptFunction noteProgressInScratch)
+    public Verify runAllJUnitTests(final JavascriptFunction noteProgressInScratch) throws InterruptedException
     {
-        ClasspathScanner scanner = new ClasspathScanner("org.directwebremoting", true);
-        Set<String> classNames = scanner.getClasses();
-        Set<Class<?>> tests = new HashSet<Class<?>>();
+        final Verify verify = new Verify();
 
-        for (Iterator<String> it = classNames.iterator(); it.hasNext();)
+        Runnable r = new Runnable()
         {
-            String className = it.next();
-
-            if (className.endsWith("Test"))
+            public void run()
             {
-                try
+                ClasspathScanner scanner = new ClasspathScanner("org.directwebremoting", true);
+                Set<String> classNames = scanner.getClasses();
+                Set<Class<?>> tests = new HashSet<Class<?>>();
+
+                for (Iterator<String> it = classNames.iterator(); it.hasNext();)
                 {
-                    Class<?> type = Class.forName(className);
-                    tests.add(type);
+                    String className = it.next();
+
+                    if (className.endsWith("Test"))
+                    {
+                        try
+                        {
+                            Class<?> type = Class.forName(className);
+                            tests.add(type);
+                        }
+                        catch (ClassNotFoundException ex)
+                        {
+                            // ignore
+                        }
+                    }
                 }
-                catch (ClassNotFoundException ex)
+
+                JUnitCore core = new JUnitCore();
+                core.addListener(new RunListener()
                 {
-                    // ignore
+                    int completed = 0;
+                    int failures = 0;
+
+                    @Override
+                    public void testFailure(Failure failure) throws Exception
+                    {
+                        failures++;
+                    }
+
+                    @Override
+                    public void testFinished(Description description) throws Exception
+                    {
+                        completed++;
+                        noteProgressInScratch.execute();
+                    }
+                });
+
+                Class<?>[] testArray = tests.toArray(new Class<?>[tests.size()]);
+                Result results = core.run(testArray);
+
+                for (Failure failure : results.getFailures())
+                {
+                    verify.fail("Desc: " + failure.getDescription() +
+                                "Header: " + failure.getTestHeader() +
+                                "Message: " + failure.getMessage());
                 }
             }
-        }
+        };
 
-        JUnitCore core = new JUnitCore();
-        core.addListener(new RunListener()
-        {
-            int completed = 0;
-            int failures = 0;
-
-            @Override
-            public void testFailure(Failure failure) throws Exception
-            {
-                failures++;
-            }
-
-            @Override
-            public void testFinished(Description description) throws Exception
-            {
-                completed++;
-                noteProgressInScratch.execute();
-            }
-        });
-
-        Class<?>[] testArray = tests.toArray(new Class<?>[tests.size()]);
-        Result results = core.run(testArray);
-
-        Verify verify = new Verify();
-        for (Failure failure : results.getFailures())
-        {
-            verify.fail("Desc: " + failure.getDescription() +
-                        "Header: " + failure.getTestHeader() +
-                        "Message: " + failure.getMessage());
-        }
-
+        // Run in a separate thread to avoid interference when run from the web
+        Thread t = new Thread(r);
+        t.start();
+        t.join();
+        
         return verify;
     }
 
