@@ -16,11 +16,6 @@
     <listener-class>org.directwebremoting.servlet.DwrListener</listener-class>
   </listener>
 
-  <!-- Part of bayeux -->
-  <listener>
-    <listener-class>org.directwebremoting.bayeux.BayeuxServletContextAttributeListener</listener-class>
-  </listener>
-
   <!-- Part of springservlet -->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -127,12 +122,6 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
 
-  <!-- Part of bayeux -->
-  <servlet>
-    <servlet-name>bayeux</servlet-name>
-    <servlet-class>org.mortbay.cometd.continuation.ContinuationCometdServlet</servlet-class>
-  </servlet>
-
   <!-- Part of springservlet -->
  <servlet>
     <servlet-name>springservlet</servlet-name>
@@ -183,12 +172,6 @@
   <servlet-mapping>
     <servlet-name>dwralt</servlet-name>
     <url-pattern>/dwralt/*</url-pattern>
-  </servlet-mapping>
-
-  <!-- Part of bayeux -->
-  <servlet-mapping>
-    <servlet-name>bayeux</servlet-name>
-    <url-pattern>/bayeux/*</url-pattern>
   </servlet-mapping>
 
   <!-- Part of springservlet -->
