@@ -19,7 +19,7 @@
  	<!-- Double dwr:configuration tag test -->
 	<dwr:configuration>
 		<dwr:init>
-			<dwr:converter id="parameterized" class="org.testdwr.springmvc.conversion.ParamereterizedConverter" />
+			<dwr:converter id="parameterized" class="org.testdwr.springmvc.conversion.ParameterizedConverter" />
 		</dwr:init>
 		<!-- This test handles global filters -->
 		<dwr:filter class="org.testdwr.springmvc.filters.GlobalLoggingFilter">

@@ -29,7 +29,7 @@ import org.testdwr.springmvc.model.OtherSpringMvcBean;
  *
  * @author Jose Noheda [jose.noheda@gmail.com]
  */
-public class ParamereterizedConverter implements Converter
+public class ParameterizedConverter implements Converter
 {
 
     private String prefix;
