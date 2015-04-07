@@ -88,7 +88,7 @@ window.testRemotingAttributesInCall = function() {
 /**
 *
 */
-window.testRemotingRequestAutoFillParams = function() {
+window.testRemotingAutoFillHttpObjectParams = function() {
   var date = new Date();
   Test.httpObjectParams(1, "AutoRequestTest", [1, 2, 3], date, waitDwrCallbackOptions({
     callback:function(httpObjectParamsBean) {
@@ -104,6 +104,31 @@ window.testRemotingRequestAutoFillParams = function() {
     attributes:{
       'param1':'value1',
       'param2':'value2'
+    }
+  }));
+};
+
+/**
+*
+*/
+window.testRemotingAutoFillHttpSessionParam1 = function() {
+  Test.httpSessionAndMoreParam({}, 1, waitDwrCallbackOptions({
+    callback:function(result) {
+      // enough that no errors occur
+    }
+  }));
+};
+window.testRemotingAutoFillHttpSessionParam2 = function() {
+  Test.httpSessionAndMoreParam2({}, 1, waitDwrCallbackOptions({
+    callback:function(result) {
+      // enough that no errors occur
+    }
+  }));
+};
+window.testRemotingAutoFillHttpSessionParam3 = function() {
+  Test.httpSessionAndMoreParam3({}, 1, waitDwrCallbackOptions({
+    callback:function(result) {
+      // enough that no errors occur
     }
   }));
 };

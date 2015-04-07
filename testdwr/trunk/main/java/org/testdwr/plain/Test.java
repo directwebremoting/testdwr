@@ -832,6 +832,21 @@ public class Test
         return httpObjectParamsBean;
     }
 
+    public TestBean httpSessionAndMoreParam(HttpSession session, TestBean testBean, int i)
+    {
+        return testBean;
+    }
+
+    public TestBean httpSessionAndMoreParam2(TestBean testBean, HttpSession session, int i)
+    {
+        return testBean;
+    }
+
+    public TestBean httpSessionAndMoreParam3(TestBean testBean, int i, HttpSession session)
+    {
+        return testBean;
+    }
+
     public TestBean[] getNestingTest()
     {
         TestBean a = new TestBean(0, true, "!\"$%^&*()_1", null);
