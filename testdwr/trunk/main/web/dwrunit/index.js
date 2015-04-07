@@ -451,7 +451,7 @@ function waitDwrErrorHandlerOptions(handlerOrOptions) {
 }
 
 function _wrongHandlerCalled() {
-  dwrunit.fail("Wrong DWR call handler triggered.");
+  dwrunit.fail(_buildMessage("Wrong DWR call handler triggered ", arguments));
 }
 
 function waitDwrVerifyCallbackOptions() {
