@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>DWRUnit: DWR Session Test</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+        <link type="text/css" href="dwrunit/index.css" rel="stylesheet" />
+    </head>
+    <body>
+        <h1>DWR Session Test</h1>
+        <div id="output"></div>
+        <div id="status"></div>
+        <script>
+            window.onload = function() {
+                var out = document.getElementById("output");
+                var stat = document.getElementById("status");
+    
+                // Let DWR generate a new DWRSESSIONID and force a new session in container = a new JSESSIONID
+                Test.createSessionWithDelay({
+                    callback: function(value) {
+                        out.innerHTML = value;
+                        // Wait a little so all sibling windows can finish
+                        setTimeout(function() {
+                            // Then attempt a call to see if any mismatch occurred between DWRSESSIONID and HttpSession that trigger CSRF protection
+                            Test.doNothing({
+                                callback: function(value) {
+                                    stat.innerHTML += "OK";
+                                },
+                                errorHandler: function(error) {
+                                    stat.innerHTML = error;
+                                }
+                            })  
+                        }, 1000);
+                    },
+                    errorHandler: function(error) {
+                        stat.innerHTML = error;
+                    }
+                });
+            }
+        </script>
+        <script type='text/javascript' src='./dwr/engine.js'></script>
+        <script type='text/javascript' src='./dwr/interface/Test.js'></script>
+    </body>
+</html>

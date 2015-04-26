@@ -104,3 +104,60 @@ function _testReverseAjax(callIntervals, allowedDelay, completeCb) {
     if (completeCb) completeCb();
   }), 9000);
 }
+
+window.testIsolatedDwrSessionCollision = function() {
+  // Start out with no JSESSIONID and no DWRSESSIONID
+  function deleteCookie(name, path) {
+      document.cookie = name + "=; path=" + path + "; expires=Thu, 01 Jan 1970 00:00:01 GMT;"
+  }
+  var path = dwr.engine._contextPath;
+  deleteCookie("JSESSIONID", path);
+  deleteCookie("DWRSESSIONID", path);
+  
+  var windows = [];
+  for(var i=0; i<10; i++) {
+    var pwin = window.open("pageTestDwrSession.html");
+    if (!pwin) throw new Error("Popup window needed for test was blocked.");
+    windows.push(pwin);
+  }
+
+  var c = new dwrunit.ExplicitAsyncCompletor;
+  function checkStatus() {
+    if (windows.length > 0) {
+      var notready = [];
+      for(var i=0; i<windows.length; i++) {
+        var pwin = windows[i];
+        var done = false;
+        try {
+          var stat = pwin.document && pwin.document.getElementById("status");
+          if (stat) {
+            var status = stat.innerHTML;
+            if (status) {
+              done = true;
+              if (status == "OK") {
+                pwin.close();
+              } else {
+                dwrunit.fail(status);
+              }
+            }
+          }
+        }
+        catch(ex) {
+          // NOP
+        }
+        if (!done) {
+          notready.push(pwin);
+        }
+      }
+      windows = notready;
+    }
+    if (windows.length == 0) {
+      c.complete();
+    } else {
+      setTimeout(waitAsync(c, function() {
+        checkStatus();
+      }), 500);
+    }
+  }
+  checkStatus();
+}
