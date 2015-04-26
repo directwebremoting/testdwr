@@ -1259,6 +1259,15 @@ public class Test
         return verify;
     }
 
+    public String createSessionWithDelay() throws Exception
+    {
+        Thread.sleep(2000);
+        WebContext webCtx = WebContextFactory.get();
+        String scriptSessionId = webCtx.getScriptSession().getId();
+        String sessionId = webCtx.getHttpServletRequest().getSession().getId();
+        return "scriptSessionId:" + scriptSessionId + ", sessionId:" + sessionId;
+    }
+    
     protected class TestScriptSessionFilter implements ScriptSessionFilter
     {
         public TestScriptSessionFilter(String attributeName)

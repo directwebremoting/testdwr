@@ -311,7 +311,7 @@ function runTests(testNames) {
     	// Use this for something?
       },
       concurrency: 3,
-      timeout: 10000
+      timeout: 20000
     }
   );
 }
