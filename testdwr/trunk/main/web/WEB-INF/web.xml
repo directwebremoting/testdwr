@@ -122,6 +122,37 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
 
+  <!-- Part of DWR poll tests -->
+  <servlet>
+    <servlet-name>dwrpoll</servlet-name>
+    <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>activeReverseAjaxEnabled</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>org.directwebremoting.extend.ServerLoadMonitor</param-name>
+      <param-value>org.directwebremoting.impl.PollingServerLoadMonitor</param-value>
+    </init-param>
+    <init-param>
+      <param-name>disconnectedTime</param-name>
+      <param-value>1000</param-value>
+    </init-param>
+    <init-param>
+      <param-name>allowScriptTagRemoting</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>allowGetForSafariButMakeForgeryEasier</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
   <!-- Part of springservlet -->
  <servlet>
     <servlet-name>springservlet</servlet-name>
@@ -172,6 +203,12 @@
   <servlet-mapping>
     <servlet-name>dwralt</servlet-name>
     <url-pattern>/dwralt/*</url-pattern>
+  </servlet-mapping>
+
+  <!-- Part of DWR poll tests -->
+  <servlet-mapping>
+    <servlet-name>dwrpoll</servlet-name>
+    <url-pattern>/dwrpoll/*</url-pattern>
   </servlet-mapping>
 
   <!-- Part of springservlet -->
