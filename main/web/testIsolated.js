@@ -43,28 +43,44 @@ window.testIsolatedSyncReturning = function() {
 /**
  * 
  */
-window.testIsolatedActiveReverseAjaxDefaultMode = function() {
-  _testReverseAjax([2000, 2000, 2000], 1500);
+window.testIsolatedActiveReverseAjaxStreamingDefaultMode = function() {
+  _testReverseAjax(dwr.engine, Test, [2000, 2000, 2000], 1500, null);
 }
-window.testIsolatedActiveReverseAjaxIframeMode = function() {
-  var origSend2 = dwr.engine.transport.send2;
-  dwr.engine.transport.send2 = function(batch) {
-    dwr.engine.batch.prepareToSend(batch);
-    batch.transport = dwr.engine.transport.iframe;
-    return batch.transport.send(batch);
-  };
-  _testReverseAjax([2000, 2000, 2000], 1500, function() {dwr.engine.transport.send2 = origSend2;});
+window.testIsolatedActiveReverseAjaxStreamingIframeMode = function() {
+  _testReverseAjax(dwr.engine, Test, [2000, 2000, 2000], 1500, dwr.engine.transport.iframe);
 }
-window.testIsolatedActiveReverseAjaxScriptTagMode = function() {
-  var origSend2 = dwr.engine.transport.send2;
-  dwr.engine.transport.send2 = function(batch) {
-    dwr.engine.batch.prepareToSend(batch);
-    batch.transport = dwr.engine.transport.scriptTag;
-    return batch.transport.send(batch);
-  };
-  _testReverseAjax([2000, 2000, 2000], 1500, function() {dwr.engine.transport.send2 = origSend2;});
+window.testIsolatedActiveReverseAjaxStreamingScriptTagMode = function() {
+  _testReverseAjax(dwr.engine, Test, [2000, 2000, 2000], 1500, dwr.engine.transport.scriptTag);
 }
-function _testReverseAjax(callIntervals, allowedDelay, completeCb) {
+
+/**
+ * 
+ */
+window.testIsolatedActiveReverseAjaxPollingDefaultMode = function() {
+  require(["dwrpoll/amd/engine", "dwrpoll/amd/interface/Test"], waitAsync(function(dwrEngine, Test) {
+    _testReverseAjax(dwrEngine, Test, [2000, 2000, 2000], 1500, null);
+  }));
+};
+window.testIsolatedActiveReverseAjaxPollingIframeMode = function() {
+  require(["dwrpoll/amd/engine", "dwrpoll/amd/interface/Test"], waitAsync(function(dwrEngine, Test) {
+    _testReverseAjax(dwrEngine, Test, [2000, 2000, 2000], 1500, dwrEngine.transport.iframe);
+  }));
+};
+window.testIsolatedActiveReverseAjaxPollingScriptTagMode = function() {
+  require(["dwrpoll/amd/engine", "dwrpoll/amd/interface/Test"], waitAsync(function(dwrEngine, Test) {
+    _testReverseAjax(dwrEngine, Test, [2000, 2000, 2000], 1500, dwrEngine.transport.scriptTag);
+  }));
+};
+
+function _testReverseAjax(dwrEngine, Test, callIntervals, allowedDelay, transportType) {
+  var origSend2 = dwrEngine.transport.send2;
+  if (transportType) {
+    dwrEngine.transport.send2 = function(batch) {
+      dwrEngine.batch.prepareToSend(batch);
+      batch.transport = transportType;
+      return batch.transport.send(batch);
+    };
+  }
   var c = new dwrunit.ExplicitAsyncCompletor;
   var expectedMaxCallTimes = [];
   var totalSoFar = 0;
@@ -84,7 +100,7 @@ function _testReverseAjax(callIntervals, allowedDelay, completeCb) {
   });
   
   Test.reverseAjaxCallFunction(fnName, callIntervals, waitDwrCallbackOptions(c));
-  dwr.engine.setActiveReverseAjax(true);
+  dwrEngine.setActiveReverseAjax(true);
   setTimeout(waitAsync(c, function() {
     var ok = true;
     if (resultCallTimes.length != expectedMaxCallTimes.length) {
@@ -100,8 +116,8 @@ function _testReverseAjax(callIntervals, allowedDelay, completeCb) {
       dwrunit.fail("Resulting call times: [" + resultCallTimes + "] msec");
     }
     c.complete();
-    dwr.engine.setActiveReverseAjax(false);
-    if (completeCb) completeCb();
+    dwrEngine.setActiveReverseAjax(false);
+    if (transportType) dwrEngine.transport.send2 = origSend2;
   }), 9000);
 }
 
