@@ -121,11 +121,12 @@ function _testReverseAjax(dwrEngine, Test, callIntervals, allowedDelay, transpor
   }), 9000);
 }
 
+function deleteCookie(name, path) {
+  document.cookie = name + "=; path=" + path + "; expires=Thu, 01 Jan 1970 00:00:01 GMT;"
+}
+
 window.testIsolatedDwrSessionCollision = function() {
   // Start out with no JSESSIONID and no DWRSESSIONID
-  function deleteCookie(name, path) {
-      document.cookie = name + "=; path=" + path + "; expires=Thu, 01 Jan 1970 00:00:01 GMT;"
-  }
   var path = dwr.engine._contextPath;
   deleteCookie("JSESSIONID", path);
   deleteCookie("DWRSESSIONID", path);
@@ -176,4 +177,86 @@ window.testIsolatedDwrSessionCollision = function() {
     }
   }
   checkStatus();
+}
+
+var reverseAjaxGetSessionIdFunc = null;
+window.testIsolatedReverseAjaxGetSessionId = function() {
+  // Clear current HttpSession (JSESSIONID)
+  var path = dwr.engine._contextPath;
+  deleteCookie("JSESSIONID", path);
+
+  // Start Reverse Ajax after JSESSIONID is cleared
+  dwr.engine.setActiveReverseAjax(true);
+
+  var c = new dwrunit.ExplicitAsyncCompletor;
+
+  // Check HttpSession id through Reverse Ajax (should be null)
+  reverseAjaxGetSessionIdFunc = waitAsync(c, step1);
+  Test.reverseAjaxCheckHttpSessionId("reverseAjaxGetSessionIdFunc");
+  function step1(httpSessionId) {
+    console.log("step1");
+    if (httpSessionId != null) {
+      dwrunit.fail("httpSessionId should be null (before creation)");
+      end();
+    } else {
+      step2();
+    }
+  }
+
+  // Force session and get HttpSession id from server
+  var createdHttpSessionId;
+  function step2() {
+    console.log("step2");
+    // Perform as batch so the second operation is performed right after the first on the server
+    // without another roundtrip
+    dwr.engine.beginBatch();
+    Test.createSession(waitAsync(c, function(httpSessionId) {
+      createdHttpSessionId = httpSessionId;
+    }));
+    step3();
+    dwr.engine.endBatch();
+  }
+
+  // Check HttpSession id through Reverse Ajax (should be set and the same as in previous call)
+  function step3() {
+    console.log("step3");
+    reverseAjaxGetSessionIdFunc = waitAsync(c, step4);
+    Test.reverseAjaxCheckHttpSessionId("reverseAjaxGetSessionIdFunc");
+  }
+  function step4(httpSessionId) {
+    console.log("step4");
+    if (httpSessionId != createdHttpSessionId) {
+      dwrunit.fail("httpSessionId should be '" + createdHttpSessionId + "' but is '" + httpSessionId + "'.");
+      end();
+    } else {
+      step5();
+    }
+  }
+
+  // Invalidate session on server
+  function step5() {
+    console.log("step5");
+    Test.invalidateSession(waitAsync(c, function() {
+      step6();
+    }));
+  }
+
+  // Check HttpSession id through Reverse Ajax (should be null)
+  function step6() {
+    console.log("step6");
+    reverseAjaxGetSessionIdFunc = waitAsync(c, step7);
+    Test.reverseAjaxCheckHttpSessionId("reverseAjaxGetSessionIdFunc");
+  }
+  function step7(httpSessionId) {
+    console.log("step7");
+    if (httpSessionId != null) {
+      dwrunit.fail("httpSessionId should be null (after invalidation)");
+    }
+    end();
+  }
+  function end() {
+    console.log("end");
+    c.complete();
+    dwr.engine.setActiveReverseAjax(false);
+  }
 }
