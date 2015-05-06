@@ -50,6 +50,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.directwebremoting.Browser;
 import org.directwebremoting.Container;
+import org.directwebremoting.ScriptBuffer;
 import org.directwebremoting.ScriptSession;
 import org.directwebremoting.ScriptSessionFilter;
 import org.directwebremoting.ScriptSessions;
@@ -61,6 +62,7 @@ import org.directwebremoting.dwrunit.Verify;
 import org.directwebremoting.event.ScriptSessionBindingEvent;
 import org.directwebremoting.event.ScriptSessionBindingListener;
 import org.directwebremoting.extend.InboundContext;
+import org.directwebremoting.extend.ScriptBufferUtil;
 import org.directwebremoting.impl.DefaultContainer;
 import org.directwebremoting.impl.ImplWidenScope;
 import org.directwebremoting.io.FileTransfer;
@@ -1259,6 +1261,18 @@ public class Test
         return verify;
     }
 
+    public String createSession() throws Exception
+    {
+        WebContext webCtx = WebContextFactory.get();
+        return webCtx.getHttpServletRequest().getSession().getId();
+    }
+    
+    public void invalidateSession() throws Exception
+    {
+        WebContext webCtx = WebContextFactory.get();
+        webCtx.getHttpServletRequest().getSession().invalidate();
+    }
+    
     public String createSessionWithDelay() throws Exception
     {
         Thread.sleep(2000);
@@ -1321,6 +1335,30 @@ public class Test
                                 }
                             });
                     }
+                }
+                catch (InterruptedException e)
+                {
+                    // Ignore
+                }
+            }
+        };
+        Thread t = new Thread(r);
+        t.start();
+    }
+    
+    public void reverseAjaxCheckHttpSessionId(final String funcName) {
+        final WebContext webCtx = WebContextFactory.get();
+        Runnable r = new Runnable()
+        {
+            public void run()
+            {
+                try
+                {
+                    Thread.sleep(500);
+                    ScriptSession scriptSession = webCtx.getScriptSession();
+                    ScriptBuffer script = new ScriptBuffer();
+                    script.appendCall(funcName, scriptSession.getHttpSessionId());
+                    scriptSession.addScript(script);
                 }
                 catch (InterruptedException e)
                 {
