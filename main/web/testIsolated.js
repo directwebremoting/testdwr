@@ -171,6 +171,8 @@ function deleteCookie(name, path) {
 
 window.testIsolatedDwrSessionCollision = function() {
   // Start out with no JSESSIONID and no DWRSESSIONID
+  var match = document.cookie.match(/(?:^|; )DWRSESSIONID=([^;]+)/);
+  var origDwrSessionId = match && match[1];
   var path = dwr.engine._contextPath;
   deleteCookie("JSESSIONID", path);
   deleteCookie("DWRSESSIONID", path);
@@ -214,6 +216,8 @@ window.testIsolatedDwrSessionCollision = function() {
     }
     if (windows.length == 0) {
       c.complete();
+      deleteCookie("JSESSIONID", path);
+      if (origDwrSessionId) dwr.engine.transport.setDwrSession(origDwrSessionId);
     } else {
       setTimeout(waitAsync(c, function() {
         checkStatus();
