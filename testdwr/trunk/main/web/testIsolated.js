@@ -43,30 +43,30 @@ window.testIsolatedSyncReturning = function() {
 /**
  * 
  */
-window.testIsolatedActiveReverseAjaxStreamingDefaultMode = function() {
+window.testIsolatedReverseAjaxPushStreamingDefaultMode = function() {
   _testReverseAjax(dwr.engine, Test, [2000, 2000, 2000], 1500, null);
 }
-window.testIsolatedActiveReverseAjaxStreamingIframeMode = function() {
+window.testIsolatedReverseAjaxPushStreamingIframeMode = function() {
   _testReverseAjax(dwr.engine, Test, [2000, 2000, 2000], 1500, dwr.engine.transport.iframe);
 }
-window.testIsolatedActiveReverseAjaxStreamingScriptTagMode = function() {
+window.testIsolatedReverseAjaxPushStreamingScriptTagMode = function() {
   _testReverseAjax(dwr.engine, Test, [2000, 2000, 2000], 1500, dwr.engine.transport.scriptTag);
 }
 
 /**
  * 
  */
-window.testIsolatedActiveReverseAjaxPollingDefaultMode = function() {
+window.testIsolatedReverseAjaxPushPollingDefaultMode = function() {
   require(["dwrpoll/amd/engine", "dwrpoll/amd/interface/Test"], waitAsync(function(dwrEngine, Test) {
     _testReverseAjax(dwrEngine, Test, [2000, 2000, 2000], 2000, null);
   }));
 };
-window.testIsolatedActiveReverseAjaxPollingIframeMode = function() {
+window.testIsolatedReverseAjaxPushPollingIframeMode = function() {
   require(["dwrpoll/amd/engine", "dwrpoll/amd/interface/Test"], waitAsync(function(dwrEngine, Test) {
     _testReverseAjax(dwrEngine, Test, [2000, 2000, 2000], 2000, dwrEngine.transport.iframe);
   }));
 };
-window.testIsolatedActiveReverseAjaxPollingScriptTagMode = function() {
+window.testIsolatedReverseAjaxPushPollingScriptTagMode = function() {
   require(["dwrpoll/amd/engine", "dwrpoll/amd/interface/Test"], waitAsync(function(dwrEngine, Test) {
     _testReverseAjax(dwrEngine, Test, [2000, 2000, 2000], 2000, dwrEngine.transport.scriptTag);
   }));
@@ -124,13 +124,13 @@ function _testReverseAjax(dwrEngine, Test, callIntervals, allowedDelay, transpor
 /**
  * 
  */
-window.testIsolatedPassiveReverseAjaxDefaultMode = function() {
+window.testIsolatedReverseAjaxPushPassiveDefaultMode = function() {
   _testPassiveReverseAjax(null);
 };
-window.testIsolatedPassiveReverseAjaxIframeMode = function() {
+window.testIsolatedReverseAjaxPushPassiveIframeMode = function() {
   _testPassiveReverseAjax(dwr.engine.transport.iframe);
 };
-window.testIsolatedPassiveReverseAjaxScriptTagMode = function() {
+window.testIsolatedReverseAjaxPushPassiveScriptTagMode = function() {
   _testPassiveReverseAjax(dwr.engine.transport.scriptTag);
 };
 
@@ -227,14 +227,22 @@ window.testIsolatedDwrSessionCollision = function() {
   checkStatus();
 }
 
+window.testIsolatedReverseAjaxGetSessionIdStreaming = function() {
+  _testIsolatedReverseAjaxGetSessionId(dwr.engine, Test);
+}
+window.testIsolatedReverseAjaxGetSessionIdPolling = function() {
+  require(["dwrpoll/amd/engine", "dwrpoll/amd/interface/Test"], waitAsync(function(dwrEngine, Test) {
+    _testIsolatedReverseAjaxGetSessionId(dwrEngine, Test);
+  }));
+}
 var reverseAjaxGetSessionIdFunc = null;
-window.testIsolatedReverseAjaxGetSessionId = function() {
+_testIsolatedReverseAjaxGetSessionId = function(dwrEngine, Test) {
   // Clear current HttpSession (JSESSIONID)
-  var path = dwr.engine._contextPath;
+  var path = dwrEngine._contextPath;
   deleteCookie("JSESSIONID", path);
 
   // Start Reverse Ajax after JSESSIONID is cleared
-  dwr.engine.setActiveReverseAjax(true);
+  dwrEngine.setActiveReverseAjax(true);
 
   var c = new dwrunit.ExplicitAsyncCompletor;
 
@@ -257,12 +265,12 @@ window.testIsolatedReverseAjaxGetSessionId = function() {
     console.log("step2");
     // Perform as batch so the second operation is performed right after the first on the server
     // without another roundtrip
-    dwr.engine.beginBatch();
+    dwrEngine.beginBatch();
     Test.createSession(waitAsync(c, function(httpSessionId) {
       createdHttpSessionId = httpSessionId;
     }));
     step3();
-    dwr.engine.endBatch();
+    dwrEngine.endBatch();
   }
 
   // Check HttpSession id through Reverse Ajax (should be set and the same as in previous call)
@@ -305,18 +313,26 @@ window.testIsolatedReverseAjaxGetSessionId = function() {
   function end() {
     console.log("end");
     c.complete();
-    dwr.engine.setActiveReverseAjax(false);
+    dwrEngine.setActiveReverseAjax(false);
   }
 }
 
+window.testIsolatedReverseAjaxCreateSessionFromWorkerThreadStreaming = function() {
+  _testIsolatedReverseAjaxCreateSessionFromWorkerThread(dwr.engine, Test);
+}
+window.testIsolatedReverseAjaxCreateSessionFromWorkerThreadPolling = function() {
+  require(["dwrpoll/amd/engine", "dwrpoll/amd/interface/Test"], waitAsync(function(dwrEngine, Test) {
+    _testIsolatedReverseAjaxCreateSessionFromWorkerThread(dwrEngine, Test);
+  }));
+}
 var reverseAjaxSessionCreatedFunc = null;
-window.testIsolatedReverseAjaxCreateSessionFromWorkerThread = function() {
+_testIsolatedReverseAjaxCreateSessionFromWorkerThread = function(dwrEngine, Test) {
   // Clear current HttpSession (JSESSIONID)
-  var path = dwr.engine._contextPath;
+  var path = dwrEngine._contextPath;
   deleteCookie("JSESSIONID", path);
 
   // Start Reverse Ajax after JSESSIONID is cleared
-  dwr.engine.setActiveReverseAjax(true);
+  dwrEngine.setActiveReverseAjax(true);
 
   var c = new dwrunit.ExplicitAsyncCompletor;
 
@@ -326,6 +342,6 @@ window.testIsolatedReverseAjaxCreateSessionFromWorkerThread = function() {
   function handleReply(status) {
     if (!status.startsWith("ok")) dwrunit.fail(status);
     c.complete();
-    dwr.engine.setActiveReverseAjax(false);
+    dwrEngine.setActiveReverseAjax(false);
   }
 };
