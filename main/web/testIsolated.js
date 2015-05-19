@@ -308,3 +308,24 @@ window.testIsolatedReverseAjaxGetSessionId = function() {
     dwr.engine.setActiveReverseAjax(false);
   }
 }
+
+var reverseAjaxSessionCreatedFunc = null;
+window.testIsolatedReverseAjaxCreateSessionFromWorkerThread = function() {
+  // Clear current HttpSession (JSESSIONID)
+  var path = dwr.engine._contextPath;
+  deleteCookie("JSESSIONID", path);
+
+  // Start Reverse Ajax after JSESSIONID is cleared
+  dwr.engine.setActiveReverseAjax(true);
+
+  var c = new dwrunit.ExplicitAsyncCompletor;
+
+  reverseAjaxSessionCreatedFunc = waitAsync(c, handleReply);
+  Test.reverseAjaxCreateSessionFromWorkerThread("reverseAjaxSessionCreatedFunc");
+
+  function handleReply(status) {
+    if (!status.startsWith("ok")) dwrunit.fail(status);
+    c.complete();
+    dwr.engine.setActiveReverseAjax(false);
+  }
+};
