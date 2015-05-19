@@ -62,7 +62,6 @@ import org.directwebremoting.dwrunit.Verify;
 import org.directwebremoting.event.ScriptSessionBindingEvent;
 import org.directwebremoting.event.ScriptSessionBindingListener;
 import org.directwebremoting.extend.InboundContext;
-import org.directwebremoting.extend.ScriptBufferUtil;
 import org.directwebremoting.impl.DefaultContainer;
 import org.directwebremoting.impl.ImplWidenScope;
 import org.directwebremoting.io.FileTransfer;
@@ -1368,6 +1367,65 @@ public class Test
         };
         Thread t = new Thread(r);
         t.start();
+    }
+    
+    public void reverseAjaxCreateSessionFromWorkerThread(final String replyFuncName) {
+        final ScriptSession scriptSession = WebContextFactory.get().getScriptSession();
+        HttpServletRequest callRequest = WebContextFactory.get().getHttpServletRequest();
+        if (callRequest.getSession(false) != null) {
+            callReverseAjaxFunc(scriptSession, replyFuncName, "Error: session already exists");
+            return;
+        }
+        Runnable r = new Runnable()
+        {
+            public void run()
+            {
+                try
+                {
+                    Thread.sleep(500);
+                    scriptSession.addRunnable(new Runnable()
+                    {
+                        public void run()
+                        {
+// callReverseAjaxFunc(scriptSession, replyFuncName, "Error: testing");
+// if (true == true) return;
+                            HttpServletRequest pollRequest1 = WebContextFactory.get().getHttpServletRequest();
+                            HttpSession session = pollRequest1.getSession();
+                            if (!session.isNew()) {
+                                callReverseAjaxFunc(scriptSession, replyFuncName, "Error: session is already confirmed");
+                                return;
+                            }
+                            scriptSession.addRunnable(new Runnable()
+                            {
+                                public void run()
+                                {
+                                    HttpServletRequest pollRequest2 = WebContextFactory.get().getHttpServletRequest();
+                                    HttpSession session = pollRequest2.getSession();
+                                    if (session.isNew()) {
+                                        callReverseAjaxFunc(scriptSession, replyFuncName, "Error: session is not confirmed");
+                                        return;
+                                    }
+                                    callReverseAjaxFunc(scriptSession, replyFuncName, "ok: " + session.getId());
+                                }
+                            });
+                        }
+                    });
+                }
+                catch (InterruptedException e)
+                {
+                    // Ignore
+                }
+            }
+        };
+        Thread t = new Thread(r);
+        t.start();
+    }
+    
+    private void callReverseAjaxFunc(ScriptSession scriptSession, String funcName, Object... args)
+    {
+        ScriptBuffer script = new ScriptBuffer();
+        script.appendCall(funcName, args);
+        scriptSession.addScript(script);
     }
     
     /**
