@@ -115,6 +115,13 @@ function _moduleSystemsAmd(dwrmap, ifcmap, dtomap, iframeMode) {
   );
 }
 
+window.testModuleSystemsAmdConfig = function() {
+  // See setup in web.xml and index.html
+  require(["dwrconf/amd/engine"], function(dwrEngine) {
+    verifyEqual(dwrEngine._attributes, {a:1, b:2});
+  });
+};
+
 // Tests when Dojo loader mapped on application root (default) implying that
 // modules are addressed with <servletpath>.dojo base.
 window.testModuleSystemsDojoStandardMapping = function() {
