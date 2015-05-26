@@ -237,20 +237,21 @@ window.testIsolatedReverseAjaxGetSessionIdPolling = function() {
 }
 var reverseAjaxGetSessionIdFunc = null;
 _testIsolatedReverseAjaxGetSessionId = function(dwrEngine, Test) {
-  // Clear current HttpSession (JSESSIONID)
-  var path = dwrEngine._contextPath;
-  deleteCookie("JSESSIONID", path);
-
-  // Start Reverse Ajax after JSESSIONID is cleared
-  dwrEngine.setActiveReverseAjax(true);
-
   var c = new dwrunit.ExplicitAsyncCompletor;
 
-  // Check HttpSession id through Reverse Ajax (should be null)
-  reverseAjaxGetSessionIdFunc = waitAsync(c, step1);
-  Test.reverseAjaxCheckHttpSessionId("reverseAjaxGetSessionIdFunc");
+  Test.expireJsessionIdCookie(waitAsync(c, function() {
+    // Start test after JSESSIONID is cleared
+    start();
+  }));
+
+  function start() {
+    dwrEngine.setActiveReverseAjax(true);
+    // Check HttpSession id through Reverse Ajax (should be null)
+    reverseAjaxGetSessionIdFunc = waitAsync(c, step1);
+    Test.reverseAjaxCheckHttpSessionId("reverseAjaxGetSessionIdFunc");
+  }
+
   function step1(httpSessionId) {
-    console.log("step1");
     if (httpSessionId != null) {
       dwrunit.fail("httpSessionId should be null (before creation)");
       end();
@@ -262,7 +263,6 @@ _testIsolatedReverseAjaxGetSessionId = function(dwrEngine, Test) {
   // Force session and get HttpSession id from server
   var createdHttpSessionId;
   function step2() {
-    console.log("step2");
     // Perform as batch so the second operation is performed right after the first on the server
     // without another roundtrip
     dwrEngine.beginBatch();
@@ -275,12 +275,10 @@ _testIsolatedReverseAjaxGetSessionId = function(dwrEngine, Test) {
 
   // Check HttpSession id through Reverse Ajax (should be set and the same as in previous call)
   function step3() {
-    console.log("step3");
     reverseAjaxGetSessionIdFunc = waitAsync(c, step4);
     Test.reverseAjaxCheckHttpSessionId("reverseAjaxGetSessionIdFunc");
   }
   function step4(httpSessionId) {
-    console.log("step4");
     if (httpSessionId != createdHttpSessionId) {
       dwrunit.fail("httpSessionId should be '" + createdHttpSessionId + "' but is '" + httpSessionId + "'.");
       end();
@@ -291,7 +289,6 @@ _testIsolatedReverseAjaxGetSessionId = function(dwrEngine, Test) {
 
   // Invalidate session on server
   function step5() {
-    console.log("step5");
     Test.invalidateSession(waitAsync(c, function() {
       step6();
     }));
@@ -299,19 +296,16 @@ _testIsolatedReverseAjaxGetSessionId = function(dwrEngine, Test) {
 
   // Check HttpSession id through Reverse Ajax (should be null)
   function step6() {
-    console.log("step6");
     reverseAjaxGetSessionIdFunc = waitAsync(c, step7);
     Test.reverseAjaxCheckHttpSessionId("reverseAjaxGetSessionIdFunc");
   }
   function step7(httpSessionId) {
-    console.log("step7");
     if (httpSessionId != null) {
       dwrunit.fail("httpSessionId should be null (after invalidation)");
     }
     end();
   }
   function end() {
-    console.log("end");
     c.complete();
     dwrEngine.setActiveReverseAjax(false);
   }
@@ -327,17 +321,18 @@ window.testIsolatedReverseAjaxCreateSessionFromWorkerThreadPolling = function() 
 }
 var reverseAjaxSessionCreatedFunc = null;
 _testIsolatedReverseAjaxCreateSessionFromWorkerThread = function(dwrEngine, Test) {
-  // Clear current HttpSession (JSESSIONID)
-  var path = dwrEngine._contextPath;
-  deleteCookie("JSESSIONID", path);
-
-  // Start Reverse Ajax after JSESSIONID is cleared
-  dwrEngine.setActiveReverseAjax(true);
-
   var c = new dwrunit.ExplicitAsyncCompletor;
 
-  reverseAjaxSessionCreatedFunc = waitAsync(c, handleReply);
-  Test.reverseAjaxCreateSessionFromWorkerThread("reverseAjaxSessionCreatedFunc");
+  Test.expireJsessionIdCookie(waitAsync(c, function() {
+    // Start test after JSESSIONID is cleared
+    start();
+  }));
+
+  function start() {
+    dwrEngine.setActiveReverseAjax(true);
+    reverseAjaxSessionCreatedFunc = waitAsync(c, handleReply);
+    Test.reverseAjaxCreateSessionFromWorkerThread("reverseAjaxSessionCreatedFunc");
+  }
 
   function handleReply(status) {
     if (!status.startsWith("ok")) dwrunit.fail(status);

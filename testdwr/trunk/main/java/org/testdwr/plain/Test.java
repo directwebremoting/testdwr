@@ -1281,6 +1281,12 @@ public class Test
         return "scriptSessionId:" + scriptSessionId + ", sessionId:" + sessionId;
     }
     
+    public void expireJsessionIdCookie() throws Exception
+    {
+        WebContext webCtx = WebContextFactory.get();
+        webCtx.getHttpServletResponse().addHeader("Set-Cookie", "JSESSIONID=novalue; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=" + webCtx.getHttpServletRequest().getContextPath() + "/; HttpOnly");
+    }
+    
     protected class TestScriptSessionFilter implements ScriptSessionFilter
     {
         public TestScriptSessionFilter(String attributeName)
