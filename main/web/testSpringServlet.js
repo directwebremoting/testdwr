@@ -1,6 +1,8 @@
 
 createTestGroup("SpringServlet");
 
+SpringServletTest._path = common.getContextPath() + "/springservlet";
+
 window.testSpringServletByteParam = function() {
   runSpringServletComparisonTests([
     { code:"byteParam", data:-128 },
