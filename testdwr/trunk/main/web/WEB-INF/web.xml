@@ -55,7 +55,7 @@
       <param-value>false</param-value>
     </init-param>
     <init-param>
-      <param-name>allowGetForSafariButMakeForgeryEasier</param-name>
+      <param-name>allowGetButMakeForgeryEasier</param-name>
       <param-value>true</param-value>
     </init-param>
     <init-param>
@@ -147,7 +147,7 @@
       <param-value>true</param-value>
     </init-param>
     <init-param>
-      <param-name>allowGetForSafariButMakeForgeryEasier</param-name>
+      <param-name>allowGetButMakeForgeryEasier</param-name>
       <param-value>true</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
