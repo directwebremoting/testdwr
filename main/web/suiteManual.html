@@ -9,6 +9,9 @@
   <script type='text/javascript' src='common.js'> </script>
   <script type='text/javascript' src='dwrunit/dwrunit.js'> </script>
   <script type='text/javascript' src='dwrunit/index.js'> </script>
+  <script type='text/javascript'>
+    dwrunitConcurrency = 1;
+  </script>
 
   <script type='text/javascript' src='./dwr/engine.js'> </script>
   <script type='text/javascript' src='./dwr/util.js'> </script>
@@ -31,7 +34,7 @@
 <body>
 
 <h1>Manual Test Suite</h1>
-<p>Contains tests that need to be run separately</p>
+<p>Contains tests that need to be run one by one (done automatically)</p>
 
 <div id="dwrUnit"></div>
 
