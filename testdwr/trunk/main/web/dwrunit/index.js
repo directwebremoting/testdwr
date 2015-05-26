@@ -310,7 +310,7 @@ function runTests(testNames) {
       completeCallback: function() {
     	// Use this for something?
       },
-      concurrency: 3,
+      concurrency: (typeof "dwrunitConcurrency" != undefined ? dwrunitConcurrency : 3),
       timeout: 20000
     }
   );
