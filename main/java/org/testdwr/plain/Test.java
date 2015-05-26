@@ -1393,8 +1393,6 @@ public class Test
                     {
                         public void run()
                         {
-// callReverseAjaxFunc(scriptSession, replyFuncName, "Error: testing");
-// if (true == true) return;
                             HttpServletRequest pollRequest1 = WebContextFactory.get().getHttpServletRequest();
                             HttpSession session = pollRequest1.getSession();
                             if (!session.isNew()) {
