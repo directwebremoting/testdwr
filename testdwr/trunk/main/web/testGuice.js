@@ -1,6 +1,8 @@
 
 createTestGroup("Guice");
 
+GuiceTest._path = common.getContextPath() + "/guice";
+
 window.testGuiceByteParam = function() {
   runGuiceComparisonTests([
     { code:"byteParam", data:-128 },

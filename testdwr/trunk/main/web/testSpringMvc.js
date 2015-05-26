@@ -1,5 +1,16 @@
 createTestGroup("SpringMvc");
 
+SpringMvcAnnotated._path = common.getContextPath() + "/springmvc";
+DemoName._path = common.getContextPath() + "/springmvc";
+Lazy._path = common.getContextPath() + "/springmvc";
+Calculator._path = common.getContextPath() + "/springmvc";
+Generator._path = common.getContextPath() + "/springmvc";
+Giver._path = common.getContextPath() + "/springmvc";
+AnnotatedConverter._path = common.getContextPath() + "/springmvc";
+SpringBeanConverter._path = common.getContextPath() + "/springmvc";
+OtherSpringBeanConverter._path = common.getContextPath() + "/springmvc";
+GenericProxy._path = common.getContextPath() + "/springmvc";
+
 window.testSpringMvcEcho = function() {
 	SpringMvcAnnotated.echo("hello world", "  en_US  ", "USD", waitDwrCallbackOptions(
 		function(data) {
