@@ -343,19 +343,23 @@ _testIsolatedReverseAjaxCreateSessionFromWorkerThread = function(dwrEngine, Test
 
 window.testIsolatedDwrSessionIdCookieAttributes = function() {
   deleteCookie("DWRSESSIONID", dwr.engine._contextPath);
+  if (document.cookie.match("DWRSESSIONID=")) {
+    dwrunit.fail("DWRSESSIONID cookie still set.");
+    return;
+  }
   dwr.engine._dwrSessionId = null;
   dwr.engine._scriptSessionId = "";
   var c = new dwrunit.ExplicitAsyncCompletor;
   dwr.engine.setCookieAttributes("expires=" + (new Date((new Date).getTime() + 3000)).toGMTString());
   Test.doNothing(waitAsync(c, function() {
-    if (!document.cookie.match("DWRSESSIONID=")) dwrunit.fail("Cookie not set.");
+    if (!document.cookie.match("DWRSESSIONID=")) dwrunit.fail("DWRSESSIONID cookie not set.");
     checkExpiry(10);
   }));
   function checkExpiry(tries) {
     if (!document.cookie.match("DWRSESSIONID=")) {
       end();
     } else if (tries == 0) {
-      dwrunit.fail("Cookie not expired.");
+      dwrunit.fail("DWRSESSIONID cookie not expired.");
       end();
     } else {
       setTimeout(waitAsync(c, function() {
