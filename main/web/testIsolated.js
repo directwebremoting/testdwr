@@ -144,7 +144,7 @@ function _testPassiveReverseAjax(transportType) {
     };
   }
   var c = new dwrunit.ExplicitAsyncCompletor;
-  var fnName = "_testReverseAjax_" + Date.now();
+  var fnName = "_testReverseAjax_" + (new Date).getTime();
   var replies = [];
   window[fnName] = waitAsync(c, function(callIndex) {
     replies.push("piggyback");
@@ -335,7 +335,7 @@ _testIsolatedReverseAjaxCreateSessionFromWorkerThread = function(dwrEngine, Test
   }
 
   function handleReply(status) {
-    if (!status.startsWith("ok")) dwrunit.fail(status);
+    if (status.indexOf("ok") < 0) dwrunit.fail(status);
     c.complete();
     dwrEngine.setActiveReverseAjax(false);
   }
@@ -346,7 +346,7 @@ window.testIsolatedDwrSessionIdCookieAttributes = function() {
   dwr.engine._dwrSessionId = null;
   dwr.engine._scriptSessionId = "";
   var c = new dwrunit.ExplicitAsyncCompletor;
-  dwr.engine.setCookieAttributes("expires=" + (new Date(Date.now() + 3000)).toGMTString());
+  dwr.engine.setCookieAttributes("expires=" + (new Date((new Date).getTime() + 3000)).toGMTString());
   Test.doNothing(waitAsync(c, function() {
     if (!document.cookie.match("DWRSESSIONID=")) dwrunit.fail("Cookie not set.");
     checkExpiry(10);
