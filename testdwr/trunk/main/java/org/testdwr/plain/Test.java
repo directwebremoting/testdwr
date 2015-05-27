@@ -1286,9 +1286,9 @@ public class Test
         WebContext webCtx = WebContextFactory.get();
         String path = webCtx.getHttpServletRequest().getContextPath();
         if (path.equals("")) path = "/";
-        webCtx.getHttpServletResponse().addHeader("Set-Cookie", "JSESSIONID=novalue; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=" + path + "; HttpOnly");
+        webCtx.getHttpServletResponse().addHeader("Set-Cookie", "JSESSIONID=novalue; Expires=Thu, 01-Jan-1970 00:00:00 GMT; Path=" + path + "; HttpOnly");
         if (!path.endsWith("/")) {
-            webCtx.getHttpServletResponse().addHeader("Set-Cookie", "JSESSIONID=novalue; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=" + path + "/; HttpOnly");
+            webCtx.getHttpServletResponse().addHeader("Set-Cookie", "JSESSIONID=novalue; Expires=Thu, 01-Jan-1970 00:00:00 GMT; Path=" + path + "/; HttpOnly");
         }
     }
     
