@@ -12,6 +12,6 @@
 	<classpathentry kind="lib" path="main/web/WEB-INF/lib/xom-1.1.jar" sourcepath="/librarydwr/source/xom-1.1.zip"/>
 	<classpathentry kind="lib" path="main/lib/selenium-java-client-driver.jar" sourcepath="/librarydwr/source/selenium-java-client-driver-1.0.beta1-src.jar"/>
 	<classpathentry kind="src" output="main/web/WEB-INF/classes" path="main/java"/>
-	<classpathentry kind="lib" path="main/web/WEB-INF/lib/aspectjrt-1.6.2.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/aspectjrt-1.6.12.jar"/>
 	<classpathentry kind="output" path="target/eclipse/classes"/>
 </classpath>
