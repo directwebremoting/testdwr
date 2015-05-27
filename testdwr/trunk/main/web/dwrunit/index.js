@@ -296,7 +296,7 @@ function runTests(testNames) {
         if (ts.isFailed()) result = stati.fail;
         _setStatus(testinfo, result);
         if (ts.isFailed()) {
-          testinfo.messages = ts.getErrors();
+          testinfo.messages = ts.getMessages();
           var output = testinfo.messages.join("<br />");
           dwr.util.setValue(testinfo.name, output, { escapeHtml:false });
           logConsole("FAILED: " + ts.getName());

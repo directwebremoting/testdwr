@@ -300,6 +300,12 @@ dwrunit = (function() {
 		return this._errors; 
 	};
 
+	TestRun.prototype.getMessages = function() {
+		var messages = [];
+		for(var i=0; i<this._errors.length; i++) messages.push(this._errors[i].message); 
+		return messages; 
+	};
+
 	//
 	// API used by test cases
 	//
@@ -474,7 +480,7 @@ dwrunit = (function() {
 
 	TestStatusFacade.prototype._testrun = null;
 
-	DelegateMethodsToMember(TestStatusFacade, "_testrun", ["getName", "getData", "isPassed", "isFailed", "getErrors"]);
+	DelegateMethodsToMember(TestStatusFacade, "_testrun", ["getName", "getData", "isPassed", "isFailed", "getErrors", "getMessages"]);
 
 	//-------------------------------------------------------------------------
 
@@ -514,8 +520,11 @@ dwrunit = (function() {
 	
 	//-------------------------------------------------------------------------
 
-	var AssertionError = function DwrUnitAssertionError(message) {
-		var err = new Error(message);
+	var AssertionError = function DwrUnitAssertionError(cause) {
+		var err = new Error(cause instanceof Error ? cause.message : cause);
+		if (cause instanceof Error) {
+			err.cause = cause;
+		}
 		err.name = "AssertionError";
 		err.toString = function(){return this.name + ": " + this.message;};
 		return err;
@@ -523,8 +532,11 @@ dwrunit = (function() {
 	
 	//-------------------------------------------------------------------------
 
-	var BadTestCaseError = function DwrUnitBadTestCaseError(message) {
-		var err = new Error(message);
+	var BadTestCaseError = function DwrUnitBadTestCaseError(cause) {
+		var err = new Error(cause instanceof Error ? cause.message : cause);
+		if (cause instanceof Error) {
+			err.cause = cause;
+		}
 		err.name = "BadTestCaseError";
 		err.toString = function(){return this.name + ": " + this.message;};
 		return err;
