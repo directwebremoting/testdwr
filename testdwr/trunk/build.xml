@@ -29,13 +29,6 @@
         <fileset dir="${basedir}/main/web/WEB-INF/lib" includes="**/*.jar"/>
       </classpath>
     </javac>
-    <mkdir dir="${target}/launch"/>
-    <javac debug="on" destdir="${target}/launch" srcdir="${basedir}/main/launch" includes="**/*.java" includeantruntime="false" excludes="**/package-info.java">
-      <classpath>
-        <fileset dir="${basedir}/main/lib" includes="**/*.jar"/>
-        <fileset dir="${basedir}/main/web/WEB-INF/lib" includes="**/*.jar"/>
-      </classpath>
-    </javac>
   </target>
 
   <!--=======================================================================-->
