@@ -6,12 +6,16 @@
 	<classpathentry kind="lib" path="main/web/WEB-INF/lib/commons-logging-1.1.1.jar" sourcepath="/librarydwr/source/commons-logging-1.1.1-src.zip"/>
 	<classpathentry kind="lib" path="main/web/WEB-INF/lib/dwr.jar" sourcepath="/dwr"/>
 	<classpathentry kind="lib" path="main/web/WEB-INF/lib/guice-1.0.jar"/>
-	<classpathentry kind="lib" path="main/web/WEB-INF/lib/spring-2.5.5.jar" sourcepath="/librarydwr/source/spring-sources-2.5.5.jar"/>
 	<classpathentry kind="lib" path="main/web/WEB-INF/lib/dom4j-1.6.1.jar" sourcepath="/librarydwr/source/dom4j-1.6.1.zip"/>
 	<classpathentry kind="lib" path="main/web/WEB-INF/lib/jdom-1.1.jar" sourcepath="/librarydwr/source/jdom-1.1.zip"/>
 	<classpathentry kind="lib" path="main/web/WEB-INF/lib/xom-1.1.jar" sourcepath="/librarydwr/source/xom-1.1.zip"/>
 	<classpathentry kind="lib" path="main/lib/selenium-java-client-driver.jar" sourcepath="/librarydwr/source/selenium-java-client-driver-1.0.beta1-src.jar"/>
 	<classpathentry kind="src" output="main/web/WEB-INF/classes" path="main/java"/>
 	<classpathentry kind="lib" path="main/web/WEB-INF/lib/aspectjrt-1.6.2.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/spring-context-3.2.14.RELEASE.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/spring-webmvc-3.2.14.RELEASE.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/spring-beans-3.2.14.RELEASE.jar"/>
+	<classpathentry kind="lib" path="main/web/WEB-INF/lib/spring-web-3.2.14.RELEASE.jar"/>
 	<classpathentry kind="output" path="target/eclipse/classes"/>
 </classpath>
