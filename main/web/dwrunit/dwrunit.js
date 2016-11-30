@@ -99,6 +99,7 @@ dwrunit = (function() {
 			names = testnames;
 		}
 		var concurrency = options.concurrency || 3;
+		var pause = options.pause || 0;
 		var timeout = options.timeout || 10000;
 
 		var total = names.length;
@@ -132,7 +133,7 @@ dwrunit = (function() {
 				if (options.completionCallback) options.completionCallback();
 			} else {
 				// Invoke the next test if there is one
-				setTimeout(runNextTest, 0);
+				setTimeout(runNextTest, pause);
 			}
 		}
 	};
