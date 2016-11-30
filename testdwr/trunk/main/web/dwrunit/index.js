@@ -55,7 +55,6 @@ function addTest(testName, func) {
     group: groupName,
     messages: []
   };
-  dwrunit.addTest(testName, func);
 }
 
 /**
@@ -87,6 +86,11 @@ function displayTestTable() {
     var testNames = groups[groupName];
     if (testNames.length == 0) continue;
     testNames.sort();
+    for(var j=0; j<testNames.length; j++) {
+      var name = testNames[j];
+      var test = tests[name];
+      dwrunit.addTest(name, test.func);
+    }
 
     dwr.util.addRows("testSummary", [ groupName ], [
       function(groupName) {
