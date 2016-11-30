@@ -311,6 +311,7 @@ function runTests(testNames) {
     	// Use this for something?
       },
       concurrency: (typeof dwrunitConcurrency != "undefined" ? dwrunitConcurrency : 3),
+      pause: (typeof dwrunitPause != "undefined" ? dwrunitPause : 0),
       timeout: 20000
     }
   );
