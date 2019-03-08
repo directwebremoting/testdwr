@@ -150,7 +150,7 @@
   import org.testdwr.plain.*;
 
   // Needed even on JDK 1.5
-  Test.untypedTestBeanListParam(List<TestBean> test)
+  Test.untypedBeanListParam(List<TestBean> test)
 
   // Needed on JDK 1.4
   // Test.testBeanSetParam(Set<TestBean>);

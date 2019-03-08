@@ -220,7 +220,7 @@ public class Test
         return objA;
     }
 
-    public ObjA testLooped(ObjA objA)
+    public ObjA beanLoopParam(ObjA objA)
     {
         ObjA nestedA = objA.getObjB().getObjA();
 
@@ -447,7 +447,7 @@ public class Test
         return test;
     }
 
-    public Set<TestBean> testBeanSetParam(Set<TestBean> test)
+    public Set<TestBean> beanSetParam(Set<TestBean> test)
     {
         if (test.size() > 1)
         {
@@ -462,7 +462,7 @@ public class Test
         return test;
     }
 
-    public String testEmptyListParams(List<String> list1, List<String> list2)
+    public String emptyListParams(List<String> list1, List<String> list2)
     {
         if (list1 == list2) 
         {
@@ -482,7 +482,7 @@ public class Test
         }
     }
     
-    public List<TestBean> testBeanListParam(List<TestBean> test)
+    public List<TestBean> beanListParam(List<TestBean> test)
     {
         if (test.size() > 1)
         {
@@ -497,7 +497,7 @@ public class Test
         return test;
     }
 
-    public TestBeanWithList testBeanWithListParam(TestBeanWithList test)
+    public TestBeanWithList beanWithListParam(TestBeanWithList test)
     {
         if (test.getList().size() > 1)
         {
@@ -512,7 +512,7 @@ public class Test
         return test;
     }
 
-    public List<TestObject> testObjectListParam(List<TestObject> test)
+    public List<TestObject> objectListParam(List<TestObject> test)
     {
         if (test.size() > 1)
         {
@@ -527,7 +527,7 @@ public class Test
         return test;
     }
 
-    public TestObjectWithList testObjectWithListParam(TestObjectWithList test)
+    public TestObjectWithList objectWithListParam(TestObjectWithList test)
     {
         if (test.list.size() > 1)
         {
@@ -543,7 +543,7 @@ public class Test
     }
 
     @SuppressWarnings("unchecked")
-    public List<?> untypedTestBeanListParam(List<?> test)
+    public List<?> untypedBeanListParam(List<?> test)
     {
         if (test.size() > 1)
         {
@@ -585,7 +585,7 @@ public class Test
         return test;
     }
 
-    public TestBean testBeanParam(TestBean test)
+    public TestBean beanParam(TestBean test)
     {
         return test;
     }
@@ -610,7 +610,7 @@ public class Test
         return test;
     } 
    
-    public Map<Character, TestBean> charTestBeanMapParam(Map<Character, TestBean> test)
+    public Map<Character, TestBean> characterBeanMapParam(Map<Character, TestBean> test)
     {
         return test;
     }

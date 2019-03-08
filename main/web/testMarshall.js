@@ -53,7 +53,7 @@ window.testMarshallOverloaded = function() {
     verifyEqual(data, "param1");
   }));
   Test.dangerOverload(waitDwrCallbackOptions(function (data) {
-	verifyEqual(data, "hello");
+    verifyEqual(data, "hello");
   }));
   Test.dangerOverload(["param1"], waitDwrCallbackOptions(function (data) {
     verifyEqual(data, "helloarray");
@@ -456,18 +456,18 @@ var objb = new ObjB();
 objb.objA = obja;
 obja.objB = objb;
 
-window.testMarshallLoopedParam = function() {
+window.testMarshallBeanLoopParam = function() {
   runComparisonTests([
-    { code:"testLooped", data:obja }
+    { code:"beanLoopParam", data:obja }
   ]);
 };
 
-window.testMarshallTestBeanParam = function() {
+window.testMarshallBeanParam = function() {
   runComparisonTests([
-    { code:"testBeanParam", data:{ integer:-2147483648, bool:true, string:'!"$%^&*()', testBean:null } },
-    { code:"testBeanParam", data:{ integer:-1, bool:true, string:'Null', testBean:null } },
-    { code:"testBeanParam", data:{ integer:0, bool:true, string:'null', testBean:null } },
-    { code:"testBeanParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested } }
+    { code:"beanParam", data:{ integer:-2147483648, bool:true, string:'!"$%^&*()', testBean:null } },
+    { code:"beanParam", data:{ integer:-1, bool:true, string:'Null', testBean:null } },
+    { code:"beanParam", data:{ integer:0, bool:true, string:'null', testBean:null } },
+    { code:"beanParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested } }
   ]);
 };
 
@@ -475,26 +475,26 @@ window.testMarshallTestBeanParam = function() {
 // COLLECTIONS OF BEANS
 //
 
-window.testMarshallTestBeanSetParam = function() {
+window.testMarshallBeanSetParam = function() {
   runComparisonTests([
-    { code:"testBeanSetParam", data:[ ] },
-    { code:"testBeanSetParam", data:[{ integer:1, bool:true, string:'0987654321', testBean:nested }] },
-    { code:"testBeanSetParam", data:[ nested ] }
+    { code:"beanSetParam", data:[ ] },
+    { code:"beanSetParam", data:[{ integer:1, bool:true, string:'0987654321', testBean:nested }] },
+    { code:"beanSetParam", data:[ nested ] }
   ]);
 };
 
-window.testMarshallTestEmptyListParams = function() {
-  Test.testEmptyListParams([], [], waitDwrCallbackOptions(function(retval) {
+window.testMarshallEmptyListParams = function() {
+  Test.emptyListParams([], [], waitDwrCallbackOptions(function(retval) {
     verifyTrue(retval.match(/error/i) == null);
   }));
 };
 
-window.testMarshallTestBeanListParam = function() {
+window.testMarshallBeanListParam = function() {
   runComparisonTests([
-    { code:"testBeanListParam", data:[ ] },
-    { code:"testBeanListParam", data:[ nested ] },
-    { code:"testBeanListParam", data:[ nested, nested ] },
-    { code:"testBeanListParam", data:[ nested, nested, nested ] }
+    { code:"beanListParam", data:[ ] },
+    { code:"beanListParam", data:[ nested ] },
+    { code:"beanListParam", data:[ nested, nested ] },
+    { code:"beanListParam", data:[ nested, nested, nested ] }
   ]);
 };
 
@@ -504,21 +504,21 @@ window.testMarshallTestBeanListParam = function() {
  * and not on the parameters to getters or setters, as getters and setters are
  * not used for objects."
  */
-window.testMarshallTestBeanWithListParam = function() {
+window.testMarshallBeanWithListParam = function() {
   runComparisonTests([
-    { code:"testBeanWithListParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested, list:[] } },
-    { code:"testBeanWithListParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested, list:[nested] } },
-    { code:"testBeanWithListParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested, list:[nested, nested] } },
-    { code:"testBeanWithListParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested, list:[nested, nested, nested] } }
+    { code:"beanWithListParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested, list:[] } },
+    { code:"beanWithListParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested, list:[nested] } },
+    { code:"beanWithListParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested, list:[nested, nested] } },
+    { code:"beanWithListParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested, list:[nested, nested, nested] } }
   ]);
 };
 
-window.testMarshallTestObjectListParam = function() {
+window.testMarshallObjectListParam = function() {
   runComparisonTests([
-    { code:"testObjectListParam", data:[ ] },
-    { code:"testObjectListParam", data:[ nestedObj ] },
-    { code:"testObjectListParam", data:[ nestedObj, nestedObj ] },
-    { code:"testObjectListParam", data:[ nestedObj, nestedObj, nestedObj ] }
+    { code:"objectListParam", data:[ ] },
+    { code:"objectListParam", data:[ nestedObj ] },
+    { code:"objectListParam", data:[ nestedObj, nestedObj ] },
+    { code:"objectListParam", data:[ nestedObj, nestedObj, nestedObj ] }
   ]);
 };
 
@@ -528,12 +528,12 @@ window.testMarshallTestObjectListParam = function() {
 / eventually change and make this pass.  For now I am commented it out to 
 / avoid confusion. 
 /  
-window.testMarshallTestObjectWithListParam = function() {
+window.testMarshallObjectWithListParam = function() {
   runComparisonTests([
-    { code:"testObjectWithListParam", data:{ integer:1, bool:true, string:'0987654321', testObj:nestedObj, list:[] } },
-    { code:"testObjectWithListParam", data:{ integer:1, bool:true, string:'0987654321', testObj:nestedObj, list:[nestedObj] } },
-    { code:"testObjectWithListParam", data:{ integer:1, bool:true, string:'0987654321', testObj:nestedObj, list:[nestedObj, nestedObj] } },
-    { code:"testObjectWithListParam", data:{ integer:1, bool:true, string:'0987654321', testObj:nestedObj, list:[nestedObj, nestedObj, nestedObj] } }
+    { code:"objectWithListParam", data:{ integer:1, bool:true, string:'0987654321', testObj:nestedObj, list:[] } },
+    { code:"objectWithListParam", data:{ integer:1, bool:true, string:'0987654321', testObj:nestedObj, list:[nestedObj] } },
+    { code:"objectWithListParam", data:{ integer:1, bool:true, string:'0987654321', testObj:nestedObj, list:[nestedObj, nestedObj] } },
+    { code:"objectWithListParam", data:{ integer:1, bool:true, string:'0987654321', testObj:nestedObj, list:[nestedObj, nestedObj, nestedObj] } }
   ]);
 };*/
 
@@ -556,19 +556,19 @@ window.testMarshallFinalBeanArrayParam = function() {
   ]);
 };
 
-window.testMarshallUntypedTestBeanListParam = function() {
+window.testMarshallUntypedBeanListParam = function() {
   runComparisonTests([
-    { code:"untypedTestBeanListParam", data:[ ] },
-    { code:"untypedTestBeanListParam", data:[ nested ] },
-    { code:"untypedTestBeanListParam", data:[ nested, nested ] },
-    { code:"untypedTestBeanListParam", data:[ nested, nested, nested ] }
+    { code:"untypedBeanListParam", data:[ ] },
+    { code:"untypedBeanListParam", data:[ nested ] },
+    { code:"untypedBeanListParam", data:[ nested, nested ] },
+    { code:"untypedBeanListParam", data:[ nested, nested, nested ] }
   ]);
 };
 
-window.testMarshallTestBeanMapParam = function() {
+window.testMarshallCharacterBeanMapParam = function() {
   runComparisonTests([
-    { code:"charTestBeanMapParam", data:{ } },
-    { code:"charTestBeanMapParam", data:{ d:{ integer:1, bool:true, string:'0987654321', testBean:nested } } }
+    { code:"characterBeanMapParam", data:{ } },
+    { code:"characterBeanMapParam", data:{ 'd':{ integer:1, bool:true, string:'0987654321', testBean:nested } } }
   ]);
 };
 
@@ -684,8 +684,8 @@ window.testMarshallStringBeanArrayMapParam = function() {
 };
 
 window.testMarshallStringBooleanMapParam = function() {
-	runComparisonTests([
-	    { code:"stringBooleanMapParam", data: { Key : true } }	    
+    runComparisonTests([
+        { code:"stringBooleanMapParam", data: { Key : true } }
     ]);
 };
 
