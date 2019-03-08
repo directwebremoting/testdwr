@@ -1,6 +1,10 @@
 
 createTestGroup("Marshall");
 
+//
+// COMPLEX
+//
+
 window.testMarshallComplexNull = function() {
   Test.testComplex(waitDwrCallbackOptions(function (data) {
     verifyNull(data);
@@ -37,27 +41,34 @@ window.testMarshallComplexDeep = function() {
   }));
 };
 
-window.testMarshallOverloaded = function() {
-	  Test.dangerOverload("param1", 1, waitDwrCallbackOptions(function (data) {
-	    verifyEqual(data, "param1,1");
-	  }));
-	  Test.dangerOverload("param1", waitDwrCallbackOptions(function (data) {
-	    verifyEqual(data, "param1");
-	  }));
-	  Test.dangerOverload(waitDwrCallbackOptions(function (data) {
-		verifyEqual(data, "hello");
-	  }));
-	  Test.dangerOverload(["param1"], waitDwrCallbackOptions(function (data) {
-	    verifyEqual(data, "helloarray");
-	  }));
-	  Test.dangerOverload({string: "param1"}, waitDwrCallbackOptions(function (data) {
-	    verifyEqual(data, "hellotestbean");
-	  }));
-	  Test.dangerOverload(1, waitDwrCallbackOptions(function (data) {
-	    verifyEqual(data, "1");
-	  }));
-	};
+//
+// OVERLOADED
+//
 
+window.testMarshallOverloaded = function() {
+  Test.dangerOverload("param1", 1, waitDwrCallbackOptions(function (data) {
+    verifyEqual(data, "param1,1");
+  }));
+  Test.dangerOverload("param1", waitDwrCallbackOptions(function (data) {
+    verifyEqual(data, "param1");
+  }));
+  Test.dangerOverload(waitDwrCallbackOptions(function (data) {
+	verifyEqual(data, "hello");
+  }));
+  Test.dangerOverload(["param1"], waitDwrCallbackOptions(function (data) {
+    verifyEqual(data, "helloarray");
+  }));
+  Test.dangerOverload({string: "param1"}, waitDwrCallbackOptions(function (data) {
+    verifyEqual(data, "hellotestbean");
+  }));
+  Test.dangerOverload(1, waitDwrCallbackOptions(function (data) {
+    verifyEqual(data, "1");
+  }));
+};
+
+//
+// STRING VARARGS
+//
 
 window.testMarshallStringVarArgsEmpty = function() {
   Test.stringVarArgs(waitDwrCallbackOptions(function (data) {
@@ -79,6 +90,10 @@ window.testMarshallStringVarArgsMultiple = function() {
     verifyEqual(data, [ "1", "2", "3" ]);
   }));
 };
+
+//
+// BEAN VARARGS
+//
 
 window.testMarshallBeanVarArgs = function() {
   dwr.engine.beginBatch();
@@ -107,6 +122,10 @@ window.testMarshallStringBeanVarArgs = function() {
   }));
   dwr.engine.endBatch();
 };
+
+//
+// PRIMITIVES
+//
 
 window.testMarshallByteParam = function() {
   runComparisonTests([
@@ -335,6 +354,10 @@ window.testMarshallStringParam = function() {
   ]);
 };
 
+//
+// ARRAYS OF PRIMITIVES
+//
+
 window.testMarshallBooleanArrayParam = function() {
   runComparisonTests([
     { code:"booleanArrayParam", data:[ ] },
@@ -382,7 +405,7 @@ window.testMarshallFloatArrayParam = function() {
   ]);
 };
 
-window.testMarshallConsecutiveCalls = function() {
+window.testMarshallStringArrayConsecutiveCalls = function() {
   runComparisonTests([
     { code:"stringArrayParam", data:[ "first", "second", "third", "fourth", "fifth"] },
     { code:"stringArrayParam", data:[ "second", "first", "third", "fourth", "fifth" ] },
@@ -419,7 +442,10 @@ window.testMarshallXDArrayParam = function() {
   ]);
 };
 
-// Used in a few tests
+//
+// BEANS
+//
+
 var nested = { integer:0, bool:true, string:'0123456789' };
 nested.testBean = nested;
 var nestedObj = { integer:0, bool:true, string:'0123456789' };
@@ -429,7 +455,6 @@ var obja = new ObjA();
 var objb = new ObjB();
 objb.objA = obja;
 obja.objB = objb;
-
 
 window.testMarshallLoopedParam = function() {
   runComparisonTests([
@@ -445,6 +470,10 @@ window.testMarshallTestBeanParam = function() {
     { code:"testBeanParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested } }
   ]);
 };
+
+//
+// COLLECTIONS OF BEANS
+//
 
 window.testMarshallTestBeanSetParam = function() {
   runComparisonTests([
@@ -542,6 +571,10 @@ window.testMarshallTestBeanMapParam = function() {
     { code:"charTestBeanMapParam", data:{ d:{ integer:1, bool:true, string:'0987654321', testBean:nested } } }
   ]);
 };
+
+//
+// COLLECTIONS
+//
 
 window.testMarshallStringCollectionParam = function() {
   runComparisonTests([
@@ -689,6 +722,10 @@ function runComparisonTests(compares) {
   })(i)
 }
 
+//
+// DOM/XML
+//
+
 window.testMarshallDomElementParam = function() {
   var testXml = '<p id="test">This is a <em>test node</em> to check on <strong>DOM</strong> <span class="small">manipulation</span>.</p>';
   var testElement = dwr.engine.serialize.toDomElement(testXml);
@@ -709,6 +746,10 @@ window.testMarshallDomElementParam = function() {
   Test.jdomElementParam(testElement, waitDwrCallbackOptions(nodeCompare));
   Test.domElementParam(testElement, waitDwrCallbackOptions(nodeCompare));
 };
+
+//
+// CLASS MAPPING
+//
 
 /**
  *
@@ -886,6 +927,10 @@ window.testMarshallConverterWildcardsRecursive = function() {
   );
 };
 
+//
+// LIGHT CLASS MAPPING
+//
+
 /**
  *
  */
@@ -914,6 +959,10 @@ window.testMarshallLightClassMapping = function() {
     verifyEqual(reply.array[0].$dwrClassName, "ObjectWithLightClassMapping");
   }));
 };
+
+//
+// MISC
+//
 
 /**
 *
