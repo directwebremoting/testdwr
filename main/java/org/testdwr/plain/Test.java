@@ -211,35 +211,13 @@ public class Test
         return a == b;
     }
 
-    public ObjA getLooped()
-    {
-        ObjA objA = new ObjA();
-        ObjB objB = new ObjB();
-        objA.setObjB(objB);
-        objB.setObjA(objA);
-        return objA;
-    }
-
-    public ObjA beanLoopParam(ObjA objA)
-    {
-        ObjA nestedA = objA.getObjB().getObjA();
-
-        if (nestedA != objA)
-        {
-            throw new IllegalStateException("Non matching obja != obja.objb.obja");
-        }
-
-        if (nestedA.getObjB() != objA.getObjB())
-        {
-            throw new IllegalStateException("Non matching objb != objb.obja.objb");
-        }
-
-        return objA;
-    }
-
     public void voidParam()
     {
     }
+
+    //
+    // PRIMITIVES
+    //
 
     public boolean booleanParam(boolean test)
     {
@@ -281,10 +259,24 @@ public class Test
         return test;
     }
 
+    public BigInteger bigIntegerParam(BigInteger test)
+    {
+        return test;
+    }
+
+    public BigDecimal bigDecimalParam(BigDecimal test)
+    {
+        return test;
+    }
+
     public String stringParam(String test)
     {
         return test;
     }
+
+    //
+    // ARRAYS OF PRIMITIVES
+    //
 
     public boolean[] booleanArrayParam(boolean[] test)
     {
@@ -371,81 +363,44 @@ public class Test
         return test;
     }
 
+    //
+    // BEANS
+    //
 
-    public BigInteger bigIntegerParam(BigInteger test)
+    public ObjA getLooped()
+    {
+        ObjA objA = new ObjA();
+        ObjB objB = new ObjB();
+        objA.setObjB(objB);
+        objB.setObjA(objA);
+        return objA;
+    }
+
+    public ObjA beanLoopParam(ObjA objA)
+    {
+        ObjA nestedA = objA.getObjB().getObjA();
+
+        if (nestedA != objA)
+        {
+            throw new IllegalStateException("Non matching obja != obja.objb.obja");
+        }
+
+        if (nestedA.getObjB() != objA.getObjB())
+        {
+            throw new IllegalStateException("Non matching objb != objb.obja.objb");
+        }
+
+        return objA;
+    }
+
+    public TestBean beanParam(TestBean test)
     {
         return test;
     }
 
-    public BigDecimal bigDecimalParam(BigDecimal test)
-    {
-        return test;
-    }
-
-    public Collection<String> stringCollectionParam(Collection<String> test)
-    {
-        return test;
-    }
-
-    public LinkedList<String> stringLinkedListParam(LinkedList<String> test)
-    {
-        return test;
-    }
-
-    public ArrayList<String> stringArrayListParam(ArrayList<String> test)
-    {
-        return test;
-    }
-
-    public List<String> stringListParam(List<String> test)
-    {
-        return test;
-    }
-
-    public Set<String> stringSetParam(Set<String> test)
-    {
-        return test;
-    }
-
-    public org.dom4j.Element dom4jElementParam(org.dom4j.Element test)
-    {
-        return test;
-    }
-
-    public org.dom4j.Document dom4jDocumentParam(org.dom4j.Document test)
-    {
-        return test;
-    }
-
-    public nu.xom.Element xomElementParam(nu.xom.Element test)
-    {
-        return test;
-    }
-
-    public nu.xom.Document xomDocumentParam(nu.xom.Document test)
-    {
-        return test;
-    }
-
-    public org.jdom.Element jdomElementParam(org.jdom.Element test)
-    {
-        return test;
-    }
-
-    public org.jdom.Document jdomDocumentParam(org.jdom.Document test)
-    {
-        return test;
-    }
-
-    public org.w3c.dom.Element domElementParam(org.w3c.dom.Element test)
-    {
-        return test;
-    }
-
-    public org.w3c.dom.Document domDocumentParam(org.w3c.dom.Document test)
-    {
-        return test;
-    }
+    //
+    // COLLECTIONS OF BEANS
+    //
 
     public Set<TestBean> beanSetParam(Set<TestBean> test)
     {
@@ -556,8 +511,77 @@ public class Test
         }
 
         return test;
-    }
+    }    
+
+    //
+    // COLLECTIONS
+    //
     
+    public Collection<String> stringCollectionParam(Collection<String> test)
+    {
+        return test;
+    }
+
+    public LinkedList<String> stringLinkedListParam(LinkedList<String> test)
+    {
+        return test;
+    }
+
+    public ArrayList<String> stringArrayListParam(ArrayList<String> test)
+    {
+        return test;
+    }
+
+    public List<String> stringListParam(List<String> test)
+    {
+        return test;
+    }
+
+    public Set<String> stringSetParam(Set<String> test)
+    {
+        return test;
+    }
+
+    public org.dom4j.Element dom4jElementParam(org.dom4j.Element test)
+    {
+        return test;
+    }
+
+    public org.dom4j.Document dom4jDocumentParam(org.dom4j.Document test)
+    {
+        return test;
+    }
+
+    public nu.xom.Element xomElementParam(nu.xom.Element test)
+    {
+        return test;
+    }
+
+    public nu.xom.Document xomDocumentParam(nu.xom.Document test)
+    {
+        return test;
+    }
+
+    public org.jdom.Element jdomElementParam(org.jdom.Element test)
+    {
+        return test;
+    }
+
+    public org.jdom.Document jdomDocumentParam(org.jdom.Document test)
+    {
+        return test;
+    }
+
+    public org.w3c.dom.Element domElementParam(org.w3c.dom.Element test)
+    {
+        return test;
+    }
+
+    public org.w3c.dom.Document domDocumentParam(org.w3c.dom.Document test)
+    {
+        return test;
+    }
+
     public List<TestBean> testBeanListReturn()
     {
         List<TestBean> testBeanList = new ArrayList<TestBean>();
@@ -581,11 +605,6 @@ public class Test
     }
 
     public TreeSet<String> stringTreeSetParam(TreeSet<String> test)
-    {
-        return test;
-    }
-
-    public TestBean beanParam(TestBean test)
     {
         return test;
     }
