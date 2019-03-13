@@ -471,6 +471,33 @@ window.testMarshallBeanParam = function() {
   ]);
 };
 
+var bean = {integer:0, bool:true, string:'0123456789'};
+var beanWithSubBean = {integer:0, bool:true, string:'0123456789', subBean:bean};
+
+window.testMarshallBrokenConstructorBeanParam = function() {
+  Test.brokenConstructorBeanParam(bean, waitDwrExceptionHandlerOptions());
+};
+
+window.testMarshallBrokenSetterBeanParam = function() {
+  Test.brokenSetterBeanParam(bean, waitDwrExceptionHandlerOptions());
+};
+
+window.testMarshallBrokenGetterBeanParam = function() {
+  Test.brokenGetterBeanReturn(waitDwrExceptionHandlerOptions());
+};
+
+window.testMarshallBeanWithBrokenConstructorBeanParam = function() {
+  Test.beanWithBrokenConstructorBeanParam(beanWithSubBean, waitDwrExceptionHandlerOptions());
+};
+
+window.testMarshallBeanWithBrokenSetterBeanParam = function() {
+  Test.beanWithBrokenSetterBeanParam(beanWithSubBean, waitDwrExceptionHandlerOptions());
+};
+
+window.testMarshallBeanWithBrokenGetterBeanReturn = function() {
+  Test.beanWithBrokenGetterBeanReturn(waitDwrExceptionHandlerOptions());
+};
+
 //
 // COLLECTIONS OF BEANS
 //
@@ -481,6 +508,34 @@ window.testMarshallBeanSetParam = function() {
     { code:"beanSetParam", data:[{ integer:1, bool:true, string:'0987654321', testBean:nested }] },
     { code:"beanSetParam", data:[ nested ] }
   ]);
+};
+
+window.testMarshallBrokenConstructorBeanListParam = function() {
+  Test.brokenConstructorBeanListParam([bean], waitDwrExceptionHandlerOptions());
+};
+
+window.testMarshallBrokenSetterBeanListParam = function() {
+  Test.brokenSetterBeanListParam([bean], waitDwrExceptionHandlerOptions());
+};
+
+window.testMarshallBrokenGetterBeanListReturn = function() {
+  Test.brokenGetterBeanListReturn(waitDwrExceptionHandlerOptions());
+};
+
+window.testMarshallBrokenConstructorListParam = function() {
+  Test.brokenConstructorListParam([bean], waitDwrExceptionHandlerOptions());
+};
+
+window.testMarshallBrokenAdderListParam = function() {
+  Test.brokenAdderListParam([bean], waitDwrExceptionHandlerOptions());
+};
+
+window.testMarshallBrokenHasNextListReturn = function() {
+  Test.brokenHasNextListReturn(waitDwrExceptionHandlerOptions());
+};
+
+window.testMarshallBrokenNextListReturn = function() {
+  Test.brokenNextListReturn(waitDwrExceptionHandlerOptions());
 };
 
 window.testMarshallEmptyListParams = function() {
@@ -511,6 +566,24 @@ window.testMarshallBeanWithListParam = function() {
     { code:"beanWithListParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested, list:[nested, nested] } },
     { code:"beanWithListParam", data:{ integer:1, bool:true, string:'0987654321', testBean:nested, list:[nested, nested, nested] } }
   ]);
+};
+
+var beanWithList = {integer:0, bool:true, string:'0123456789', list:[bean]};
+
+window.testMarshallBeanWithBrokenConstructorListParam = function() {
+  Test.beanWithBrokenConstructorListParam(beanWithList, waitDwrExceptionHandlerOptions());
+};
+
+window.testMarshallBeanWithBrokenAdderListParam = function() {
+  Test.beanWithBrokenAdderListParam(beanWithList, waitDwrExceptionHandlerOptions());
+};
+
+window.testMarshallBeanWithBrokenHasNextListReturn = function() {
+  Test.beanWithBrokenHasNextListReturn(waitDwrExceptionHandlerOptions());
+};
+
+window.testMarshallBeanWithBrokenNextListReturn = function() {
+  Test.beanWithBrokenNextListReturn(waitDwrExceptionHandlerOptions());
 };
 
 window.testMarshallObjectListParam = function() {

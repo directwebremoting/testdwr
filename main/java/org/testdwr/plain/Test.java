@@ -367,6 +367,11 @@ public class Test
     // BEANS
     //
 
+    public TestBean beanParam(TestBean test)
+    {
+        return test;
+    }
+
     public ObjA getLooped()
     {
         ObjA objA = new ObjA();
@@ -393,9 +398,84 @@ public class Test
         return objA;
     }
 
-    public TestBean beanParam(TestBean test)
+    static public class BrokenConstructorBean extends TestBean
+    {
+        public BrokenConstructorBean()
+        {
+            throw new RuntimeException("Exception thrown in bean constructor.");
+        }
+    }
+    
+    public BrokenConstructorBean brokenConstructorBeanParam(BrokenConstructorBean test)
     {
         return test;
+    }
+
+    static public class BeanWithBrokenConstructorBean extends TestBean
+    {
+        public void setSubBean(BrokenConstructorBean bean)
+        {
+            super.setTestBean(bean);
+        }
+    }
+    
+    static public class BrokenSetterBean extends TestBean
+    {
+        @Override
+        public void setInteger(int integer)
+        {
+            throw new RuntimeException("Exception thrown in bean setter.");
+        }
+    }
+    
+    public BrokenSetterBean brokenSetterBeanParam(BrokenSetterBean test)
+    {
+        return test;
+    }
+
+    static public class BrokenGetterBean extends TestBean
+    {
+        @Override
+        public int getInteger()
+        {
+            throw new RuntimeException("Exception thrown in bean getter.");
+        }
+    }
+    
+    public BrokenGetterBean brokenGetterBeanReturn()
+    {
+        return new BrokenGetterBean();
+    }
+
+    public BeanWithBrokenConstructorBean beanWithBrokenConstructorBeanParam(BeanWithBrokenConstructorBean test)
+    {
+        return test;
+    }
+
+    static public class BeanWithBrokenSetterBean extends TestBean
+    {
+        public void setSubBean(BrokenSetterBean bean)
+        {
+            super.setTestBean(bean);
+        }
+    }
+    
+    public BeanWithBrokenSetterBean beanWithBrokenSetterBeanParam(BeanWithBrokenSetterBean test)
+    {
+        return test;
+    }
+
+    static public class BeanWithBrokenGetterBean extends TestBean
+    {
+        public BrokenGetterBean getSubBean()
+        {
+            return new BrokenGetterBean();
+        }
+    }
+    
+    public BeanWithBrokenGetterBean beanWithBrokenGetterBeanReturn()
+    {
+        return new BeanWithBrokenGetterBean();
     }
 
     //
@@ -452,6 +532,102 @@ public class Test
         return test;
     }
 
+    public List<BrokenConstructorBean> brokenConstructorBeanListParam(List<BrokenConstructorBean> test)
+    {
+        return test;
+    }
+
+    public List<BrokenSetterBean> brokenSetterBeanListParam(List<BrokenSetterBean> test)
+    {
+        return test;
+    }
+
+    public List<BrokenGetterBean> brokenGetterBeanListReturn()
+    {
+        ArrayList<BrokenGetterBean> list = new ArrayList<>();
+        list.add(new BrokenGetterBean());
+        return list;
+    }
+
+    static public class BrokenConstructorList<T> extends ArrayList<T>
+    {
+        public BrokenConstructorList()
+        {
+            throw new RuntimeException("Exception thrown in list constructor.");
+        }
+    }
+    
+    public BrokenConstructorList<TestBean> brokenConstructorListParam(BrokenConstructorList<TestBean> test)
+    {
+        return test;
+    }
+
+    static public class BrokenAdderList<T> extends ArrayList<T>
+    {
+        @Override
+        public boolean add(T e)
+        {
+            throw new RuntimeException("Exception thrown in list add().");
+        }
+    }
+    
+    public BrokenAdderList<TestBean> brokenAdderListParam(BrokenAdderList<TestBean> test)
+    {
+        return test;
+    }    
+    
+    static public class BrokenHasNextList<T> extends ArrayList<T>
+    {
+        @Override
+        public Iterator<T> iterator()
+        {
+            return new Iterator<T>()
+            {
+                @Override
+                public boolean hasNext()
+                {
+                    throw new RuntimeException("Exception thrown in list hasNext().");
+                }
+                @Override
+                public T next()
+                {
+                    return null;
+                }
+            };
+        }
+    }
+    
+    public BrokenHasNextList<TestBean> brokenHasNextListReturn()
+    {
+        return new BrokenHasNextList<>();
+    }
+    
+    static public class BrokenNextList<T> extends ArrayList<T>
+    {
+        @Override
+        public Iterator<T> iterator()
+        {
+            return new Iterator<T>()
+            {
+                @Override
+                public boolean hasNext()
+                {
+                    return true;
+                }
+                @Override
+                public T next()
+                {
+                    throw new RuntimeException("Exception thrown in list next().");
+                }
+            };
+        }
+    }
+    
+    public BrokenNextList<TestBean> brokenNextListReturn()
+    {
+        return new BrokenNextList<>();
+    }
+    
     public TestBeanWithList beanWithListParam(TestBeanWithList test)
     {
         if (test.getList().size() > 1)
@@ -465,8 +641,58 @@ public class Test
         }
 
         return test;
+    }    
+
+    static public class BeanWithBrokenConstructorList extends TestBean
+    {
+        public void setList(BrokenConstructorList<TestBean> list)
+        {
+        }
+    }
+    
+    public BeanWithBrokenConstructorList beanWithBrokenConstructorListParam(BeanWithBrokenConstructorList test)
+    {
+        return test;
     }
 
+    static public class BeanWithBrokenAdderList extends TestBean
+    {
+        public void setList(BrokenAdderList<TestBean> list)
+        {
+        }
+    }
+    
+    public BeanWithBrokenAdderList beanWithBrokenAdderListParam(BeanWithBrokenAdderList test)
+    {
+        return test;
+    }    
+    
+    static public class BeanWithBrokenHasNextList extends TestBean
+    {
+        public BrokenHasNextList<TestBean> getList()
+        {
+            return new BrokenHasNextList<>();
+        }
+    }
+    
+    public BeanWithBrokenHasNextList beanWithBrokenHasNextListReturn()
+    {
+        return new BeanWithBrokenHasNextList();
+    }    
+    
+    static public class BeanWithBrokenNextList extends TestBean
+    {
+        public BrokenNextList<TestBean> getList()
+        {
+            return new BrokenNextList<>();
+        }
+    }
+    
+    public BeanWithBrokenNextList beanWithBrokenNextListReturn()
+    {
+        return new BeanWithBrokenNextList();
+    }    
+    
     public List<TestObject> objectListParam(List<TestObject> test)
     {
         if (test.size() > 1)
